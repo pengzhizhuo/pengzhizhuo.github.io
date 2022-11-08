@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"javabk.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="操作场景本文以云服务器的操作系统为“CentOS 7.4 64位”为例，采用Parted分区工具为数据盘设置分区。 MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，因此当您初始化容量大于2 TB的磁盘时，分区形式请采用GPT。对于Linux操作系统而言，当磁盘分区形式选用GPT时，fdisk分区工具将无法使用，需要采用parted工具。 划分分区并挂载磁盘本操作以该场景为">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初始化Linux数据盘（parted）">
+<meta property="og:url" content="http://javabk.com/2020/05/10/%E5%88%9D%E5%A7%8B%E5%8C%96Linux%E6%95%B0%E6%8D%AE%E7%9B%98%EF%BC%88parted%EF%BC%89/index.html">
+<meta property="og:site_name" content="JAVABK">
+<meta property="og:description" content="操作场景本文以云服务器的操作系统为“CentOS 7.4 64位”为例，采用Parted分区工具为数据盘设置分区。 MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，因此当您初始化容量大于2 TB的磁盘时，分区形式请采用GPT。对于Linux操作系统而言，当磁盘分区形式选用GPT时，fdisk分区工具将无法使用，需要采用parted工具。 划分分区并挂载磁盘本操作以该场景为">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://res-img2.huaweicloud.com/content/dam/cloudbu-site/archive/china/zh-cn/support/resource/framework/v3/images/support-doc-new-notice.svg">
+<meta property="og:image" content="https://res-img2.huaweicloud.com/content/dam/cloudbu-site/archive/china/zh-cn/support/resource/framework/v3/images/support-doc-new-notice.svg">
+<meta property="article:published_time" content="2020-05-10T12:30:00.000Z">
+<meta property="article:modified_time" content="2020-05-10T12:29:49.077Z">
+<meta property="article:author" content="pengzhizhuo">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res-img2.huaweicloud.com/content/dam/cloudbu-site/archive/china/zh-cn/support/resource/framework/v3/images/support-doc-new-notice.svg">
+
+
+<link rel="canonical" href="http://javabk.com/2020/05/10/%E5%88%9D%E5%A7%8B%E5%8C%96Linux%E6%95%B0%E6%8D%AE%E7%9B%98%EF%BC%88parted%EF%BC%89/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://javabk.com/2020/05/10/%E5%88%9D%E5%A7%8B%E5%8C%96Linux%E6%95%B0%E6%8D%AE%E7%9B%98%EF%BC%88parted%EF%BC%89/","path":"2020/05/10/初始化Linux数据盘（parted）/","title":"初始化Linux数据盘（parted）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>初始化Linux数据盘（parted） | JAVABK</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">JAVABK</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">认清明天的去向，不忘昨日的来处</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E5%9C%BA%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">操作场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%92%E5%88%86%E5%88%86%E5%8C%BA%E5%B9%B6%E6%8C%82%E8%BD%BD%E7%A3%81%E7%9B%98"><span class="nav-number">2.</span> <span class="nav-text">划分分区并挂载磁盘</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA"><span class="nav-number">3.</span> <span class="nav-text">设置开机自动挂载磁盘分区</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">pengzhizhuo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://javabk.com/2020/05/10/%E5%88%9D%E5%A7%8B%E5%8C%96Linux%E6%95%B0%E6%8D%AE%E7%9B%98%EF%BC%88parted%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="pengzhizhuo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JAVABK">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="初始化Linux数据盘（parted） | JAVABK">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          初始化Linux数据盘（parted）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2020-05-10 20:30:00 / 修改时间：20:29:49" itemprop="dateCreated datePublished" datetime="2020-05-10T20:30:00+08:00">2020-05-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">Linux运维</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h4 id="操作场景"><a href="#操作场景" class="headerlink" title="操作场景"></a>操作场景</h4><p>本文以云服务器的操作系统为“CentOS 7.4 64位”为例，采用Parted分区工具为数据盘设置分区。</p>
+<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，因此当您初始化容量大于2 TB的磁盘时，分区形式请采用GPT。对于Linux操作系统而言，当磁盘分区形式选用GPT时，fdisk分区工具将无法使用，需要采用parted工具。</p>
+<h4 id="划分分区并挂载磁盘"><a href="#划分分区并挂载磁盘" class="headerlink" title="划分分区并挂载磁盘"></a>划分分区并挂载磁盘</h4><p>本操作以该场景为例，当云服务器挂载了一块新的数据盘时，采用parted分区工具为数据盘设置分区，分区形式设置为GPT，文件系统设为ext4格式，挂载在“&#x2F;mnt&#x2F;sdc”下，并设置开机启动自动挂载。</p>
+<ol>
+<li><p>执行以下命令，查看新增数据盘。</p>
+<p><strong>lsblk</strong></p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root@ecs-test-0001 ~]# lsblk</span><br><span class="line">NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT</span><br><span class="line">vda    253:0    0   40G  0 disk</span><br><span class="line">└─vda1 253:1    0   40G  0 part /</span><br><span class="line">vdb    253:16   0  100G  0 disk</span><br></pre></td></tr></table></figure>
+
+
+
+<p>表示当前的云服务器有两块磁盘，<strong>“&#x2F;dev&#x2F;vda”</strong>是系统盘，<strong>“&#x2F;dev&#x2F;vdb”</strong>是新增数据盘。</p>
+</li>
+<li><p>执行以下命令，进入parted分区工具，开始对新增数据盘执行分区操作。</p>
+<p><strong>parted</strong> <em>新增数据盘</em></p>
+<p>命令示例：</p>
+<p><strong>parted &#x2F;dev&#x2F;vdb</strong></p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@ecs-test-0001 ~]# parted /dev/vdb</span><br><span class="line">GNU Parted 3.1</span><br><span class="line">Using /dev/vdb</span><br><span class="line">Welcome to GNU Parted! Type &#x27;help&#x27; to view a list of commands.</span><br><span class="line">(parted) </span><br></pre></td></tr></table></figure>
+
+
+
+
+</li>
+<li><p>输入“p”，按“Enter”，查看当前磁盘分区形式。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(parted) p</span><br><span class="line">Error: /dev/vdb: unrecognised disk label</span><br><span class="line">Model: Virtio Block Device (virtblk)</span><br><span class="line">Disk /dev/vdb: 107GB</span><br><span class="line">Sector size (logical/physical): 512B/512B</span><br><span class="line">Partition Table: unknown</span><br><span class="line">Disk Flags:</span><br><span class="line">(parted) </span><br></pre></td></tr></table></figure>
+
+
+
+<p>“Partition Table”为“unknown”表示磁盘分区形式未知，新的数据盘还未设置分区形式。</p>
+</li>
+<li><p>输入以下命令，设置磁盘分区形式。</p>
+<p><strong>mklabel</strong> <em>磁盘分区形式</em></p>
+<p>磁盘分区形式有MBR和GPT两种，以GPT为例：</p>
+<p><strong>mklabel gpt</strong></p>
+<p><img src="https://res-img2.huaweicloud.com/content/dam/cloudbu-site/archive/china/zh-cn/support/resource/framework/v3/images/support-doc-new-notice.svg" alt="img">须知：</p>
+<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，当前数据盘支持的最大容量为32 TB，如果您需要使用大于2 TB的磁盘容量，分区形式请采用GPT。</p>
+<p>当磁盘已经投入使用后，此时切换磁盘分区形式时，磁盘上的原有数据将会清除，因此请在磁盘初始化时谨慎选择磁盘分区形式。</p>
+</li>
+<li><p>输入“p”，按“Enter”，设置分区形式后，再次查看磁盘分区形式。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">(parted) mklabel gpt</span><br><span class="line">(parted) p</span><br><span class="line">Model: Virtio Block Device (virtblk)</span><br><span class="line">Disk /dev/vdb: 107GB</span><br><span class="line">Sector size (logical/physical): 512B/512B</span><br><span class="line">Partition Table: gpt</span><br><span class="line">Disk Flags:</span><br><span class="line"></span><br><span class="line">Number  Start  End  Size  File system  Name  Flags</span><br><span class="line"></span><br><span class="line">(parted) </span><br></pre></td></tr></table></figure>
+
+
+
+<p>“Partition Table”为“gpt”表示磁盘分区形式已设置为GPT。</p>
+</li>
+<li><p>输入“unit s”，按“Enter”，设置磁盘的计量单位为磁柱。</p>
+</li>
+<li><p>以整个磁盘创建一个分区为例，执行以下命令，按“Enter”。</p>
+<p><strong>mkpart</strong> <em>磁盘分区名称 起始磁柱值</em> <em>截止磁柱**值</em></p>
+<p>命令示例：</p>
+<p><strong>mkpart test 2048s 100%</strong></p>
+<p>“2048s”表示磁盘起始磁柱值，“100%”表示磁盘截止磁柱值，此处仅供参考，您可以根据业务需要自行规划磁盘分区数量及容量。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(parted) mkpart opt 2048s 100%</span><br><span class="line">(parted)</span><br></pre></td></tr></table></figure>
+
+
+
+
+</li>
+<li><p>输入“p”，按“Enter”，查看新建分区的详细信息。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">(parted) p</span><br><span class="line">Model: Virtio Block Device (virtblk)</span><br><span class="line">Disk /dev/vdb: 209715200s</span><br><span class="line">Sector size (logical/physical): 512B/512B</span><br><span class="line">Partition Table: gpt</span><br><span class="line">Disk Flags:</span><br><span class="line"></span><br><span class="line">Number  Start  End         Size        File system  Name  Flags</span><br><span class="line"> 1      2048s  209713151s  209711104s               test</span><br><span class="line"></span><br><span class="line">(parted) </span><br></pre></td></tr></table></figure>
+
+
+
+
+</li>
+<li><p>输入“q”，按“Enter”，退出parted分区工具。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(parted) q</span><br><span class="line">Information: You may need to update /etc/fstab.</span><br></pre></td></tr></table></figure>
+
+
+
+<p>“&#x2F;etc&#x2F;fstab”文件控制磁盘开机自动挂载，请先参考以下步骤为磁盘分区设置文件系统和挂载目录后，再根据文档指导更新“&#x2F;etc&#x2F;fstab”文件。</p>
+</li>
+<li><p>执行以下命令，查看磁盘分区信息。</p>
+<p><strong>lsblk</strong></p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ecs-test-0001 ~]# lsblk</span><br><span class="line">NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT</span><br><span class="line">vda    253:0    0   40G  0 disk</span><br><span class="line">└─vda1 253:1    0   40G  0 part /</span><br><span class="line">vdb    253:16   0  100G  0 disk</span><br><span class="line">└─vdb1 253:17   0  100G  0 part</span><br></pre></td></tr></table></figure>
+
+
+
+<p>此时可以查看到新建分区“&#x2F;dev&#x2F;vdb1”</p>
+</li>
+<li><p>执行以下命令，将新建分区文件系统设为系统所需格式。</p>
+<p><strong>mkfs</strong> <strong>-t</strong> <em>文件系统格式</em> <strong>&#x2F;dev&#x2F;vdb1</strong></p>
+<p>以设置文件系统为“ext4”为例：</p>
+<p><strong>mkfs -t ext4 &#x2F;dev&#x2F;vdb1</strong></p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@ecs-test-0001 ~]# mkfs -t ext4 /dev/vdb1</span><br><span class="line">mke2fs 1.42.9 (28-Dec-2013)</span><br><span class="line">Filesystem label=</span><br><span class="line">OS type: Linux</span><br><span class="line">Block size=4096 (log=2)</span><br><span class="line">Fragment size=4096 (log=2)</span><br><span class="line">Stride=0 blocks, Stripe width=0 blocks</span><br><span class="line">6553600 inodes, 26213888 blocks</span><br><span class="line">1310694 blocks (5.00%) reserved for the super user</span><br><span class="line">First data block=0</span><br><span class="line">Maximum filesystem blocks=2174746624</span><br><span class="line">800 block groups</span><br><span class="line">32768 blocks per group, 32768 fragments per group</span><br><span class="line">8192 inodes per group</span><br><span class="line">Superblock backups stored on blocks:</span><br><span class="line">        32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,</span><br><span class="line">        4096000, 7962624, 11239424, 20480000, 23887872</span><br><span class="line"></span><br><span class="line">Allocating group tables: done</span><br><span class="line">Writing inode tables: done</span><br><span class="line">Creating journal (32768 blocks): done</span><br><span class="line">Writing superblocks and filesystem accounting information: done</span><br></pre></td></tr></table></figure>
+
+
+
+<p>格式化需要等待一段时间，请观察系统运行状态，不要退出。</p>
+<p><img src="https://res-img2.huaweicloud.com/content/dam/cloudbu-site/archive/china/zh-cn/support/resource/framework/v3/images/support-doc-new-notice.svg" alt="img">须知：</p>
+<p>不同文件系统支持的分区大小不同，请根据您的业务需求选择合适的文件系统。</p>
+</li>
+<li><p>执行以下命令，新建挂载目录。</p>
+<p><strong>mkdir</strong> <em>挂载目录</em></p>
+<p>以新建挂载目录“&#x2F;mnt&#x2F;sdc”为例：</p>
+<p><strong>mkdir &#x2F;mnt&#x2F;sdc</strong></p>
+</li>
+<li><p>执行以下命令，将新建分区挂载到<a target="_blank" rel="noopener" href="https://support.huaweicloud.com/qs-ecs/ecs_02_0020.html#ecs_02_0020__zh-cn_topic_0084935709_li1910362714149">12</a>中创建的目录下。</p>
+<p><strong>mount</strong> <em>磁盘分区</em> <em>挂载目录</em></p>
+<p>以挂载新建分区“&#x2F;dev&#x2F;vdb1”至“&#x2F;mnt&#x2F;sdc”为例：</p>
+<p><strong>mount &#x2F;dev&#x2F;vdb1 &#x2F;mnt&#x2F;sdc</strong></p>
+</li>
+<li><p>执行以下命令，查看挂载结果。</p>
+<p><strong>df -TH</strong></p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@ecs-test-0001 ~]# df -TH</span><br><span class="line">Filesystem     Type      Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/vda1      ext4       43G  1.9G   39G   5% /</span><br><span class="line">devtmpfs       devtmpfs  2.0G     0  2.0G   0% /dev</span><br><span class="line">tmpfs          tmpfs     2.0G     0  2.0G   0% /dev/shm</span><br><span class="line">tmpfs          tmpfs     2.0G  9.0M  2.0G   1% /run</span><br><span class="line">tmpfs          tmpfs     2.0G     0  2.0G   0% /sys/fs/cgroup</span><br><span class="line">tmpfs          tmpfs     398M     0  398M   0% /run/user/0</span><br><span class="line">/dev/vdb1      ext4      106G   63M  101G   1% /mnt/sdc</span><br></pre></td></tr></table></figure>
+
+
+
+<p>表示新建分区<strong>“&#x2F;dev&#x2F;vdb1”</strong>已挂载至“&#x2F;mnt&#x2F;sdc”。</p>
+<p>说明：</p>
+<p>云服务器重启后，挂载会失效。您可以修改“&#x2F;etc&#x2F;fstab”文件，将新建磁盘分区设置为开机自动挂载</p>
+</li>
+</ol>
+<h4 id="设置开机自动挂载磁盘分区"><a href="#设置开机自动挂载磁盘分区" class="headerlink" title="设置开机自动挂载磁盘分区"></a>设置开机自动挂载磁盘分区</h4><p>设置云服务器系统启动时自动挂载磁盘分区，不能采用在“&#x2F;etc&#x2F;fstab”直接指定设备名（比如&#x2F;dev&#x2F;vdb1）的方法，因为云中设备的顺序编码在关闭或者开启云服务器过程中可能发生改变，例如&#x2F;dev&#x2F;vdb1可能会变成&#x2F;dev&#x2F;vdb2。推荐使用UUID来配置自动挂载磁盘分区。</p>
+<p>说明：</p>
+<p>UUID（universally unique identifier）是Linux系统为磁盘分区提供的唯一的标识字符串。</p>
+<ol>
+<li><p>执行如下命令，查询磁盘分区的UUID。</p>
+<p><strong>blkid</strong> <em>磁盘分区</em></p>
+<p>以查询磁盘分区<strong>“&#x2F;dev&#x2F;vdb1”</strong>的UUID为例：</p>
+<p><strong>blkid &#x2F;dev&#x2F;vdb1</strong></p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ecs-test-0001 ~]# blkid /dev/vdb1</span><br><span class="line">/dev/vdb1: UUID=&quot;0b3040e2-1367-4abb-841d-ddb0b92693df&quot; TYPE=&quot;ext4&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>表示<strong>“&#x2F;dev&#x2F;vdb1”</strong>的UUID。</p>
+</li>
+<li><p>执行以下命令，使用VI编辑器打开“fstab”文件。</p>
+<p><strong>vi &#x2F;etc&#x2F;fstab</strong></p>
+</li>
+<li><p>按“i”，进入编辑模式。</p>
+</li>
+<li><p>将光标移至文件末尾，按“Enter”，添加如下内容。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UUID=0b3040e2-1367-4abb-841d-ddb0b92693df /mnt/sdc                ext4    defaults        0 2</span><br></pre></td></tr></table></figure>
+
+
+
+<p>以内容上仅为示例，具体请以实际情况为准，参数说明如下：</p>
+<ul>
+<li><p>第一列为UUID，此处填写<a target="_blank" rel="noopener" href="https://support.huaweicloud.com/qs-ecs/ecs_02_0020.html#ecs_02_0020__zh-cn_topic_0084935709_zh-cn_topic_0044524669_li840964143216">1</a>中查询到的磁盘分区的UUID。</p>
+</li>
+<li><p>第二列为磁盘分区的挂载目录，可以通过<strong>df -TH</strong>命令查询。</p>
+</li>
+<li><p>第三列为磁盘分区的文件系统格式， 可以通过<strong>df -TH</strong>命令查询。</p>
+</li>
+<li><p>第四列为磁盘分区的挂载选项，此处通常设置为defaults即可。</p>
+</li>
+<li><p>第五列为Linux dump备份选项。</p>
+<ul>
+<li>0表示不使用Linux dump备份。现在通常不使用dump备份，此处设置为0即可。</li>
+<li>1表示使用Linux dump备份。</li>
+</ul>
+</li>
+<li><p>第六列为fsck选项，即开机时是否使用fsck检查磁盘。</p>
+<ul>
+<li><p>0表示不检验。</p>
+</li>
+<li><p>挂载点为（&#x2F;）根目录的分区，此处必须填写1。</p>
+<p>根分区设置为1，其他分区只能从2开始，系统会按照数字从小到大依次检查下去。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>按“ESC”后，输入“:wq”，按“Enter”。</p>
+<p>保存设置并退出编辑器。</p>
+</li>
+<li><p>执行以下步骤，验证自动挂载功能。</p>
+<ol>
+<li><p>执行如下命令，卸载已挂载的分区。</p>
+<p><strong>umount</strong> <em>磁盘分区</em></p>
+<p>命令示例：</p>
+<p><strong>umount &#x2F;dev&#x2F;vdb1</strong></p>
+</li>
+<li><p>执行如下命令，将“&#x2F;etc&#x2F;fstab”文件所有内容重新加载。</p>
+<p><strong>mount -a</strong></p>
+</li>
+<li><p>执行如下命令，查询文件系统挂载信息。</p>
+<p><strong>mount</strong> <strong>|</strong> <strong>grep</strong> <em>挂载目录</em></p>
+<p>命令示例：</p>
+<p><strong>mount</strong> <strong>|</strong> <strong>grep</strong> <strong>&#x2F;mnt&#x2F;sdc</strong></p>
+<p>回显类似如下信息，说明自动挂载功能生效：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@ecs-test-0001 ~]# mount | grep /mnt/sdc</span><br><span class="line">/dev/vdb1 on /mnt/sdc type ext4 (rw,relatime,data=ordered)</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/05/07/%E8%BF%90%E7%BB%B4%E5%AE%89%E5%85%A8%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%B1%82%E6%AC%A1/" rel="prev" title="运维安全的四个层次">
+                  <i class="fa fa-chevron-left"></i> 运维安全的四个层次
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/11/08/hello-world/" rel="next" title="Hello World">
+                  Hello World <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">pengzhizhuo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

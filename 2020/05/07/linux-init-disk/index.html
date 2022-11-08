@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"javabk.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="初始化Linux数据盘（fdisk）操作场景本文以云服务器的操作系统为“CentOS 7.7 64位”为例，采用fdisk分区工具为数据盘设置分区。 MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，因此当您初始化容量大于2 TB的磁盘时，分区形式请采用GPT。对于Linux操作系统而言，当磁盘分区形式选用GPT时，fdisk分区工具将无法使用，需要采用parted工具。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初始化Linux数据盘（fdisk）">
+<meta property="og:url" content="http://javabk.com/2020/05/07/linux-init-disk/index.html">
+<meta property="og:site_name" content="JAVABK">
+<meta property="og:description" content="初始化Linux数据盘（fdisk）操作场景本文以云服务器的操作系统为“CentOS 7.7 64位”为例，采用fdisk分区工具为数据盘设置分区。 MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，因此当您初始化容量大于2 TB的磁盘时，分区形式请采用GPT。对于Linux操作系统而言，当磁盘分区形式选用GPT时，fdisk分区工具将无法使用，需要采用parted工具。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-05-07T09:00:00.000Z">
+<meta property="article:modified_time" content="2020-05-07T09:08:18.464Z">
+<meta property="article:author" content="pengzhizhuo">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://javabk.com/2020/05/07/linux-init-disk/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://javabk.com/2020/05/07/linux-init-disk/","path":"2020/05/07/linux-init-disk/","title":"初始化Linux数据盘（fdisk）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>初始化Linux数据盘（fdisk） | JAVABK</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">JAVABK</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">认清明天的去向，不忘昨日的来处</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96Linux%E6%95%B0%E6%8D%AE%E7%9B%98%EF%BC%88fdisk%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">初始化Linux数据盘（fdisk）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E5%9C%BA%E6%99%AF"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">操作场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%92%E5%88%86%E5%88%86%E5%8C%BA%E5%B9%B6%E6%8C%82%E8%BD%BD%E7%A3%81%E7%9B%98"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">划分分区并挂载磁盘</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">设置开机自动挂载磁盘分区</span></a></li></ol></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">pengzhizhuo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://javabk.com/2020/05/07/linux-init-disk/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="pengzhizhuo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JAVABK">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="初始化Linux数据盘（fdisk） | JAVABK">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          初始化Linux数据盘（fdisk）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2020-05-07 17:00:00 / 修改时间：17:08:18" itemprop="dateCreated datePublished" datetime="2020-05-07T17:00:00+08:00">2020-05-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">Linux运维</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="初始化Linux数据盘（fdisk）"><a href="#初始化Linux数据盘（fdisk）" class="headerlink" title="初始化Linux数据盘（fdisk）"></a>初始化Linux数据盘（fdisk）</h1><h4 id="操作场景"><a href="#操作场景" class="headerlink" title="操作场景"></a>操作场景</h4><p>本文以云服务器的操作系统为“CentOS 7.7 64位”为例，采用fdisk分区工具为数据盘设置分区。</p>
+<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，因此当您初始化容量大于2 TB的磁盘时，分区形式请采用GPT。对于Linux操作系统而言，当磁盘分区形式选用GPT时，fdisk分区工具将无法使用，需要采用parted工具。</p>
+<h4 id="划分分区并挂载磁盘"><a href="#划分分区并挂载磁盘" class="headerlink" title="划分分区并挂载磁盘"></a>划分分区并挂载磁盘</h4><p>本操作以该场景为例，当服务器挂载了一块新的数据盘时，使用fdisk分区工具将该数据盘设为主分区，分区形式默认设置为MBR，文件系统设为xfs格式，挂载在“&#x2F;opt”下，并设置开机启动自动挂载。</p>
+<ol>
+<li><p>执行以下命令，查看新增数据盘。</p>
+<p><strong>fdisk -l</strong></p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# fdisk -l</span><br><span class="line"></span><br><span class="line">Disk /dev/sda: 68.7 GB, 68719476736 bytes, 134217728 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line">Disk label type: dos</span><br><span class="line">Disk identifier: 0x0002fb1b</span><br><span class="line"></span><br><span class="line">   Device Boot      Start         End      Blocks   Id  System</span><br><span class="line">/dev/sda1   *        2048     2099199     1048576   83  Linux</span><br><span class="line">/dev/sda2         2099200   134217727    66059264   8e  Linux LVM</span><br><span class="line"></span><br><span class="line">Disk /dev/sdb: 1073.7 GB, 1073741824000 bytes, 2097152000 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disk /dev/mapper/rootvg-lvroot: 27.9 GB, 27917287424 bytes, 54525952 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disk /dev/mapper/rootvg-lvswap: 17.2 GB, 17179869184 bytes, 33554432 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disk /dev/mapper/rootvg-lvhome: 1073 MB, 1073741824 bytes, 2097152 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disk /dev/mapper/rootvg-lvvar: 10.7 GB, 10737418240 bytes, 20971520 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disk /dev/mapper/rootvg-lvopt: 10.7 GB, 10733223936 bytes, 20963328 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br></pre></td></tr></table></figure>
+
+
+
+<p>表示当前的服务器有两块磁盘，<strong>“&#x2F;dev&#x2F;sda”</strong>是系统盘，<strong>“&#x2F;dev&#x2F;sdb”</strong>是新增数据盘。</p>
+</li>
+<li><p>执行以下命令，进入fdisk分区工具，开始对新增数据盘执行分区操作。</p>
+<p><strong>fdisk</strong> <em>新增数据盘</em></p>
+<p>以新挂载的数据盘“&#x2F;dev&#x2F;sdb”为例：</p>
+<p><strong>fdisk &#x2F;dev&#x2F;sdb</strong></p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# fdisk /dev/sdb</span><br><span class="line">Welcome to fdisk (util-linux 2.23.2).</span><br><span class="line"></span><br><span class="line">Changes will remain in memory only, until you decide to write them.</span><br><span class="line">Be careful before using the write command.</span><br><span class="line"></span><br><span class="line">Device does not contain a recognized partition table</span><br><span class="line">Building a new DOS disklabel with disk identifier 0xa04eb0bd.</span><br><span class="line"></span><br><span class="line">Command (m for help): </span><br></pre></td></tr></table></figure>
+
+
+
+
+</li>
+<li><p>输入“n”，按“Enter”，开始新建分区。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Command (m for help): n</span><br><span class="line">Partition type:</span><br><span class="line">   p   primary (0 primary, 0 extended, 4 free)</span><br><span class="line">   e   extended</span><br></pre></td></tr></table></figure>
+
+
+
+<p>表示磁盘有两种分区类型：</p>
+<ul>
+<li>“p”表示主分区。</li>
+<li>“e”表示扩展分区。</li>
+</ul>
+<p>说明：</p>
+<p>磁盘使用MBR分区形式，最多可以创建4个主分区，或者3个主分区加1个扩展分区，扩展分区不可以直接使用，需要划分成若干个逻辑分区才可以使用。</p>
+<p>磁盘使用GPT分区形式时，没有主分区、扩展分区以及逻辑分区之分。</p>
+</li>
+<li><p>以创建一个主要分区为例，输入“p”，按“Enter”，开始创建一个主分区。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Select (default p): p</span><br><span class="line">Partition number (1-4, default 1): </span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>“Partition number”</strong>表示主分区编号，可以选择1-4。</p>
+</li>
+<li><p>以分区编号选择“1”为例，输入主分区编号“1”，按“Enter”。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Partition number (1-4, default 1): 1</span><br><span class="line">First sector (2048-209715199, default 2048):</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>“First sector”</strong>表示起始磁柱值，可以选择2048-209715199，默认为2048。</p>
+</li>
+<li><p>以选择默认起始磁柱值2048为例，按“Enter”。</p>
+<p>系统会自动提示分区可用空间的起始磁柱值和截止磁柱值，可以在该区间内自定义，或者使用默认值。起始磁柱值必须小于分区的截止磁柱值。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">First sector (2048-209715199, default 2048):</span><br><span class="line">Using default value 2048</span><br><span class="line">Last sector, +sectors or +size&#123;K,M,G&#125; (2048-209715199, default 209715199):</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>“Last sector”</strong>表示截止磁柱值，可以选择2048-209715199，默认为209715199。</p>
+</li>
+<li><p>以选择默认截止磁柱值209715199为例，按“Enter”。</p>
+<p>系统会自动提示分区可用空间的起始磁柱值和截止磁柱值，可以在该区间内自定义，或者使用默认值。起始磁柱值必须小于分区的截止磁柱值。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Last sector, +sectors or +size&#123;K,M,G&#125; (2048-209715199, default 209715199):</span><br><span class="line">Using default value 209715199</span><br><span class="line">Partition 1 of type Linux and of size 100 GiB is set</span><br><span class="line"></span><br><span class="line">Command (m for help):</span><br></pre></td></tr></table></figure>
+
+
+
+<p>表示分区完成，即为数据盘新建了1个分区。</p>
+</li>
+<li><p>输入“p”，按“Enter”，查看新建分区的详细信息。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Command (m for help): p</span><br><span class="line"></span><br><span class="line">Disk /dev/sdb: 1073.7 GB, 1073741824000 bytes, 2097152000 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line">Disk label type: dos</span><br><span class="line">Disk identifier: 0xa04eb0bd</span><br><span class="line"></span><br><span class="line">   Device Boot      Start         End      Blocks   Id  System</span><br><span class="line">/dev/sdb1            2048  2097151999  1048574976   83  Linux</span><br></pre></td></tr></table></figure>
+
+
+
+<p>表示新建分区<strong>“&#x2F;dev&#x2F;sdb1”</strong>的详细信息。</p>
+</li>
+<li><p>输入“w”，按“Enter”，将分区结果写入分区表中。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Command (m for help): w</span><br><span class="line">The partition table has been altered!</span><br><span class="line"></span><br><span class="line">Calling ioctl() to re-read partition table.</span><br><span class="line">Syncing disks.</span><br></pre></td></tr></table></figure>
+
+
+
+<p>表示分区创建完成。</p>
+<p>说明：</p>
+<p>如果之前分区操作有误，请输入“q”，则会退出fdisk分区工具，之前的分区结果将不会被保留。</p>
+</li>
+<li><p>执行以下命令，将新的分区表变更同步至操作系统。</p>
+</li>
+</ol>
+<p>   <strong>partprobe</strong></p>
+<ol start="11">
+<li>执行以下命令，将新建分区文件系统设为系统所需格式。</li>
+</ol>
+<p>  ​    </p>
+<pre><code>**mkfs** **-t** *文件系统格式* **/dev/sdb1**
+
+以设置文件系统为“xfs”为例：
+
+**mkfs -t xfs /dev/sdb1**
+
+回显类似如下信息：
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# mkfs -t xfs /dev/sdb1</span><br><span class="line">meta-data=/dev/sdb1              isize=512    agcount=4, agsize=65535936 blks</span><br><span class="line">         =                       sectsz=512   attr=2, projid32bit=1</span><br><span class="line">         =                       crc=1        finobt=0, sparse=0</span><br><span class="line">data     =                       bsize=4096   blocks=262143744, imaxpct=25</span><br><span class="line">         =                       sunit=0      swidth=0 blks</span><br><span class="line">naming   =version 2              bsize=4096   ascii-ci=0 ftype=1</span><br><span class="line">log      =internal log           bsize=4096   blocks=127999, version=2</span><br><span class="line">         =                       sectsz=512   sunit=0 blks, lazy-count=1</span><br><span class="line">realtime =none                   extsz=4096   blocks=0, rtextents=0</span><br></pre></td></tr></table></figure>
+
+
+
+格式化需要等待一段时间，请观察系统运行状态，不要退出。
+
+不同文件系统支持的分区大小不同，请根据您的业务需求选择合适的文件系统。
+</code></pre>
+<ol start="12">
+<li><p>执行以下命令，新建挂载目录。</p>
+<p><strong>mkdir</strong> <em>挂载目录</em></p>
+<p>以挂载目录“&#x2F;opt”为例：</p>
+</li>
+<li><p>执行以下命令，将新建分区挂载到<a target="_blank" rel="noopener" href="https://support.huaweicloud.com/qs-ecs/zh-cn_topic_0085634797.html#zh-cn_topic_0085634797__zh-cn_topic_0044524669_li1758111811323">12</a>中创建的目录下。</p>
+</li>
+</ol>
+<p>  ​    </p>
+<pre><code>**mount** *磁盘分区* *挂载目录*
+
+以挂载新建分区“/dev/sdb1”至“/opt”为例：
+
+**mount /dev/sdb1 /opt**
+</code></pre>
+<ol start="14">
+<li>执行以下命令，查看挂载结果。</li>
+</ol>
+<p>  ​    </p>
+<pre><code>**df -TH**
+
+回显类似如下信息：
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# df -HT</span><br><span class="line">Filesystem                Type      Size  Used Avail Use% Mounted on</span><br><span class="line">devtmpfs                  devtmpfs   17G     0   17G   0% /dev</span><br><span class="line">tmpfs                     tmpfs      17G     0   17G   0% /dev/shm</span><br><span class="line">tmpfs                     tmpfs      17G   55M   17G   1% /run</span><br><span class="line">tmpfs                     tmpfs      17G     0   17G   0% /sys/fs/cgroup</span><br><span class="line">/dev/mapper/rootvg-lvroot xfs        28G  4.7G   24G  17% /</span><br><span class="line">/dev/sda1                 xfs       1.1G  178M  886M  17% /boot</span><br><span class="line">/dev/sdb1                 xfs       1.1T   34M  1.1T   1% /opt</span><br><span class="line">/dev/mapper/rootvg-lvhome xfs       1.1G   34M  1.1G   4% /home</span><br><span class="line">/dev/mapper/rootvg-lvvar  xfs        11G  320M   11G   3% /var</span><br><span class="line">tmpfs                     tmpfs     3.4G   13k  3.4G   1% /run/user/42</span><br><span class="line">tmpfs                     tmpfs     3.4G     0  3.4G   0% /run/user/1000</span><br></pre></td></tr></table></figure>
+
+
+
+表示新建分区**“/dev/sdb1”**已挂载至“/opt”。
+
+
+
+说明：
+
+服务器重启后，挂载会失效。您可以修改“/etc/fstab”文件，将新建磁盘分区设置为开机自动挂载
+</code></pre>
+<h4 id="设置开机自动挂载磁盘分区"><a href="#设置开机自动挂载磁盘分区" class="headerlink" title="设置开机自动挂载磁盘分区"></a>设置开机自动挂载磁盘分区</h4><p>设置云服务器系统启动时自动挂载磁盘分区，不能采用在“&#x2F;etc&#x2F;fstab”直接指定设备名（比如&#x2F;dev&#x2F;sdb1）的方法，因为设备的顺序编码在关闭或者开启服务器过程中可能发生改变，例如&#x2F;dev&#x2F;sdb1可能会变成&#x2F;dev&#x2F;sdb2。推荐使用UUID来配置自动挂载磁盘分区。</p>
+<p>说明：</p>
+<p>UUID（universally unique identifier）是Linux系统为磁盘分区提供的唯一的标识字符串。</p>
+<ol>
+<li><p>执行如下命令，查询磁盘分区的UUID。</p>
+<p><strong>blkid</strong> <em>磁盘分区</em></p>
+<p>以查询磁盘分区<strong>“&#x2F;dev&#x2F;sdb1”</strong>的UUID为例：</p>
+<p><strong>blkid &#x2F;dev&#x2F;sdb1</strong></p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# blkid /dev/sdb1</span><br><span class="line">/dev/sdb1: UUID=&quot;94a71f8e-1900-41d5-82c8-9e79b6754981&quot; TYPE=&quot;xfs&quot; </span><br></pre></td></tr></table></figure>
+
+
+
+<p>表示<strong>“&#x2F;dev&#x2F;sdb1”</strong>的UUID。</p>
+</li>
+<li><p>执行以下命令，使用VI编辑器打开“fstab”文件。</p>
+<p><strong>vim &#x2F;etc&#x2F;fstab</strong></p>
+</li>
+<li><p>按“i”，进入编辑模式。</p>
+</li>
+<li><p>将光标移至文件末尾，按“Enter”，添加如下内容。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UUID=94a71f8e-1900-41d5-82c8-9e79b6754981 /opt  xfs defaults    0 0</span><br></pre></td></tr></table></figure>
+
+
+
+<p>以内容上仅为示例，具体请以实际情况为准，参数说明如下：</p>
+<ul>
+<li><p>第一列为UUID，此处填写<a target="_blank" rel="noopener" href="https://support.huaweicloud.com/qs-ecs/zh-cn_topic_0085634797.html#zh-cn_topic_0085634797__zh-cn_topic_0044524669_li840964143216">1</a>中查询到的磁盘分区的UUID。</p>
+</li>
+<li><p>第二列为磁盘分区的挂载目录，可以通过<strong>df -TH</strong>命令查询。</p>
+</li>
+<li><p>第三列为磁盘分区的文件系统格式， 可以通过<strong>df -TH</strong>命令查询。</p>
+</li>
+<li><p>第四列为磁盘分区的挂载选项，此处通常设置为defaults即可。</p>
+</li>
+<li><p>第五列为Linux dump备份选项。</p>
+<ul>
+<li>0表示不使用Linux dump备份。现在通常不使用dump备份，此处设置为0即可。</li>
+<li>1表示使用Linux dump备份。</li>
+</ul>
+</li>
+<li><p>第六列为fsck选项，即开机时是否使用fsck检查磁盘。</p>
+<ul>
+<li><p>0表示不检验。</p>
+</li>
+<li><p>挂载点为（&#x2F;）根目录的分区，此处必须填写1。</p>
+<p>根分区设置为1，其他分区只能从2开始，系统会按照数字从小到大依次检查下去。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>按“ESC”后，输入“:wq”，按“Enter”。</p>
+<p>保存设置并退出编辑器。</p>
+</li>
+<li><p>执行以下步骤，验证自动挂载功能。</p>
+<ol>
+<li><p>执行如下命令，卸载已挂载的分区。</p>
+<p><strong>umount</strong> <em>磁盘分区</em></p>
+<p>命令示例：</p>
+<p><strong>umount &#x2F;dev&#x2F;sdb1</strong></p>
+</li>
+<li><p>执行如下命令，将“&#x2F;etc&#x2F;fstab”文件所有内容重新加载。</p>
+<p><strong>mount -a</strong></p>
+</li>
+<li><p>执行如下命令，查询文件系统挂载信息。</p>
+<p><strong>mount</strong> <strong>|</strong> <strong>grep</strong> <em>挂载目录</em></p>
+<p>命令示例：</p>
+<p><strong>mount</strong> <strong>|</strong> <strong>grep</strong> <strong>&#x2F;opt</strong></p>
+<p>回显类似如下信息，说明自动挂载功能生效：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@DB-Sub12003574 etc]# mount | grep /opt</span><br><span class="line">/dev/mapper/rootvg-lvopt on /opt type xfs (rw,relatime,attr2,inode64,noquota)</span><br><span class="line">/dev/sdb1 on /opt type xfs (rw,relatime,attr2,inode64,noquota)</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/05/07/linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%BD%A2%E5%BC%8F/" rel="prev" title="常用的磁盘分区形式">
+                  <i class="fa fa-chevron-left"></i> 常用的磁盘分区形式
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/05/07/%E8%BF%90%E7%BB%B4%E5%AE%89%E5%85%A8%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%B1%82%E6%AC%A1/" rel="next" title="运维安全的四个层次">
+                  运维安全的四个层次 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">pengzhizhuo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

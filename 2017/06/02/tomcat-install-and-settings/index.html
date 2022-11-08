@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"javabk.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Tomcat 8 安装 Tomcat 8 安装 官网：http:&#x2F;&#x2F;tomcat.apache.org&#x2F; Tomcat 8 官网下载：http:&#x2F;&#x2F;tomcat.apache.org&#x2F;download-80.cgi 此时（20170602） Tomcat 8 最新版本为：apache-tomcat-8.5.15.tar.gz Tomcat 8 下载：wget http:&#x2F;&#x2F;mirror.bit.e">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tomcat8安装配置优化">
+<meta property="og:url" content="http://javabk.com/2017/06/02/tomcat-install-and-settings/index.html">
+<meta property="og:site_name" content="JAVABK">
+<meta property="og:description" content="Tomcat 8 安装 Tomcat 8 安装 官网：http:&#x2F;&#x2F;tomcat.apache.org&#x2F; Tomcat 8 官网下载：http:&#x2F;&#x2F;tomcat.apache.org&#x2F;download-80.cgi 此时（20170602） Tomcat 8 最新版本为：apache-tomcat-8.5.15.tar.gz Tomcat 8 下载：wget http:&#x2F;&#x2F;mirror.bit.e">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-06-02T10:43:44.000Z">
+<meta property="article:modified_time" content="2018-04-27T16:18:01.391Z">
+<meta property="article:author" content="pengzhizhuo">
+<meta property="article:tag" content="tomcat">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://javabk.com/2017/06/02/tomcat-install-and-settings/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://javabk.com/2017/06/02/tomcat-install-and-settings/","path":"2017/06/02/tomcat-install-and-settings/","title":"tomcat8安装配置优化"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>tomcat8安装配置优化 | JAVABK</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">JAVABK</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">认清明天的去向，不忘昨日的来处</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tomcat-8-%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">Tomcat 8 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tomcat-8-%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">Tomcat 8 配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tomcat-8-%E5%AE%89%E5%85%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">Tomcat 8 安全配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM-%E4%BC%98%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">JVM 优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tomcat-8-%E7%9A%84-Log-%E5%88%86%E5%89%B2"><span class="nav-number">5.</span> <span class="nav-text">Tomcat 8 的 Log 分割</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tomcat-%E8%BF%9C%E7%A8%8B%E7%9B%91%E6%8E%A7"><span class="nav-number">6.</span> <span class="nav-text">Tomcat 远程监控</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">pengzhizhuo</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://javabk.com/2017/06/02/tomcat-install-and-settings/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="pengzhizhuo">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JAVABK">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="tomcat8安装配置优化 | JAVABK">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          tomcat8安装配置优化
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-06-02 18:43:44" itemprop="dateCreated datePublished" datetime="2017-06-02T18:43:44+08:00">2017-06-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2018-04-28 00:18:01" itemprop="dateModified" datetime="2018-04-28T00:18:01+08:00">2018-04-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">Java架构</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="Tomcat-8-安装"><a href="#Tomcat-8-安装" class="headerlink" title="Tomcat 8 安装"></a>Tomcat 8 安装</h2><ul>
+<li>Tomcat 8 安装<ul>
+<li>官网：<a target="_blank" rel="noopener" href="http://tomcat.apache.org/">http://tomcat.apache.org/</a></li>
+<li>Tomcat 8 官网下载：<a target="_blank" rel="noopener" href="http://tomcat.apache.org/download-80.cgi">http://tomcat.apache.org/download-80.cgi</a></li>
+<li>此时（20170602） Tomcat 8 最新版本为：<code>apache-tomcat-8.5.15.tar.gz</code></li>
+<li>Tomcat 8 下载：<code>wget http://mirror.bit.edu.cn/apache/tomcat/tomcat-8/v8.5.15/bin/apache-tomcat-8.5.15.tar.gz</code></li>
+<li>压缩包解压：<code>tar -zxvf apache-tomcat-8.5.15.tar.gz</code></li>
+<li>移到解压出来文件夹到 &#x2F;usr&#x2F;local 下：<code>mv apache-tomcat-8.5.15/ /usr/local/</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="Tomcat-8-配置"><a href="#Tomcat-8-配置" class="headerlink" title="Tomcat 8 配置"></a>Tomcat 8 配置</h2><ul>
+<li>设置 Tomcat 相关变量：<ul>
+<li><code>vim /usr/local/tomcat8/bin/catalina.sh</code></li>
+<li>在配置文件的可编辑内容最上面（98 行开始），加上如下内容（具体参数根据你服务器情况自行修改）：  <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">JAVA_HOME</span>=/usr/local/jdk1.<span class="number">8.0</span>_72</span><br><span class="line">   <span class="attr">CATALINA_HOME</span>=/usr/local/tomcat8</span><br><span class="line">   <span class="attr">CATALINA_OPTS</span>=<span class="string">&quot;-Dfile.encoding=UTF-8 -server -Xms2048m -Xmx2048m -Xmn1024m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</span></span><br><span class="line">   <span class="attr">CATALINA_PID</span>=<span class="variable">$CATALINA_HOME</span>/catalina.pid</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>如果使用 <code>shutdown.sh</code> 还无法停止 tomcat，可以修改其配置：<code>vim /usr/local/tomcat8/bin/shutdown.sh</code><ul>
+<li>把最尾巴这一行：<code>exec &quot;$PRGDIR&quot;/&quot;$EXECUTABLE&quot; stop &quot;$@&quot;</code></li>
+<li>改为：<code>exec &quot;$PRGDIR&quot;/&quot;$EXECUTABLE&quot; stop 10 -force</code></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="Tomcat-8-安全配置"><a href="#Tomcat-8-安全配置" class="headerlink" title="Tomcat 8 安全配置"></a>Tomcat 8 安全配置</h2><p>默认tomcat是root身份运行的，这样不安全，不要使用root用户启动tomcat。</p>
+<p>Java程序与C程序不同，nginx,httpd 使用root用户启动守护80端口，子进程&#x2F;线程会通过setuid(),setgid()两个函数切换到普通用户。即父进程所有者是root用户，子进程与多线程所有者是一个非root用户，这个用户没有shell，无法通过ssh与控制台登陆系统，Java 的JVM 是与系统无关的，是建立在OS之上的，你使用什么用户启动Tomcat，那么Tomcat 就会继承该所有者的权限。</p>
+<p>为了防止 Tomcat 被植入 web shell 程序后，可以修改项目文件。因此我们要将 Tomcat 和项目的属主做分离，这样子，即便被搞，他也无法创建和编辑项目文件。<br>设置普通用户，用来启动tomcat</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># groupadd tomcat</span></span><br><span class="line">[root@localhost ~]<span class="comment"># useradd -g tomcat tomcat</span></span><br><span class="line">[root@localhost ~]<span class="comment"># passwd tomcat</span></span><br><span class="line">[root@localhost ~]<span class="comment"># chown tomcat.tomcat -R /usr/local/tomcat8</span></span><br><span class="line">[root@localhost ~]<span class="comment"># su - tomcat /usr/local/tomcat8/bin/startup.sh</span></span><br><span class="line">[root@localhost ~]<span class="comment"># echo &#x27;su - tomcat -c &quot;tomcat /usr/local/tomcat8/bin/startup.sh&quot;&#x27; &gt;&gt; /etc/rc.local  #开机启动</span></span><br><span class="line"></span><br><span class="line">```    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## Tomcat 8 优化</span></span><br><span class="line"></span><br><span class="line">- Tomcat 6/7/8 的优化参数有点不一样，最好按下面的方式看一下官网这个文档是否还保留着这个参数</span><br><span class="line">- 启动tomcat，访问该地址，下面要讲解的一些配置信息，在该文档下都有说明的：</span><br><span class="line">	- 文档：&lt;http://127.0.0.1:8080/docs/config&gt;</span><br><span class="line">	- 你也可以直接看网络版本：</span><br><span class="line">		- Tomcat 6 文档：&lt;https://tomcat.apache.org/tomcat-6.0-doc/config&gt;</span><br><span class="line">		- Tomcat 7 文档：&lt;https://tomcat.apache.org/tomcat-7.0-doc/config/&gt;</span><br><span class="line">		- Tomcat 8 文档：&lt;https://tomcat.apache.org/tomcat-8.0-doc/config/&gt;</span><br><span class="line">- 如果你需要查看 Tomcat 的运行状态可以配置tomcat管理员账户，然后登陆 Tomcat 后台进行查看</span><br><span class="line">- 编辑 /opt/tomcat7/bin/conf/tomcat-users.xml 文件，在里面添加下面信息：</span><br><span class="line">``` xml</span><br><span class="line">&lt;role rolename=<span class="string">&quot;manager&quot;</span>/&gt;</span><br><span class="line">&lt;role rolename=<span class="string">&quot;manager-gui&quot;</span>/&gt;</span><br><span class="line">&lt;role rolename=<span class="string">&quot;admin&quot;</span>/&gt;</span><br><span class="line">&lt;role rolename=<span class="string">&quot;admin-gui&quot;</span>/&gt;</span><br><span class="line">&lt;user username=<span class="string">&quot;tomcat&quot;</span> password=<span class="string">&quot;tomcat&quot;</span> roles=<span class="string">&quot;admin-gui,admin,manager-gui,manager&quot;</span>/&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>编辑配置文件：<code>vim /usr/local/tomcat8/conf/server.xml</code><ul>
+<li>打开默认被注释的连接池配置：<ul>
+<li>默认值：  <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">&lt;Executor name=&quot;tomcatThreadPool&quot; namePrefix=&quot;catalina-exec-&quot;</span></span><br><span class="line"><span class="comment">    maxThreads=&quot;150&quot; minSpareThreads=&quot;4&quot;/&gt;</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>修改为：  <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Executor</span></span></span><br><span class="line"><span class="tag">        <span class="attr">name</span>=<span class="string">&quot;tomcatThreadPool&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">namePrefix</span>=<span class="string">&quot;catalina-exec-&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">maxThreads</span>=<span class="string">&quot;500&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">minSpareThreads</span>=<span class="string">&quot;30&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">maxIdleTime</span>=<span class="string">&quot;60000&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">prestartminSpareThreads</span> = <span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">maxQueueSize</span> = <span class="string">&quot;100&quot;</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>重点参数解释：<ul>
+<li>maxThreads，最大并发数，默认设置 200，一般建议在 500 ~ 800，根据硬件设施和业务来判断</li>
+<li>minSpareThreads，Tomcat 初始化时创建的线程数，默认设置 25</li>
+<li>prestartminSpareThreads，在 Tomcat 初始化的时候就初始化 minSpareThreads 的参数值，如果不等于 true，minSpareThreads 的值就没啥效果了</li>
+<li>maxQueueSize，最大的等待队列数，超过则拒绝请求</li>
+<li>maxIdleTime，如果当前线程大于初始化线程，那空闲线程存活的时间，单位毫秒，默认60000&#x3D;60秒&#x3D;1分钟。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>修改默认的链接参数配置：<ul>
+<li><p>默认值：</p>
+  <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Connector</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">port</span>=<span class="string">&quot;8080&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">protocol</span>=<span class="string">&quot;HTTP/1.1&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">connectionTimeout</span>=<span class="string">&quot;20000&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">redirectPort</span>=<span class="string">&quot;8443&quot;</span> </span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>修改为：</p>
+  <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Connector</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">executor</span>=<span class="string">&quot;tomcatThreadPool&quot;</span></span></span><br><span class="line"><span class="tag">   <span class="attr">port</span>=<span class="string">&quot;8080&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">protocol</span>=<span class="string">&quot;org.apache.coyote.http11.Http11Nio2Protocol&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">connectionTimeout</span>=<span class="string">&quot;20000&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">maxConnections</span>=<span class="string">&quot;10000&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">redirectPort</span>=<span class="string">&quot;8443&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">enableLookups</span>=<span class="string">&quot;false&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">acceptCount</span>=<span class="string">&quot;100&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">maxPostSize</span>=<span class="string">&quot;10485760&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">maxHttpHeaderSize</span>=<span class="string">&quot;8192&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">compression</span>=<span class="string">&quot;on&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">disableUploadTimeout</span>=<span class="string">&quot;true&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">compressionMinSize</span>=<span class="string">&quot;2048&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">acceptorThreadCount</span>=<span class="string">&quot;2&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">compressableMimeType</span>=<span class="string">&quot;text/html,text/xml,text/plain,text/css,text/javascript,application/javascript&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">URIEncoding</span>=<span class="string">&quot;utf-8&quot;</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>重点参数解释：</p>
+<ul>
+<li>protocol，Tomcat 8 设置 nio2 更好：org.apache.coyote.http11.Http11Nio2Protocol（如果这个用不了，就用下面那个）</li>
+<li>protocol，Tomcat 6、7 设置 nio 更好：org.apache.coyote.http11.Http11NioProtocol</li>
+</ul>
+<blockquote>
+<p>BIO：一个线程处理一个请求。缺点：并发量高时，线程数较多，浪费资源。Tomcat7或以- 下，在Linux系统中默认使用这种方式。<br>NIO：利用Java的异步IO处理，可以通过少量的线程处理大量的请求。Tomcat8在Linux系统中默认使用这种方式。<br>APR：即Apache Portable Runtime，从操作系统层面解决io阻塞问题。Tomcat7或Tomcat8在Win7或以上的系统中启动默认使用这种方式。Linux如果安装了apr和native，Tomcat直接启动就支持apr。（安装方法：<a target="_blank" rel="noopener" href="http://www.cnblogs.com/nb-blog/p/5278502.html%EF%BC%89">http://www.cnblogs.com/nb-blog/p/5278502.html）</a></p>
+</blockquote>
+<ul>
+<li>enableLookups，禁用DNS查询</li>
+<li>acceptCount，指定当所有可以使用的处理请求的线程数都被使用时，可以放到处理队列中的请求数，超过这个数的请求将不予处理，默认设置 100</li>
+<li>maxPostSize，以 FORM URL 参数方式的 POST 提交方式，限制提交最大的大小，默认是 2097152(2兆)，它使用的单位是字节。10485760 为 10M。如果要禁用限制，则可以设置为 -1。</li>
+<li>acceptorThreadCount，用于接收连接的线程的数量，默认值是1。一般这个指需要改动的时候是因为该服务器是一个多核CPU，如果是多核 CPU 一般配置为 2.</li>
+<li>maxHttpHeaderSize，http请求头信息的最大程度，超过此长度的部分不予处理。一般8K。</li>
+<li>compression：传输时是压缩。</li>
+<li>compressionMinSize：压缩的大小 </li>
+<li>noCompressionUserAgents：不启用压缩的浏览器<blockquote>
+<p>提示：压缩会增加Tomcat负担，最好采用Nginx + Tomcat 或者 Apache + Tomcat 方式，压缩交由Nginx&#x2F;Apache 去做。</p>
+</blockquote>
+<p>  Tomcat 的压缩是在客户端请求服务器对应资源后，从服务器端将资源文件压缩，再输出到客户端，由客户端的浏览器负责解压缩并浏览。相对于普通的 浏览过程 HTML、CSS、Javascript和Text，它可以节省40% 左右的流量。更为重要的是，它可以对动态生成的，包括CGI、PHP、JSP、ASP、Servlet,SHTML等输出的网页也能进行压缩，压缩效率也很高。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>禁用 AJP（如果你服务器没有使用 Apache） <ul>
+<li>把下面这一行注释掉，默认 Tomcat 是开启的。  <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- &lt;Connector port=&quot;8009&quot; protocol=&quot;AJP/1.3&quot; redirectPort=&quot;8443&quot; /&gt; --&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="JVM-优化"><a href="#JVM-优化" class="headerlink" title="JVM 优化"></a>JVM 优化</h2><ul>
+<li>模型资料来源：<a target="_blank" rel="noopener" href="http://xmuzyq.iteye.com/blog/599750">http://xmuzyq.iteye.com/blog/599750</a></li>
+<li>配比资料：<a target="_blank" rel="noopener" href="http://www.jianshu.com/p/d45e12241af4">http://www.jianshu.com/p/d45e12241af4</a></li>
+<li>Java 的内存模型分为：<ul>
+<li>Young，年轻代（易被 GC）。Young 区被划分为三部分，Eden 区和两个大小严格相同的 Survivor 区，其中 Survivor 区间中，某一时刻只有其中一个是被使用的，另外一个留做垃圾收集时复制对象用，在 Young 区间变满的时候，minor GC 就会将存活的对象移到空闲的Survivor 区间中，根据 JVM 的策略，在经过几次垃圾收集后，任然存活于 Survivor 的对象将被移动到 Tenured  区间。</li>
+<li>Tenured，终身代。Tenured 区主要保存生命周期长的对象，一般是一些老的对象，当一些对象在 Young 复制转移一定的次数以后，对象就会被转移到 Tenured 区，一般如果系统中用了 application 级别的缓存，缓存中的对象往往会被转移到这一区间。</li>
+<li>Perm，永久代。主要保存 class,method,filed 对象，这部门的空间一般不会溢出，除非一次性加载了很多的类，不过在涉及到热部署的应用服务器的时候，有时候会遇到 java.lang.OutOfMemoryError : PermGen space 的错误，造成这个错误的很大原因就有可能是每次都重新部署，但是重新部署后，类的 class 没有被卸载掉，这样就造成了大量的 class 对象保存在了 perm 中，这种情况下，一般重新启动应用服务器可以解决问题。</li>
+</ul>
+</li>
+<li>Linux 修改 &#x2F;usr&#x2F;program&#x2F;tomcat7&#x2F;bin&#x2F;catalina.sh 文件，把下面信息添加到文件第一行。<ul>
+<li>如果服务器只运行一个 Tomcat<ul>
+<li>机子内存如果是 4G：<ul>
+<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms2048m -Xmx2048m -Xmn1024m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
+</ul>
+</li>
+<li>机子内存如果是 8G：<ul>
+<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms4096m -Xmx4096m -Xmn2048m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
+</ul>
+</li>
+<li>机子内存如果是 16G：<ul>
+<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms8192m -Xmx8192m -Xmn4096m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
+</ul>
+</li>
+<li>机子内存如果是 32G：<ul>
+<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms16384m -Xmx16384m -Xmn8192m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>如果是 8G 开发机<ul>
+<li><code>-Xms2048m -Xmx2048m -XX:NewSize=512m -XX:MaxNewSize=1024m -XX:PermSize=256m -XX:MaxPermSize=512m</code></li>
+</ul>
+</li>
+<li>如果是 16G 开发机<ul>
+<li><code>-Xms4096m -Xmx4096m -XX:NewSize=1024m -XX:MaxNewSize=2048m -XX:PermSize=256m -XX:MaxPermSize=512m</code></li>
+</ul>
+</li>
+<li>参数说明：  <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">-Dfile.encoding：默认文件编码</span><br><span class="line">-server：表示这是应用于服务器的配置，<span class="attribute">JVM</span> 内部会有特殊处理的</span><br><span class="line">-Xmx1024m：设置JVM最大可用内存为1024MB</span><br><span class="line">-Xms1024m：设置JVM最小内存为<span class="number">1024m</span>。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存。</span><br><span class="line">-Xmn1024m：设置JVM新生代大小（JDK1.<span class="number">4</span>之后版本）。一般-Xmn的大小是-Xms的<span class="number">1</span>/<span class="number">2</span>左右，不要设置的过大或过小，过大导致老年代变小，频繁Full GC，过小导致minor GC频繁。如果不设置-Xmn，可以采用-XX:NewRatio=<span class="number">2</span>来设置，也是一样的效果</span><br><span class="line">-XX:NewSize：设置新生代大小</span><br><span class="line">-XX:MaxNewSize：设置最大的新生代大小</span><br><span class="line">-XX:PermSize：设置永久代大小</span><br><span class="line">-XX:MaxPermSize：设置最大永久代大小</span><br><span class="line">-XX:NewRatio=<span class="number">4</span>：设置年轻代（包括 Eden 和两个 Survivor 区）与终身代的比值（除去永久代）。设置为 <span class="number">4</span>，则年轻代与终身代所占比值为 <span class="number">1</span>：<span class="number">4</span>，年轻代占整个堆栈的 <span class="number">1</span>/<span class="number">5</span></span><br><span class="line">-XX:MaxTenuringThreshold=<span class="number">10</span>：设置垃圾最大年龄，默认为：<span class="number">15</span>。如果设置为 <span class="number">0</span> 的话，则年轻代对象不经过 Survivor 区，直接进入年老代。对于年老代比较多的应用，可以提高效率。如果将此值设置为一个较大值，则年轻代对象会在 Survivor 区进行多次复制，这样可以增加对象再年轻代的存活时间，增加在年轻代即被回收的概论。需要注意的是，设置了 -XX:MaxTenuringThreshold，并不代表着，对象一定在年轻代存活<span class="number">15</span>次才被晋升进入老年代，它只是一个最大值，事实上，存在一个动态计算机制，计算每次晋入老年代的阈值，取阈值和MaxTenuringThreshold中较小的一个为准。</span><br><span class="line">-XX:+DisableExplicitGC：这个将会忽略手动调用 GC 的代码使得 System.gc() 的调用就会变成一个空调用，完全不会触发任何 GC</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>Windows 修改 &#x2F;tomcat8&#x2F;bin&#x2F;catalina.bat 文件，找到这一行：<code>echo Using CATALINA_BASE:   &quot;%CATALINA_BASE%&quot;</code>，然后在其上面添加如下内容，此方法只对解压版的 Tomcat 有效果，对于安装版本的需要点击安装后任务栏上的那个 Tomcat 图标，打开配置中有一个 <code>Java</code> Tab 的进行编辑。<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">set</span> JAVA_OPTS=%JAVA_OPTS% -Dfile.encoding=<span class="string">&quot;UTF-8&quot;</span> -Dsun.jnu.encoding=<span class="string">&quot;UTF8&quot;</span> -Ddefault.client.encoding=<span class="string">&quot;UTF-8&quot;</span> -Duser.language=Zh</span><br><span class="line">set JAVA_OPTS=%JAVA_OPTS% -server -Xms4096m -Xmx4096m -Xmn2048m -XX:PermSize=<span class="number">256m</span> -XX:MaxPermSize=<span class="number">512m</span> -XX:SurvivorRatio=<span class="number">10</span> -XX:MaxTenuringThreshold=<span class="number">15</span> -XX:NewRatio=<span class="number">2</span> -XX:+DisableExplicitGC</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Tomcat-8-的-Log-分割"><a href="#Tomcat-8-的-Log-分割" class="headerlink" title="Tomcat 8 的 Log 分割"></a>Tomcat 8 的 Log 分割</h2><ul>
+<li>修改前提：本人为 Tomcat8.5，安装目录为：&#x2F;usr&#x2F;local&#x2F;tomcat8</li>
+<li>网络上的官网地址现在打不开：<a target="_blank" rel="noopener" href="http://cronolog.org/download/index.html">http://cronolog.org/download/index.html</a></li>
+<li>阿里云的 CentOS 有 epel 源所以可以直接下载：<code>yum install cronolog</code>，当前版本为：1.6.2-10.el6</li>
+<li>安装完后，查看下安装后的目录位置：<code>which cronolog</code>，我这边得到的结果是：<code>/usr/sbin/cronolog</code>，记下这个结果，后面有用到。</li>
+<li>修改 catalina.sh 中的内容：<code>vim /usr/local/tomcat8/bin/catalina.sh</code></li>
+<li>找到这段代码（预计在 416 行前后）：</li>
+</ul>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">shift</span><br><span class="line">touch &quot;$CATALINA_OUT&quot;</span><br><span class="line">if <span class="section">[ &quot;$1&quot; = &quot;-security&quot; ]</span> <span class="comment">; then</span></span><br><span class="line">if <span class="section">[ $have_tty -eq 1 ]</span><span class="comment">; then</span></span><br><span class="line">  echo &quot;Using Security Manager&quot;</span><br><span class="line">fi</span><br><span class="line">shift</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  -Djava.security.manager \</span><br><span class="line">  <span class="attr">-Djava.security.policy</span>==<span class="string">&quot;\&quot;$CATALINA_BASE/conf/catalina.policy\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start \</span><br><span class="line">  &gt;&gt; &quot;$CATALINA_OUT&quot; 2&gt;&amp;1 &quot;&amp;&quot;</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start \</span><br><span class="line">  &gt;&gt; &quot;$CATALINA_OUT&quot; 2&gt;&amp;1 &quot;&amp;&quot;</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将上面代码改为如下，其中请注意这个关键字：<code>/usr/sbin/cronolog</code>，这个是我上面提到的安装路径，你如果跟我不一样，需要自己修改该相关。</li>
+</ul>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">shift</span><br><span class="line"><span class="comment"># touch &quot;$CATALINA_OUT&quot;</span></span><br><span class="line">if <span class="section">[ &quot;$1&quot; = &quot;-security&quot; ]</span> <span class="comment">; then</span></span><br><span class="line">if <span class="section">[ $have_tty -eq 1 ]</span><span class="comment">; then</span></span><br><span class="line">  echo &quot;Using Security Manager&quot;</span><br><span class="line">fi</span><br><span class="line">shift</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  -Djava.security.manager \</span><br><span class="line">  <span class="attr">-Djava.security.policy</span>==<span class="string">&quot;\&quot;$CATALINA_BASE/conf/catalina.policy\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start 2&gt;&amp;1 | /usr/sbin/cronolog &quot;$CATALINA_BASE&quot;/logs/catalina.%Y-%m-%d.out &gt;&gt; /dev/null &amp;</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start 2&gt;&amp;1 | /usr/sbin/cronolog &quot;$CATALINA_BASE&quot;/logs/catalina.%Y-%m-%d.out &gt;&gt; /dev/null &amp;</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Tomcat-远程监控"><a href="#Tomcat-远程监控" class="headerlink" title="Tomcat 远程监控"></a>Tomcat 远程监控</h2><p>首先检查远程服务器hostname -i<br>192.168.1.190</p>
+<p>1.编辑tomcat&#x2F;bin&#x2F;catalina.sh<br>vi catalina.sh</p>
+<p>搜索 Execute The Requested Command</p>
+<p>在这一行上面加入一下配置</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">JAVA_OPTS</span>=<span class="string">&#x27;-Xms1024m -Xmx1024m -XX:PermSize=256M -XX:MaxNewSize=512m -XX:MaxPermSize=512m -Djava.rmi.server.hostname=192.168.1.190 -Dcom.sun.management.jmxremote.port=8444 -Dcom.sun.management.jmxremote.ssl=false-Dcom.sun.management.jmxremote.authenticate=false&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>2.编辑jmxremote.access和jmxremote.password</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/java/jdk1.6.0_18/jre/lib/management</span><br><span class="line"><span class="built_in">mv</span> jmxremote.password.template jmxremote.password</span><br><span class="line"><span class="built_in">chmod</span> 600 jmxremote.access jmxremote.password</span><br><span class="line">vi jmxremote.password</span><br></pre></td></tr></table></figure>
+
+<p>jmxremote.access 一般保持原始内容不变即可。<br>对于jmxremote.password，将 其中的：<br>monitorRole 123<br>controlRole 123<br>井号注释取消掉。其中monitorRole为只拥有只读权限的角色，controlRole有更高权限：读写等等。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/tomcat/" rel="tag"># tomcat</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/05/09/spring-resource-properties/" rel="prev" title="利用Spring的Resource类读写中文Properties">
+                  <i class="fa fa-chevron-left"></i> 利用Spring的Resource类读写中文Properties
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/05/02/mysql-backup-shell/" rel="next" title="MySQL数据库自动备份脚本">
+                  MySQL数据库自动备份脚本 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">pengzhizhuo</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
