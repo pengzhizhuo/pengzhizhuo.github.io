@@ -120,6 +120,41 @@
       </tags>
   </entry>
   <entry>
+    <title>常用的磁盘分区形式</title>
+    <url>/2020/05/07/linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%BD%A2%E5%BC%8F/</url>
+    <content><![CDATA[<p>常用的磁盘分区形式如表1所示，并且针对Linux操作系统，不同的磁盘分区形式需要选择不同的分区工具。</p>
+<table>
+<thead>
+<tr>
+<th>磁盘分区形式</th>
+<th>支持最大磁盘容量</th>
+<th>支持分区数量</th>
+<th>Linux分区工具</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主启动记录分区（MBR）</td>
+<td>2 TB</td>
+<td>4个主分区 <br />3个主分区和1个扩展分区<br />MBR分区包含主分区和扩展分区，其中扩展分区里面可以包含若干个逻辑分区。扩展分区不可以直接使用，需要划分成若干个逻辑分区才可以使用。以创建6个分区为例，以下两种分区情况供参考：<br />3个主分区，1个扩展分区，其中扩展分区中包含3个逻辑分区。<br />1个主分区，1个扩展分区，其中扩展分区中包含5个逻辑分区。</td>
+<td>以下两种工具均可以使用：fdisk工具parted工具</td>
+</tr>
+<tr>
+<td>全局分区表（GPT, Guid Partition Table）</td>
+<td>18 EB1 EB &#x3D; 1048576 TB</td>
+<td>不限制分区数量GPT格式下没有主分区、扩展分区以及逻辑分区之分。</td>
+<td>parted工具</td>
+</tr>
+</tbody></table>
+<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，如果您需要使用大于2 TB的磁盘容量，分区形式请采用GPT。</p>
+]]></content>
+      <categories>
+        <category>Linux运维</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Git入门</title>
     <url>/2017/03/03/learn-git/</url>
     <content><![CDATA[<h1 id="基本了解"><a href="#基本了解" class="headerlink" title="基本了解"></a>基本了解</h1><p>git命令是一些命令行工具的集合，它可以用来跟踪，记录文件的变动。比如你可以进行保存，比对，分析，合并等等。这个过程被称之为版本控制。已经有一系列的版本控制系统，比如SVN, Mercurial, Perforce, CVS, Bitkeepe等等。</p>
@@ -284,41 +319,6 @@
       </tags>
   </entry>
   <entry>
-    <title>常用的磁盘分区形式</title>
-    <url>/2020/05/07/linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%BD%A2%E5%BC%8F/</url>
-    <content><![CDATA[<p>常用的磁盘分区形式如表1所示，并且针对Linux操作系统，不同的磁盘分区形式需要选择不同的分区工具。</p>
-<table>
-<thead>
-<tr>
-<th>磁盘分区形式</th>
-<th>支持最大磁盘容量</th>
-<th>支持分区数量</th>
-<th>Linux分区工具</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>主启动记录分区（MBR）</td>
-<td>2 TB</td>
-<td>4个主分区 <br />3个主分区和1个扩展分区<br />MBR分区包含主分区和扩展分区，其中扩展分区里面可以包含若干个逻辑分区。扩展分区不可以直接使用，需要划分成若干个逻辑分区才可以使用。以创建6个分区为例，以下两种分区情况供参考：<br />3个主分区，1个扩展分区，其中扩展分区中包含3个逻辑分区。<br />1个主分区，1个扩展分区，其中扩展分区中包含5个逻辑分区。</td>
-<td>以下两种工具均可以使用：fdisk工具parted工具</td>
-</tr>
-<tr>
-<td>全局分区表（GPT, Guid Partition Table）</td>
-<td>18 EB1 EB &#x3D; 1048576 TB</td>
-<td>不限制分区数量GPT格式下没有主分区、扩展分区以及逻辑分区之分。</td>
-<td>parted工具</td>
-</tr>
-</tbody></table>
-<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，如果您需要使用大于2 TB的磁盘容量，分区形式请采用GPT。</p>
-]]></content>
-      <categories>
-        <category>Linux运维</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>CentOS逻辑卷调整分区大小</title>
     <url>/2018/05/04/lvreduce-lvextend/</url>
     <content><![CDATA[<h1 id="CentOS逻辑卷调整分区大小目的"><a href="#CentOS逻辑卷调整分区大小目的" class="headerlink" title="CentOS逻辑卷调整分区大小目的"></a>CentOS逻辑卷调整分区大小目的</h1><p>因为系统使用的是逻辑卷分区（LVM），且分区大小不合理</p>
@@ -342,43 +342,6 @@
         <category>Linux运维</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MySQL数据库自动备份脚本</title>
-    <url>/2018/05/02/mysql-backup-shell/</url>
-    <content><![CDATA[<h1 id="编写数据库备份脚本-mysqlfullbackup-sh"><a href="#编写数据库备份脚本-mysqlfullbackup-sh" class="headerlink" title="编写数据库备份脚本(mysqlfullbackup.sh)"></a>编写数据库备份脚本(mysqlfullbackup.sh)</h1><p>#数据库备份脚本</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="comment">###############################</span></span><br><span class="line"><span class="comment"># 此脚本用来全量备份</span></span><br><span class="line"><span class="comment"># 此文件名：mysqlfullbackup.sh</span></span><br><span class="line"><span class="comment">#  vim /etc/crontab </span></span><br><span class="line"><span class="comment"># 定时任务,计划在每天晚上23点55分进行数据备份(加 &amp; 为后台执行)</span></span><br><span class="line"><span class="comment"># 55 23 * * * root /backup/mysql/full_backup/mysqlfullbackup.sh &amp;</span></span><br><span class="line"><span class="comment"># # /etc/rc.d/init.d/crond restart</span></span><br><span class="line"><span class="comment">###############################</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#备份数据库(多数据库，用逗号隔开)</span></span><br><span class="line">mysql_databases=<span class="string">&quot;test&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#设置用户名和密码</span></span><br><span class="line">mysql_user=<span class="string">&quot;root&quot;</span></span><br><span class="line">mysql_password=<span class="string">&quot;123456&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#mysql安装全路径</span></span><br><span class="line">mysql_dir=/usr/local/mysql-5.6.38</span><br><span class="line"></span><br><span class="line"><span class="comment">#设置备份基本路径</span></span><br><span class="line">backup_dir=/backup/mysql</span><br><span class="line"></span><br><span class="line"><span class="comment">#创建备份文件夹</span></span><br><span class="line">[ -d <span class="variable">$&#123;backup_dir&#125;</span> ] || <span class="built_in">mkdir</span> -p <span class="variable">$&#123;backup_dir&#125;</span></span><br><span class="line"></span><br><span class="line">full_backup_dir=<span class="variable">$backup_dir</span>/full_backup</span><br><span class="line"></span><br><span class="line"><span class="comment">#备份的时间</span></span><br><span class="line">today=$(<span class="built_in">date</span> +<span class="string">&quot;%Y%m%d_%H%M%S&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#备份日志文件</span></span><br><span class="line">log_file=full_backup.log</span><br><span class="line"></span><br><span class="line"><span class="comment">#只保留最近10天的备份（其他删除）</span></span><br><span class="line">time=$(<span class="built_in">date</span> -d <span class="string">&quot;10 day ago&quot;</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#开始备份,记录备份开始时间 并压缩备份文件</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span><span class="variable">$mysql_databases</span><span class="string">&#x27; - &#x27;</span><span class="string">&quot;备份开始\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#判断目标目录是否已经存在</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d <span class="variable">$full_backup_dir</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">mkdir</span> -p <span class="variable">$full_backup_dir</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span><span class="variable">$mysql_databases</span><span class="string">&#x27; - &#x27;</span><span class="string">&quot;备份并压缩备份文件\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#备份并压缩备份文件</span></span><br><span class="line"><span class="variable">$mysql_dir</span>/bin/mysqldump -u<span class="variable">$mysql_user</span> -p<span class="variable">$mysql_password</span>  --databases <span class="variable">$mysql_databases</span> | gzip &gt; <span class="variable">$full_backup_dir</span>/<span class="variable">$mysql_databases</span>.<span class="variable">$today</span>.sql.gz</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[ $? -eq 0 ] &amp;&amp; <span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span>All DB<span class="string">&#x27; - &#x27;</span><span class="string">&quot;备份并压缩备份文件 OK!!!\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#找出10天前备份的文件，然后删除</span></span><br><span class="line"><span class="comment">#echo -e &#x27;[&#x27;$(date +&quot;%Y-%m-%d %H:%M:%S&quot;)&#x27;] - &#x27;$mysql_databases&#x27; - &#x27;&quot;删除10天前的备份\n&quot; &gt;&gt; #$backup_dir/$log_file</span></span><br><span class="line"><span class="comment">#for file in `find -not -type d -mtime +10`</span></span><br><span class="line"><span class="comment">#do</span></span><br><span class="line"><span class="comment">#    mv $file /tmp/</span></span><br><span class="line"><span class="comment">#done</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#基于ssh key认证，mysqldump的远程mysql备份方案</span></span><br><span class="line">copytoremote=1</span><br><span class="line">remoteuser=<span class="string">&quot;root&quot;</span></span><br><span class="line">remoteip=<span class="string">&quot;xx.xx.xxx.xx&quot;</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$copytoremote</span> = 1 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">if</span> [ -z <span class="variable">$remoteuser</span> ];<span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">&quot;remote user not set,Copy to remote Failed ...\n&quot;</span> &gt;&gt; <span class="variable">$log_file</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line">    <span class="keyword">elif</span> [ -z <span class="variable">$remoteip</span> ];<span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">&quot;remote ip not set,Copy to remote Failed ...\n&quot;</span> &gt;&gt; <span class="variable">$log_file</span></span><br><span class="line">        <span class="built_in">exit</span> 2</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span><span class="variable">$mysql_databases</span><span class="string">&#x27; - &#x27;</span><span class="string">&quot;开始使用SSH备份数据文件到远程服务器\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line">        scp <span class="variable">$mysql_databases</span>.<span class="variable">$today</span><span class="string">&quot;.sql.gz&quot;</span> <span class="variable">$remoteuser</span>@<span class="variable">$remoteip</span>:<span class="variable">$full_backup_dir</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span><span class="variable">$mysql_databases</span><span class="string">&#x27; - &#x27;</span><span class="string">&quot;备份完成\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="给脚本添加执行权限"><a href="#给脚本添加执行权限" class="headerlink" title="给脚本添加执行权限"></a>给脚本添加执行权限</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x /backup/mysql/full_backup/mysqlfullbackup.sh</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="定时任务设置"><a href="#定时任务设置" class="headerlink" title="定时任务设置"></a>定时任务设置</h1><p>修改&#x2F;etc&#x2F;crontab   #添加计划任务</p>
-<p> 定时任务,计划在每天晚上23点55分进行数据备份(加 &amp; 为后台执行)</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/crontab </span><br><span class="line"></span><br><span class="line"><span class="comment">#在最后一行添加以下内容</span></span><br><span class="line">55 23 * * * root /backup/mysql/full_backup/mysqlfullbackup.sh &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment">#重启定时任务</span></span><br><span class="line">/etc/rc.d/init.d/crond restart</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="设置免密SSH拷贝备份到远程服务器"><a href="#设置免密SSH拷贝备份到远程服务器" class="headerlink" title="设置免密SSH拷贝备份到远程服务器"></a>设置免密SSH拷贝备份到远程服务器</h1><p>设置远程无密码拷贝</p>
-<p>数据库服务器上执行</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br><span class="line"><span class="comment">#输出，连续回车</span></span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file <span class="keyword">in</span> <span class="built_in">which</span> to save the key (/root/.ssh/id_rsa): </span><br><span class="line">Enter passphrase (empty <span class="keyword">for</span> no passphrase): </span><br><span class="line">Enter same passphrase again: </span><br><span class="line">Your identification has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">60:4d:8e:08:6d:cf:a4:5c:7f:b8:2a:29:62:ce:cf:a4 root@iZ2ze7vlqunx6jumrds0v4Z</span><br><span class="line">The key<span class="string">&#x27;s randomart image is:</span></span><br><span class="line"><span class="string">+--[ RSA 2048]----+</span></span><br><span class="line"><span class="string">|  ..    .        |</span></span><br><span class="line"><span class="string">|   .o.o=         |</span></span><br><span class="line"><span class="string">|   o.*+.o.       |</span></span><br><span class="line"><span class="string">|    o.o.o .      |</span></span><br><span class="line"><span class="string">|        So       |</span></span><br><span class="line"><span class="string">|        .        |</span></span><br><span class="line"><span class="string">|   . . .         |</span></span><br><span class="line"><span class="string">|o.= o .          |</span></span><br><span class="line"><span class="string">|oE.+ .           |</span></span><br><span class="line"><span class="string">+-----------------+</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
-
-<p>会在用户目录~&#x2F;.ssh&#x2F;产生两个文件，id_rsa，id_rsa.pub</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@iZ2ze7vlqunx6jumrds0v4Z .ssh]<span class="comment"># ls</span></span><br><span class="line">id_rsa  id_rsa.pub  </span><br></pre></td></tr></table></figure>
-
-<p>将id_rsa.pub文件拷贝到远程主机的root用户主目录下的.ssh目录下,并且改名为authorized_keys</p>
-<p>这样数据库服务器上使用scp命令复制文件到远程主机上将不提示输入密码了，直接自动复制了</p>
-<p>说明：当远程主机的SSH远程端口修改后，SCP指令要加上端口号：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scp -p 端口号 <span class="variable">$mysql_databases</span>.<span class="variable">$today</span><span class="string">&quot;.sql.gz&quot;</span> <span class="variable">$remoteuser</span>@<span class="variable">$remoteip</span>:<span class="variable">$full_backup_dir</span></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Linux运维</category>
-      </categories>
-      <tags>
-        <tag>MySQL</tag>
         <tag>Linux</tag>
       </tags>
   </entry>
@@ -618,176 +581,172 @@
       </tags>
   </entry>
   <entry>
-    <title>利用Spring的Resource类读写中文Properties</title>
-    <url>/2017/05/09/spring-resource-properties/</url>
-    <content><![CDATA[<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>Spring对Properties的读取进行了完善而全面的封装，对于写则仍需配合FileOutputStream进行。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.oolong.common.util;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.PathMatchingResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.ResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserVar</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">configFile</span> <span class="operator">=</span> <span class="string">&quot;classpath*:param.properties&quot;</span>;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> org.springframework.core.io.Resource resourceWritable;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Properties p;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 注意事项:</span></span><br><span class="line"><span class="comment">   * 1、properties放在source目录下</span></span><br><span class="line"><span class="comment">   * 2、param.properties至少有一对键值对</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">static</span> &#123;</span><br><span class="line">    p = <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">    org.springframework.core.io.Resource[] resources = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="type">ResourcePatternResolver</span> <span class="variable">resolver</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PathMatchingResourcePatternResolver</span>();</span><br><span class="line">      resources = resolver.getResources(configFile);</span><br><span class="line">      <span class="keyword">if</span> (resources != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (org.springframework.core.io.Resource r : resources) &#123;</span><br><span class="line">          <span class="keyword">if</span> (r != <span class="literal">null</span>) &#123;</span><br><span class="line">            p.load(r.getInputStream());</span><br><span class="line">            resourceWritable = r;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e1) &#123;</span><br><span class="line">      e1.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">get</span><span class="params">(String key)</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">v</span> <span class="operator">=</span> (String) p.get(key);</span><br><span class="line">    <span class="keyword">if</span> (v != <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">String</span>(v.getBytes(<span class="string">&quot;ISO-8859-1&quot;</span>), <span class="string">&quot;GBK&quot;</span>);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(String key,String value)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">null</span> != resourceWritable) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">OutputStream</span> <span class="variable">fos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(resourceWritable.getFile());</span><br><span class="line">        <span class="type">Properties</span> <span class="variable">p</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">        p.load(resourceWritable.getInputStream());</span><br><span class="line">        value = <span class="keyword">new</span> <span class="title class_">String</span>(value.getBytes(<span class="string">&quot;GBK&quot;</span>),<span class="string">&quot;ISO-8859-1&quot;</span>);</span><br><span class="line">        p.setProperty(key, value);</span><br><span class="line">        p.store(fos, <span class="literal">null</span>);</span><br><span class="line">        fos.close();</span><br><span class="line">      &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+    <title>MySQL数据库自动备份脚本</title>
+    <url>/2018/05/02/mysql-backup-shell/</url>
+    <content><![CDATA[<h1 id="编写数据库备份脚本-mysqlfullbackup-sh"><a href="#编写数据库备份脚本-mysqlfullbackup-sh" class="headerlink" title="编写数据库备份脚本(mysqlfullbackup.sh)"></a>编写数据库备份脚本(mysqlfullbackup.sh)</h1><p>#数据库备份脚本</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="comment">###############################</span></span><br><span class="line"><span class="comment"># 此脚本用来全量备份</span></span><br><span class="line"><span class="comment"># 此文件名：mysqlfullbackup.sh</span></span><br><span class="line"><span class="comment">#  vim /etc/crontab </span></span><br><span class="line"><span class="comment"># 定时任务,计划在每天晚上23点55分进行数据备份(加 &amp; 为后台执行)</span></span><br><span class="line"><span class="comment"># 55 23 * * * root /backup/mysql/full_backup/mysqlfullbackup.sh &amp;</span></span><br><span class="line"><span class="comment"># # /etc/rc.d/init.d/crond restart</span></span><br><span class="line"><span class="comment">###############################</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#备份数据库(多数据库，用逗号隔开)</span></span><br><span class="line">mysql_databases=<span class="string">&quot;test&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#设置用户名和密码</span></span><br><span class="line">mysql_user=<span class="string">&quot;root&quot;</span></span><br><span class="line">mysql_password=<span class="string">&quot;123456&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#mysql安装全路径</span></span><br><span class="line">mysql_dir=/usr/local/mysql-5.6.38</span><br><span class="line"></span><br><span class="line"><span class="comment">#设置备份基本路径</span></span><br><span class="line">backup_dir=/backup/mysql</span><br><span class="line"></span><br><span class="line"><span class="comment">#创建备份文件夹</span></span><br><span class="line">[ -d <span class="variable">$&#123;backup_dir&#125;</span> ] || <span class="built_in">mkdir</span> -p <span class="variable">$&#123;backup_dir&#125;</span></span><br><span class="line"></span><br><span class="line">full_backup_dir=<span class="variable">$backup_dir</span>/full_backup</span><br><span class="line"></span><br><span class="line"><span class="comment">#备份的时间</span></span><br><span class="line">today=$(<span class="built_in">date</span> +<span class="string">&quot;%Y%m%d_%H%M%S&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#备份日志文件</span></span><br><span class="line">log_file=full_backup.log</span><br><span class="line"></span><br><span class="line"><span class="comment">#只保留最近10天的备份（其他删除）</span></span><br><span class="line">time=$(<span class="built_in">date</span> -d <span class="string">&quot;10 day ago&quot;</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#开始备份,记录备份开始时间 并压缩备份文件</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span><span class="variable">$mysql_databases</span><span class="string">&#x27; - &#x27;</span><span class="string">&quot;备份开始\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#判断目标目录是否已经存在</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d <span class="variable">$full_backup_dir</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">mkdir</span> -p <span class="variable">$full_backup_dir</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span><span class="variable">$mysql_databases</span><span class="string">&#x27; - &#x27;</span><span class="string">&quot;备份并压缩备份文件\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#备份并压缩备份文件</span></span><br><span class="line"><span class="variable">$mysql_dir</span>/bin/mysqldump -u<span class="variable">$mysql_user</span> -p<span class="variable">$mysql_password</span>  --databases <span class="variable">$mysql_databases</span> | gzip &gt; <span class="variable">$full_backup_dir</span>/<span class="variable">$mysql_databases</span>.<span class="variable">$today</span>.sql.gz</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[ $? -eq 0 ] &amp;&amp; <span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span>All DB<span class="string">&#x27; - &#x27;</span><span class="string">&quot;备份并压缩备份文件 OK!!!\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#找出10天前备份的文件，然后删除</span></span><br><span class="line"><span class="comment">#echo -e &#x27;[&#x27;$(date +&quot;%Y-%m-%d %H:%M:%S&quot;)&#x27;] - &#x27;$mysql_databases&#x27; - &#x27;&quot;删除10天前的备份\n&quot; &gt;&gt; #$backup_dir/$log_file</span></span><br><span class="line"><span class="comment">#for file in `find -not -type d -mtime +10`</span></span><br><span class="line"><span class="comment">#do</span></span><br><span class="line"><span class="comment">#    mv $file /tmp/</span></span><br><span class="line"><span class="comment">#done</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#基于ssh key认证，mysqldump的远程mysql备份方案</span></span><br><span class="line">copytoremote=1</span><br><span class="line">remoteuser=<span class="string">&quot;root&quot;</span></span><br><span class="line">remoteip=<span class="string">&quot;xx.xx.xxx.xx&quot;</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$copytoremote</span> = 1 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">if</span> [ -z <span class="variable">$remoteuser</span> ];<span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">&quot;remote user not set,Copy to remote Failed ...\n&quot;</span> &gt;&gt; <span class="variable">$log_file</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line">    <span class="keyword">elif</span> [ -z <span class="variable">$remoteip</span> ];<span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">&quot;remote ip not set,Copy to remote Failed ...\n&quot;</span> &gt;&gt; <span class="variable">$log_file</span></span><br><span class="line">        <span class="built_in">exit</span> 2</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span><span class="variable">$mysql_databases</span><span class="string">&#x27; - &#x27;</span><span class="string">&quot;开始使用SSH备份数据文件到远程服务器\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line">        scp <span class="variable">$mysql_databases</span>.<span class="variable">$today</span><span class="string">&quot;.sql.gz&quot;</span> <span class="variable">$remoteuser</span>@<span class="variable">$remoteip</span>:<span class="variable">$full_backup_dir</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span><span class="variable">$mysql_databases</span><span class="string">&#x27; - &#x27;</span><span class="string">&quot;备份完成\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="给脚本添加执行权限"><a href="#给脚本添加执行权限" class="headerlink" title="给脚本添加执行权限"></a>给脚本添加执行权限</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x /backup/mysql/full_backup/mysqlfullbackup.sh</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="定时任务设置"><a href="#定时任务设置" class="headerlink" title="定时任务设置"></a>定时任务设置</h1><p>修改&#x2F;etc&#x2F;crontab   #添加计划任务</p>
+<p> 定时任务,计划在每天晚上23点55分进行数据备份(加 &amp; 为后台执行)</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/crontab </span><br><span class="line"></span><br><span class="line"><span class="comment">#在最后一行添加以下内容</span></span><br><span class="line">55 23 * * * root /backup/mysql/full_backup/mysqlfullbackup.sh &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment">#重启定时任务</span></span><br><span class="line">/etc/rc.d/init.d/crond restart</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="设置免密SSH拷贝备份到远程服务器"><a href="#设置免密SSH拷贝备份到远程服务器" class="headerlink" title="设置免密SSH拷贝备份到远程服务器"></a>设置免密SSH拷贝备份到远程服务器</h1><p>设置远程无密码拷贝</p>
+<p>数据库服务器上执行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br><span class="line"><span class="comment">#输出，连续回车</span></span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file <span class="keyword">in</span> <span class="built_in">which</span> to save the key (/root/.ssh/id_rsa): </span><br><span class="line">Enter passphrase (empty <span class="keyword">for</span> no passphrase): </span><br><span class="line">Enter same passphrase again: </span><br><span class="line">Your identification has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">60:4d:8e:08:6d:cf:a4:5c:7f:b8:2a:29:62:ce:cf:a4 root@iZ2ze7vlqunx6jumrds0v4Z</span><br><span class="line">The key<span class="string">&#x27;s randomart image is:</span></span><br><span class="line"><span class="string">+--[ RSA 2048]----+</span></span><br><span class="line"><span class="string">|  ..    .        |</span></span><br><span class="line"><span class="string">|   .o.o=         |</span></span><br><span class="line"><span class="string">|   o.*+.o.       |</span></span><br><span class="line"><span class="string">|    o.o.o .      |</span></span><br><span class="line"><span class="string">|        So       |</span></span><br><span class="line"><span class="string">|        .        |</span></span><br><span class="line"><span class="string">|   . . .         |</span></span><br><span class="line"><span class="string">|o.= o .          |</span></span><br><span class="line"><span class="string">|oE.+ .           |</span></span><br><span class="line"><span class="string">+-----------------+</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<p>会在用户目录~&#x2F;.ssh&#x2F;产生两个文件，id_rsa，id_rsa.pub</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@iZ2ze7vlqunx6jumrds0v4Z .ssh]<span class="comment"># ls</span></span><br><span class="line">id_rsa  id_rsa.pub  </span><br></pre></td></tr></table></figure>
+
+<p>将id_rsa.pub文件拷贝到远程主机的root用户主目录下的.ssh目录下,并且改名为authorized_keys</p>
+<p>这样数据库服务器上使用scp命令复制文件到远程主机上将不提示输入密码了，直接自动复制了</p>
+<p>说明：当远程主机的SSH远程端口修改后，SCP指令要加上端口号：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scp -p 端口号 <span class="variable">$mysql_databases</span>.<span class="variable">$today</span><span class="string">&quot;.sql.gz&quot;</span> <span class="variable">$remoteuser</span>@<span class="variable">$remoteip</span>:<span class="variable">$full_backup_dir</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
       <categories>
-        <category>Java架构</category>
+        <category>Linux运维</category>
       </categories>
       <tags>
-        <tag>Spring</tag>
+        <tag>MySQL</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
-    <title>tomcat8安装配置优化</title>
-    <url>/2017/06/02/tomcat-install-and-settings/</url>
-    <content><![CDATA[<h2 id="Tomcat-8-安装"><a href="#Tomcat-8-安装" class="headerlink" title="Tomcat 8 安装"></a>Tomcat 8 安装</h2><ul>
-<li>Tomcat 8 安装<ul>
-<li>官网：<a href="http://tomcat.apache.org/">http://tomcat.apache.org/</a></li>
-<li>Tomcat 8 官网下载：<a href="http://tomcat.apache.org/download-80.cgi">http://tomcat.apache.org/download-80.cgi</a></li>
-<li>此时（20170602） Tomcat 8 最新版本为：<code>apache-tomcat-8.5.15.tar.gz</code></li>
-<li>Tomcat 8 下载：<code>wget http://mirror.bit.edu.cn/apache/tomcat/tomcat-8/v8.5.15/bin/apache-tomcat-8.5.15.tar.gz</code></li>
-<li>压缩包解压：<code>tar -zxvf apache-tomcat-8.5.15.tar.gz</code></li>
-<li>移到解压出来文件夹到 &#x2F;usr&#x2F;local 下：<code>mv apache-tomcat-8.5.15/ /usr/local/</code></li>
+    <title>运维安全的四个层次</title>
+    <url>/2020/05/07/%E8%BF%90%E7%BB%B4%E5%AE%89%E5%85%A8%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%B1%82%E6%AC%A1/</url>
+    <content><![CDATA[<h1 id="运维安全的四个层次"><a href="#运维安全的四个层次" class="headerlink" title="运维安全的四个层次"></a>运维安全的四个层次</h1><h2 id="网络安全"><a href="#网络安全" class="headerlink" title="网络安全"></a>网络安全</h2><h3 id="网络设备的安全"><a href="#网络设备的安全" class="headerlink" title="网络设备的安全"></a>网络设备的安全</h3><ul>
+<li>思科、华为等网络设备定期升级，修复bug和曝出的漏洞</li>
+<li>公网防火墙，核心交换机等核心网络设备的管理</li>
+</ul>
+<h3 id="外网安全策略"><a href="#外网安全策略" class="headerlink" title="外网安全策略"></a>外网安全策略</h3><ul>
+<li>IDC，防火墙策略，严把上行端口开放</li>
+<li>公网上下行流量监控</li>
+<li>对DDos攻击提高警惕，提前准备应急预案<ul>
+<li>临时提高流量，硬抗</li>
+<li>启动流量清洗，将攻击流量引入黑洞，有可能误杀正常用户</li>
 </ul>
 </li>
 </ul>
-<h2 id="Tomcat-8-配置"><a href="#Tomcat-8-配置" class="headerlink" title="Tomcat 8 配置"></a>Tomcat 8 配置</h2><ul>
-<li>设置 Tomcat 相关变量：<ul>
-<li><code>vim /usr/local/tomcat8/bin/catalina.sh</code></li>
-<li>在配置文件的可编辑内容最上面（98 行开始），加上如下内容（具体参数根据你服务器情况自行修改）：  <figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">JAVA_HOME</span>=/usr/local/jdk1.<span class="number">8.0</span>_72</span><br><span class="line">   <span class="attr">CATALINA_HOME</span>=/usr/local/tomcat8</span><br><span class="line">   <span class="attr">CATALINA_OPTS</span>=<span class="string">&quot;-Dfile.encoding=UTF-8 -server -Xms2048m -Xmx2048m -Xmn1024m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</span></span><br><span class="line">   <span class="attr">CATALINA_PID</span>=<span class="variable">$CATALINA_HOME</span>/catalina.pid</span><br></pre></td></tr></table></figure></li>
+<h3 id="专线安全策略"><a href="#专线安全策略" class="headerlink" title="专线安全策略"></a>专线安全策略</h3><ul>
+<li>对涉及金融、支付等项目设立专线</li>
+</ul>
+<h3 id="VPN安全策略"><a href="#VPN安全策略" class="headerlink" title="VPN安全策略"></a>VPN安全策略</h3><ul>
+<li>IPsec VPN：site to site</li>
+<li>OpenVPN： peer to site</li>
+<li>摒弃PPTP等不含加密算法的vpn服务</li>
+<li>端口全禁止，需要通信的申请审批后，再由管理员开放</li>
+</ul>
+<h2 id="数据安全"><a href="#数据安全" class="headerlink" title="数据安全"></a>数据安全</h2><h3 id="数据库用户权限"><a href="#数据库用户权限" class="headerlink" title="数据库用户权限"></a>数据库用户权限</h3><ul>
+<li>管理员权限限定，不允许远程root</li>
+<li>定期更换管理员密码</li>
+<li>应用权限最小化，专人管理</li>
+<li>手动查询权限可审计</li>
+</ul>
+<h3 id="数据库审计设备"><a href="#数据库审计设备" class="headerlink" title="数据库审计设备"></a>数据库审计设备</h3><ul>
+<li>数据库主库不能开一般查询日志（为了性能）</li>
+<li>交换机上镜像流量，接入审计设备，实现实时审计</li>
+<li>不要设计串行在系统里，形成单点和瓶颈</li>
+</ul>
+<h3 id="数据库脱敏"><a href="#数据库脱敏" class="headerlink" title="数据库脱敏"></a>数据库脱敏</h3><ul>
+<li>姓名、身份证、手机号、银行卡号等敏感信息应脱敏处理</li>
+<li>对程序脱敏协同系统架构部共同出规范</li>
+<li>对手动查询权限脱敏，按列授权，录屏</li>
+</ul>
+<h3 id="备份策略"><a href="#备份策略" class="headerlink" title="备份策略"></a>备份策略</h3><ul>
+<li>每周全备，每天增备</li>
+<li>备份文件要每天利用内网流量低谷时间，推送到远程主机，有条件的应跨机房备份</li>
+<li>一定要规划定期恢复测试，保证备份的可用性</li>
+</ul>
+<h2 id="应用安全"><a href="#应用安全" class="headerlink" title="应用安全"></a>应用安全</h2><h3 id="操作系统安全"><a href="#操作系统安全" class="headerlink" title="操作系统安全"></a>操作系统安全</h3><ul>
+<li>系统基础优化（内核优化，优化工具）</li>
+<li>日期，时区同步</li>
+<li>root密码复杂度足够高，需要在操作系统里做定时过期策略</li>
+<li>每三个月使用脚本更新服务器的root密码和iDrac密码，并将更换后的密码加密打包发送给指定管理员邮箱，同时提交gitlab</li>
+<li>对系统关键文件进行md5监控，例如&#x2F;etc&#x2F;passwd，~&#x2F;.ssh&#x2F;authorized_keys文件等，如有变更，触发报警</li>
+<li>定期查毒，漏扫，定期安排更新操作系统</li>
+<li>&#x2F;etc&#x2F;ssh&#x2F;sshd_config里配置：<ul>
+<li>PasswordAuthentication no</li>
+<li>PermitRootLogin without-password</li>
 </ul>
 </li>
-<li>如果使用 <code>shutdown.sh</code> 还无法停止 tomcat，可以修改其配置：<code>vim /usr/local/tomcat8/bin/shutdown.sh</code><ul>
-<li>把最尾巴这一行：<code>exec &quot;$PRGDIR&quot;/&quot;$EXECUTABLE&quot; stop &quot;$@&quot;</code></li>
-<li>改为：<code>exec &quot;$PRGDIR&quot;/&quot;$EXECUTABLE&quot; stop 10 -force</code></li>
+<li>使用saltstack等批量管理软件进行特权命令执行和备份脚本执行（避开ssh协议）</li>
 </ul>
-</li>
+<h3 id="应用系统安全"><a href="#应用系统安全" class="headerlink" title="应用系统安全"></a>应用系统安全</h3><h4 id="WEB应用防火墙（WAF）"><a href="#WEB应用防火墙（WAF）" class="headerlink" title="WEB应用防火墙（WAF）"></a>WEB应用防火墙（WAF）</h4><ul>
+<li>防SQL注入</li>
+<li>防CC攻击</li>
+<li>防XSS跨站脚本</li>
 </ul>
-<span id="more"></span>
-
-<h2 id="Tomcat-8-安全配置"><a href="#Tomcat-8-安全配置" class="headerlink" title="Tomcat 8 安全配置"></a>Tomcat 8 安全配置</h2><p>默认tomcat是root身份运行的，这样不安全，不要使用root用户启动tomcat。</p>
-<p>Java程序与C程序不同，nginx,httpd 使用root用户启动守护80端口，子进程&#x2F;线程会通过setuid(),setgid()两个函数切换到普通用户。即父进程所有者是root用户，子进程与多线程所有者是一个非root用户，这个用户没有shell，无法通过ssh与控制台登陆系统，Java 的JVM 是与系统无关的，是建立在OS之上的，你使用什么用户启动Tomcat，那么Tomcat 就会继承该所有者的权限。</p>
-<p>为了防止 Tomcat 被植入 web shell 程序后，可以修改项目文件。因此我们要将 Tomcat 和项目的属主做分离，这样子，即便被搞，他也无法创建和编辑项目文件。<br>设置普通用户，用来启动tomcat</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># groupadd tomcat</span></span><br><span class="line">[root@localhost ~]<span class="comment"># useradd -g tomcat tomcat</span></span><br><span class="line">[root@localhost ~]<span class="comment"># passwd tomcat</span></span><br><span class="line">[root@localhost ~]<span class="comment"># chown tomcat.tomcat -R /usr/local/tomcat8</span></span><br><span class="line">[root@localhost ~]<span class="comment"># su - tomcat /usr/local/tomcat8/bin/startup.sh</span></span><br><span class="line">[root@localhost ~]<span class="comment"># echo &#x27;su - tomcat -c &quot;tomcat /usr/local/tomcat8/bin/startup.sh&quot;&#x27; &gt;&gt; /etc/rc.local  #开机启动</span></span><br><span class="line"></span><br><span class="line">```    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## Tomcat 8 优化</span></span><br><span class="line"></span><br><span class="line">- Tomcat 6/7/8 的优化参数有点不一样，最好按下面的方式看一下官网这个文档是否还保留着这个参数</span><br><span class="line">- 启动tomcat，访问该地址，下面要讲解的一些配置信息，在该文档下都有说明的：</span><br><span class="line">	- 文档：&lt;http://127.0.0.1:8080/docs/config&gt;</span><br><span class="line">	- 你也可以直接看网络版本：</span><br><span class="line">		- Tomcat 6 文档：&lt;https://tomcat.apache.org/tomcat-6.0-doc/config&gt;</span><br><span class="line">		- Tomcat 7 文档：&lt;https://tomcat.apache.org/tomcat-7.0-doc/config/&gt;</span><br><span class="line">		- Tomcat 8 文档：&lt;https://tomcat.apache.org/tomcat-8.0-doc/config/&gt;</span><br><span class="line">- 如果你需要查看 Tomcat 的运行状态可以配置tomcat管理员账户，然后登陆 Tomcat 后台进行查看</span><br><span class="line">- 编辑 /opt/tomcat7/bin/conf/tomcat-users.xml 文件，在里面添加下面信息：</span><br><span class="line">``` xml</span><br><span class="line">&lt;role rolename=<span class="string">&quot;manager&quot;</span>/&gt;</span><br><span class="line">&lt;role rolename=<span class="string">&quot;manager-gui&quot;</span>/&gt;</span><br><span class="line">&lt;role rolename=<span class="string">&quot;admin&quot;</span>/&gt;</span><br><span class="line">&lt;role rolename=<span class="string">&quot;admin-gui&quot;</span>/&gt;</span><br><span class="line">&lt;user username=<span class="string">&quot;tomcat&quot;</span> password=<span class="string">&quot;tomcat&quot;</span> roles=<span class="string">&quot;admin-gui,admin,manager-gui,manager&quot;</span>/&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="应用系统漏洞"><a href="#应用系统漏洞" class="headerlink" title="应用系统漏洞"></a>应用系统漏洞</h4><ul>
+<li>关注0day漏洞新闻</li>
+<li>及时整改并上线投产</li>
+<li>组织技术力量测试，复现</li>
+</ul>
+<h4 id="日志收集和分析"><a href="#日志收集和分析" class="headerlink" title="日志收集和分析"></a>日志收集和分析</h4><ul>
+<li>完善日志收集方案，集中转储</li>
+<li>通过应用系统日志分析，进行安全预警</li>
+</ul>
+<h4 id="DNS劫持"><a href="#DNS劫持" class="headerlink" title="DNS劫持"></a>DNS劫持</h4><ul>
+<li>全站https，购买泛域名证书</li>
+<li>有条件的可以自己维护公网DNS，上dnssec数字签名</li>
+<li>采购基调、听云等第三方拨测服务，分布式监控网站质量</li>
+<li>向ISP投诉，工信部举报</li>
+</ul>
+<h4 id="Basic-Auth"><a href="#Basic-Auth" class="headerlink" title="Basic Auth"></a>Basic Auth</h4><ul>
+<li>在nginx上做，非常简单</li>
+<li>对防脚本攻击有奇效</li>
+</ul>
+<h3 id="企业邮箱服务器安全"><a href="#企业邮箱服务器安全" class="headerlink" title="企业邮箱服务器安全"></a>企业邮箱服务器安全</h3><h4 id="推荐使用微软的Exchange"><a href="#推荐使用微软的Exchange" class="headerlink" title="推荐使用微软的Exchange"></a>推荐使用微软的Exchange</h4><p>功能强大，维护相对简单</p>
+<h4 id="投产反垃圾邮件网关"><a href="#投产反垃圾邮件网关" class="headerlink" title="投产反垃圾邮件网关"></a>投产反垃圾邮件网关</h4><p>投产梭子鱼反垃圾邮件网关，防伪造发信人</p>
+<h4 id="群发审核管控"><a href="#群发审核管控" class="headerlink" title="群发审核管控"></a>群发审核管控</h4><h4 id="用好邮件组"><a href="#用好邮件组" class="headerlink" title="用好邮件组"></a>用好邮件组</h4><h4 id="接入AD域控"><a href="#接入AD域控" class="headerlink" title="接入AD域控"></a>接入AD域控</h4><h3 id="域名安全管理"><a href="#域名安全管理" class="headerlink" title="域名安全管理"></a>域名安全管理</h3><h4 id="做好ICP备案"><a href="#做好ICP备案" class="headerlink" title="做好ICP备案"></a>做好ICP备案</h4><ul>
+<li>域名证书</li>
+<li>域名实名认证（公司模板）</li>
+<li>接入商处蓝色幕布拍照</li>
+<li>法人身份证、管理员身份证</li>
+<li>网站真实性核验单</li>
+</ul>
+<h4 id="公网解析"><a href="#公网解析" class="headerlink" title="公网解析"></a>公网解析</h4><ul>
+<li>专人管理，邮件申请，审批</li>
+<li>将业务解析至不同公网IP出口，双活机房</li>
+<li>智能解析，解析至不同线路</li>
+<li>如有条件，可购买公网解析套餐服务，安全服务等</li>
+</ul>
+<h2 id="内网安全"><a href="#内网安全" class="headerlink" title="内网安全"></a>内网安全</h2><p>80%以上的企业IT安全问题出自内网安全</p>
+<h3 id="堡垒机"><a href="#堡垒机" class="headerlink" title="堡垒机"></a>堡垒机</h3><ul>
+<li>一定要强制使用堡垒机登录服务器</li>
+<li>ssh私钥通行短语机制，避免密钥失窃</li>
+<li>定期审计堡垒机操作日志</li>
+<li>如果有必要，可以上2FA（双因子验证）</li>
+</ul>
+<h3 id="AD域控"><a href="#AD域控" class="headerlink" title="AD域控"></a>AD域控</h3><p>有条件一定要接入windows域控，要求密码复杂度和定期过期</p>
 <ul>
-<li>编辑配置文件：<code>vim /usr/local/tomcat8/conf/server.xml</code><ul>
-<li>打开默认被注释的连接池配置：<ul>
-<li>默认值：  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">&lt;Executor name=&quot;tomcatThreadPool&quot; namePrefix=&quot;catalina-exec-&quot;</span></span><br><span class="line"><span class="comment">    maxThreads=&quot;150&quot; minSpareThreads=&quot;4&quot;/&gt;</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li>修改为：  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Executor</span></span></span><br><span class="line"><span class="tag">        <span class="attr">name</span>=<span class="string">&quot;tomcatThreadPool&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">namePrefix</span>=<span class="string">&quot;catalina-exec-&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">maxThreads</span>=<span class="string">&quot;500&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">minSpareThreads</span>=<span class="string">&quot;30&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">maxIdleTime</span>=<span class="string">&quot;60000&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">prestartminSpareThreads</span> = <span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">maxQueueSize</span> = <span class="string">&quot;100&quot;</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li>重点参数解释：<ul>
-<li>maxThreads，最大并发数，默认设置 200，一般建议在 500 ~ 800，根据硬件设施和业务来判断</li>
-<li>minSpareThreads，Tomcat 初始化时创建的线程数，默认设置 25</li>
-<li>prestartminSpareThreads，在 Tomcat 初始化的时候就初始化 minSpareThreads 的参数值，如果不等于 true，minSpareThreads 的值就没啥效果了</li>
-<li>maxQueueSize，最大的等待队列数，超过则拒绝请求</li>
-<li>maxIdleTime，如果当前线程大于初始化线程，那空闲线程存活的时间，单位毫秒，默认60000&#x3D;60秒&#x3D;1分钟。</li>
+<li>邮箱</li>
+<li>wifi</li>
+<li>vpn账号密码</li>
+<li>内网系统账号</li>
+<li>业务系统账号</li>
+<li>网络设备等</li>
 </ul>
-</li>
+<h3 id="办公网安全"><a href="#办公网安全" class="headerlink" title="办公网安全"></a>办公网安全</h3><ul>
+<li>专业的HelpDesk团队</li>
+<li>企业级杀毒软件</li>
+<li>办公电脑接入域控</li>
+<li>上网行为管理</li>
+<li>流量监控，mac地址绑定</li>
+<li>有条件的可以在办公环境上一个小型的业务机房</li>
+<li>wifi管控，单做guest接入点，不能访问业务核心网络</li>
 </ul>
-</li>
-<li>修改默认的链接参数配置：<ul>
-<li><p>默认值：</p>
-  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Connector</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">port</span>=<span class="string">&quot;8080&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">protocol</span>=<span class="string">&quot;HTTP/1.1&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">connectionTimeout</span>=<span class="string">&quot;20000&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">redirectPort</span>=<span class="string">&quot;8443&quot;</span> </span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>修改为：</p>
-  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Connector</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">executor</span>=<span class="string">&quot;tomcatThreadPool&quot;</span></span></span><br><span class="line"><span class="tag">   <span class="attr">port</span>=<span class="string">&quot;8080&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">protocol</span>=<span class="string">&quot;org.apache.coyote.http11.Http11Nio2Protocol&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">connectionTimeout</span>=<span class="string">&quot;20000&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">maxConnections</span>=<span class="string">&quot;10000&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">redirectPort</span>=<span class="string">&quot;8443&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">enableLookups</span>=<span class="string">&quot;false&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">acceptCount</span>=<span class="string">&quot;100&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">maxPostSize</span>=<span class="string">&quot;10485760&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">maxHttpHeaderSize</span>=<span class="string">&quot;8192&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">compression</span>=<span class="string">&quot;on&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">disableUploadTimeout</span>=<span class="string">&quot;true&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">compressionMinSize</span>=<span class="string">&quot;2048&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">acceptorThreadCount</span>=<span class="string">&quot;2&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">compressableMimeType</span>=<span class="string">&quot;text/html,text/xml,text/plain,text/css,text/javascript,application/javascript&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">URIEncoding</span>=<span class="string">&quot;utf-8&quot;</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>重点参数解释：</p>
-<ul>
-<li>protocol，Tomcat 8 设置 nio2 更好：org.apache.coyote.http11.Http11Nio2Protocol（如果这个用不了，就用下面那个）</li>
-<li>protocol，Tomcat 6、7 设置 nio 更好：org.apache.coyote.http11.Http11NioProtocol</li>
-</ul>
-<blockquote>
-<p>BIO：一个线程处理一个请求。缺点：并发量高时，线程数较多，浪费资源。Tomcat7或以- 下，在Linux系统中默认使用这种方式。<br>NIO：利用Java的异步IO处理，可以通过少量的线程处理大量的请求。Tomcat8在Linux系统中默认使用这种方式。<br>APR：即Apache Portable Runtime，从操作系统层面解决io阻塞问题。Tomcat7或Tomcat8在Win7或以上的系统中启动默认使用这种方式。Linux如果安装了apr和native，Tomcat直接启动就支持apr。（安装方法：<a href="http://www.cnblogs.com/nb-blog/p/5278502.html%EF%BC%89">http://www.cnblogs.com/nb-blog/p/5278502.html）</a></p>
-</blockquote>
-<ul>
-<li>enableLookups，禁用DNS查询</li>
-<li>acceptCount，指定当所有可以使用的处理请求的线程数都被使用时，可以放到处理队列中的请求数，超过这个数的请求将不予处理，默认设置 100</li>
-<li>maxPostSize，以 FORM URL 参数方式的 POST 提交方式，限制提交最大的大小，默认是 2097152(2兆)，它使用的单位是字节。10485760 为 10M。如果要禁用限制，则可以设置为 -1。</li>
-<li>acceptorThreadCount，用于接收连接的线程的数量，默认值是1。一般这个指需要改动的时候是因为该服务器是一个多核CPU，如果是多核 CPU 一般配置为 2.</li>
-<li>maxHttpHeaderSize，http请求头信息的最大程度，超过此长度的部分不予处理。一般8K。</li>
-<li>compression：传输时是压缩。</li>
-<li>compressionMinSize：压缩的大小 </li>
-<li>noCompressionUserAgents：不启用压缩的浏览器<blockquote>
-<p>提示：压缩会增加Tomcat负担，最好采用Nginx + Tomcat 或者 Apache + Tomcat 方式，压缩交由Nginx&#x2F;Apache 去做。</p>
-</blockquote>
-<p>  Tomcat 的压缩是在客户端请求服务器对应资源后，从服务器端将资源文件压缩，再输出到客户端，由客户端的浏览器负责解压缩并浏览。相对于普通的 浏览过程 HTML、CSS、Javascript和Text，它可以节省40% 左右的流量。更为重要的是，它可以对动态生成的，包括CGI、PHP、JSP、ASP、Servlet,SHTML等输出的网页也能进行压缩，压缩效率也很高。</p>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>禁用 AJP（如果你服务器没有使用 Apache） <ul>
-<li>把下面这一行注释掉，默认 Tomcat 是开启的。  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- &lt;Connector port=&quot;8009&quot; protocol=&quot;AJP/1.3&quot; redirectPort=&quot;8443&quot; /&gt; --&gt;</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="JVM-优化"><a href="#JVM-优化" class="headerlink" title="JVM 优化"></a>JVM 优化</h2><ul>
-<li>模型资料来源：<a href="http://xmuzyq.iteye.com/blog/599750">http://xmuzyq.iteye.com/blog/599750</a></li>
-<li>配比资料：<a href="http://www.jianshu.com/p/d45e12241af4">http://www.jianshu.com/p/d45e12241af4</a></li>
-<li>Java 的内存模型分为：<ul>
-<li>Young，年轻代（易被 GC）。Young 区被划分为三部分，Eden 区和两个大小严格相同的 Survivor 区，其中 Survivor 区间中，某一时刻只有其中一个是被使用的，另外一个留做垃圾收集时复制对象用，在 Young 区间变满的时候，minor GC 就会将存活的对象移到空闲的Survivor 区间中，根据 JVM 的策略，在经过几次垃圾收集后，任然存活于 Survivor 的对象将被移动到 Tenured  区间。</li>
-<li>Tenured，终身代。Tenured 区主要保存生命周期长的对象，一般是一些老的对象，当一些对象在 Young 复制转移一定的次数以后，对象就会被转移到 Tenured 区，一般如果系统中用了 application 级别的缓存，缓存中的对象往往会被转移到这一区间。</li>
-<li>Perm，永久代。主要保存 class,method,filed 对象，这部门的空间一般不会溢出，除非一次性加载了很多的类，不过在涉及到热部署的应用服务器的时候，有时候会遇到 java.lang.OutOfMemoryError : PermGen space 的错误，造成这个错误的很大原因就有可能是每次都重新部署，但是重新部署后，类的 class 没有被卸载掉，这样就造成了大量的 class 对象保存在了 perm 中，这种情况下，一般重新启动应用服务器可以解决问题。</li>
-</ul>
-</li>
-<li>Linux 修改 &#x2F;usr&#x2F;program&#x2F;tomcat7&#x2F;bin&#x2F;catalina.sh 文件，把下面信息添加到文件第一行。<ul>
-<li>如果服务器只运行一个 Tomcat<ul>
-<li>机子内存如果是 4G：<ul>
-<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms2048m -Xmx2048m -Xmn1024m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
-</ul>
-</li>
-<li>机子内存如果是 8G：<ul>
-<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms4096m -Xmx4096m -Xmn2048m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
-</ul>
-</li>
-<li>机子内存如果是 16G：<ul>
-<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms8192m -Xmx8192m -Xmn4096m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
-</ul>
-</li>
-<li>机子内存如果是 32G：<ul>
-<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms16384m -Xmx16384m -Xmn8192m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>如果是 8G 开发机<ul>
-<li><code>-Xms2048m -Xmx2048m -XX:NewSize=512m -XX:MaxNewSize=1024m -XX:PermSize=256m -XX:MaxPermSize=512m</code></li>
-</ul>
-</li>
-<li>如果是 16G 开发机<ul>
-<li><code>-Xms4096m -Xmx4096m -XX:NewSize=1024m -XX:MaxNewSize=2048m -XX:PermSize=256m -XX:MaxPermSize=512m</code></li>
-</ul>
-</li>
-<li>参数说明：  <figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line">-Dfile.encoding：默认文件编码</span><br><span class="line">-server：表示这是应用于服务器的配置，<span class="attribute">JVM</span> 内部会有特殊处理的</span><br><span class="line">-Xmx1024m：设置JVM最大可用内存为1024MB</span><br><span class="line">-Xms1024m：设置JVM最小内存为<span class="number">1024m</span>。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存。</span><br><span class="line">-Xmn1024m：设置JVM新生代大小（JDK1.<span class="number">4</span>之后版本）。一般-Xmn的大小是-Xms的<span class="number">1</span>/<span class="number">2</span>左右，不要设置的过大或过小，过大导致老年代变小，频繁Full GC，过小导致minor GC频繁。如果不设置-Xmn，可以采用-XX:NewRatio=<span class="number">2</span>来设置，也是一样的效果</span><br><span class="line">-XX:NewSize：设置新生代大小</span><br><span class="line">-XX:MaxNewSize：设置最大的新生代大小</span><br><span class="line">-XX:PermSize：设置永久代大小</span><br><span class="line">-XX:MaxPermSize：设置最大永久代大小</span><br><span class="line">-XX:NewRatio=<span class="number">4</span>：设置年轻代（包括 Eden 和两个 Survivor 区）与终身代的比值（除去永久代）。设置为 <span class="number">4</span>，则年轻代与终身代所占比值为 <span class="number">1</span>：<span class="number">4</span>，年轻代占整个堆栈的 <span class="number">1</span>/<span class="number">5</span></span><br><span class="line">-XX:MaxTenuringThreshold=<span class="number">10</span>：设置垃圾最大年龄，默认为：<span class="number">15</span>。如果设置为 <span class="number">0</span> 的话，则年轻代对象不经过 Survivor 区，直接进入年老代。对于年老代比较多的应用，可以提高效率。如果将此值设置为一个较大值，则年轻代对象会在 Survivor 区进行多次复制，这样可以增加对象再年轻代的存活时间，增加在年轻代即被回收的概论。需要注意的是，设置了 -XX:MaxTenuringThreshold，并不代表着，对象一定在年轻代存活<span class="number">15</span>次才被晋升进入老年代，它只是一个最大值，事实上，存在一个动态计算机制，计算每次晋入老年代的阈值，取阈值和MaxTenuringThreshold中较小的一个为准。</span><br><span class="line">-XX:+DisableExplicitGC：这个将会忽略手动调用 GC 的代码使得 System.gc() 的调用就会变成一个空调用，完全不会触发任何 GC</span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-<li>Windows 修改 &#x2F;tomcat8&#x2F;bin&#x2F;catalina.bat 文件，找到这一行：<code>echo Using CATALINA_BASE:   &quot;%CATALINA_BASE%&quot;</code>，然后在其上面添加如下内容，此方法只对解压版的 Tomcat 有效果，对于安装版本的需要点击安装后任务栏上的那个 Tomcat 图标，打开配置中有一个 <code>Java</code> Tab 的进行编辑。<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">set</span> JAVA_OPTS=%JAVA_OPTS% -Dfile.encoding=<span class="string">&quot;UTF-8&quot;</span> -Dsun.jnu.encoding=<span class="string">&quot;UTF8&quot;</span> -Ddefault.client.encoding=<span class="string">&quot;UTF-8&quot;</span> -Duser.language=Zh</span><br><span class="line">set JAVA_OPTS=%JAVA_OPTS% -server -Xms4096m -Xmx4096m -Xmn2048m -XX:PermSize=<span class="number">256m</span> -XX:MaxPermSize=<span class="number">512m</span> -XX:SurvivorRatio=<span class="number">10</span> -XX:MaxTenuringThreshold=<span class="number">15</span> -XX:NewRatio=<span class="number">2</span> -XX:+DisableExplicitGC</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="Tomcat-8-的-Log-分割"><a href="#Tomcat-8-的-Log-分割" class="headerlink" title="Tomcat 8 的 Log 分割"></a>Tomcat 8 的 Log 分割</h2><ul>
-<li>修改前提：本人为 Tomcat8.5，安装目录为：&#x2F;usr&#x2F;local&#x2F;tomcat8</li>
-<li>网络上的官网地址现在打不开：<a href="http://cronolog.org/download/index.html">http://cronolog.org/download/index.html</a></li>
-<li>阿里云的 CentOS 有 epel 源所以可以直接下载：<code>yum install cronolog</code>，当前版本为：1.6.2-10.el6</li>
-<li>安装完后，查看下安装后的目录位置：<code>which cronolog</code>，我这边得到的结果是：<code>/usr/sbin/cronolog</code>，记下这个结果，后面有用到。</li>
-<li>修改 catalina.sh 中的内容：<code>vim /usr/local/tomcat8/bin/catalina.sh</code></li>
-<li>找到这段代码（预计在 416 行前后）：</li>
-</ul>
-<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">shift</span><br><span class="line">touch &quot;$CATALINA_OUT&quot;</span><br><span class="line">if <span class="section">[ &quot;$1&quot; = &quot;-security&quot; ]</span> <span class="comment">; then</span></span><br><span class="line">if <span class="section">[ $have_tty -eq 1 ]</span><span class="comment">; then</span></span><br><span class="line">  echo &quot;Using Security Manager&quot;</span><br><span class="line">fi</span><br><span class="line">shift</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  -Djava.security.manager \</span><br><span class="line">  <span class="attr">-Djava.security.policy</span>==<span class="string">&quot;\&quot;$CATALINA_BASE/conf/catalina.policy\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start \</span><br><span class="line">  &gt;&gt; &quot;$CATALINA_OUT&quot; 2&gt;&amp;1 &quot;&amp;&quot;</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start \</span><br><span class="line">  &gt;&gt; &quot;$CATALINA_OUT&quot; 2&gt;&amp;1 &quot;&amp;&quot;</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>将上面代码改为如下，其中请注意这个关键字：<code>/usr/sbin/cronolog</code>，这个是我上面提到的安装路径，你如果跟我不一样，需要自己修改该相关。</li>
-</ul>
-<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">shift</span><br><span class="line"><span class="comment"># touch &quot;$CATALINA_OUT&quot;</span></span><br><span class="line">if <span class="section">[ &quot;$1&quot; = &quot;-security&quot; ]</span> <span class="comment">; then</span></span><br><span class="line">if <span class="section">[ $have_tty -eq 1 ]</span><span class="comment">; then</span></span><br><span class="line">  echo &quot;Using Security Manager&quot;</span><br><span class="line">fi</span><br><span class="line">shift</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  -Djava.security.manager \</span><br><span class="line">  <span class="attr">-Djava.security.policy</span>==<span class="string">&quot;\&quot;$CATALINA_BASE/conf/catalina.policy\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start 2&gt;&amp;1 | /usr/sbin/cronolog &quot;$CATALINA_BASE&quot;/logs/catalina.%Y-%m-%d.out &gt;&gt; /dev/null &amp;</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start 2&gt;&amp;1 | /usr/sbin/cronolog &quot;$CATALINA_BASE&quot;/logs/catalina.%Y-%m-%d.out &gt;&gt; /dev/null &amp;</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Tomcat-远程监控"><a href="#Tomcat-远程监控" class="headerlink" title="Tomcat 远程监控"></a>Tomcat 远程监控</h2><p>首先检查远程服务器hostname -i<br>192.168.1.190</p>
-<p>1.编辑tomcat&#x2F;bin&#x2F;catalina.sh<br>vi catalina.sh</p>
-<p>搜索 Execute The Requested Command</p>
-<p>在这一行上面加入一下配置</p>
-<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">JAVA_OPTS</span>=<span class="string">&#x27;-Xms1024m -Xmx1024m -XX:PermSize=256M -XX:MaxNewSize=512m -XX:MaxPermSize=512m -Djava.rmi.server.hostname=192.168.1.190 -Dcom.sun.management.jmxremote.port=8444 -Dcom.sun.management.jmxremote.ssl=false-Dcom.sun.management.jmxremote.authenticate=false&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>2.编辑jmxremote.access和jmxremote.password</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/java/jdk1.6.0_18/jre/lib/management</span><br><span class="line"><span class="built_in">mv</span> jmxremote.password.template jmxremote.password</span><br><span class="line"><span class="built_in">chmod</span> 600 jmxremote.access jmxremote.password</span><br><span class="line">vi jmxremote.password</span><br></pre></td></tr></table></figure>
-
-<p>jmxremote.access 一般保持原始内容不变即可。<br>对于jmxremote.password，将 其中的：<br>monitorRole 123<br>controlRole 123<br>井号注释取消掉。其中monitorRole为只拥有只读权限的角色，controlRole有更高权限：读写等等。</p>
 ]]></content>
       <categories>
-        <category>Java架构</category>
+        <category>Linux运维</category>
       </categories>
       <tags>
-        <tag>tomcat</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -998,135 +957,176 @@
       </tags>
   </entry>
   <entry>
-    <title>运维安全的四个层次</title>
-    <url>/2020/05/07/%E8%BF%90%E7%BB%B4%E5%AE%89%E5%85%A8%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%B1%82%E6%AC%A1/</url>
-    <content><![CDATA[<h1 id="运维安全的四个层次"><a href="#运维安全的四个层次" class="headerlink" title="运维安全的四个层次"></a>运维安全的四个层次</h1><h2 id="网络安全"><a href="#网络安全" class="headerlink" title="网络安全"></a>网络安全</h2><h3 id="网络设备的安全"><a href="#网络设备的安全" class="headerlink" title="网络设备的安全"></a>网络设备的安全</h3><ul>
-<li>思科、华为等网络设备定期升级，修复bug和曝出的漏洞</li>
-<li>公网防火墙，核心交换机等核心网络设备的管理</li>
-</ul>
-<h3 id="外网安全策略"><a href="#外网安全策略" class="headerlink" title="外网安全策略"></a>外网安全策略</h3><ul>
-<li>IDC，防火墙策略，严把上行端口开放</li>
-<li>公网上下行流量监控</li>
-<li>对DDos攻击提高警惕，提前准备应急预案<ul>
-<li>临时提高流量，硬抗</li>
-<li>启动流量清洗，将攻击流量引入黑洞，有可能误杀正常用户</li>
+    <title>tomcat8安装配置优化</title>
+    <url>/2017/06/02/tomcat-install-and-settings/</url>
+    <content><![CDATA[<h2 id="Tomcat-8-安装"><a href="#Tomcat-8-安装" class="headerlink" title="Tomcat 8 安装"></a>Tomcat 8 安装</h2><ul>
+<li>Tomcat 8 安装<ul>
+<li>官网：<a href="http://tomcat.apache.org/">http://tomcat.apache.org/</a></li>
+<li>Tomcat 8 官网下载：<a href="http://tomcat.apache.org/download-80.cgi">http://tomcat.apache.org/download-80.cgi</a></li>
+<li>此时（20170602） Tomcat 8 最新版本为：<code>apache-tomcat-8.5.15.tar.gz</code></li>
+<li>Tomcat 8 下载：<code>wget http://mirror.bit.edu.cn/apache/tomcat/tomcat-8/v8.5.15/bin/apache-tomcat-8.5.15.tar.gz</code></li>
+<li>压缩包解压：<code>tar -zxvf apache-tomcat-8.5.15.tar.gz</code></li>
+<li>移到解压出来文件夹到 &#x2F;usr&#x2F;local 下：<code>mv apache-tomcat-8.5.15/ /usr/local/</code></li>
 </ul>
 </li>
 </ul>
-<h3 id="专线安全策略"><a href="#专线安全策略" class="headerlink" title="专线安全策略"></a>专线安全策略</h3><ul>
-<li>对涉及金融、支付等项目设立专线</li>
-</ul>
-<h3 id="VPN安全策略"><a href="#VPN安全策略" class="headerlink" title="VPN安全策略"></a>VPN安全策略</h3><ul>
-<li>IPsec VPN：site to site</li>
-<li>OpenVPN： peer to site</li>
-<li>摒弃PPTP等不含加密算法的vpn服务</li>
-<li>端口全禁止，需要通信的申请审批后，再由管理员开放</li>
-</ul>
-<h2 id="数据安全"><a href="#数据安全" class="headerlink" title="数据安全"></a>数据安全</h2><h3 id="数据库用户权限"><a href="#数据库用户权限" class="headerlink" title="数据库用户权限"></a>数据库用户权限</h3><ul>
-<li>管理员权限限定，不允许远程root</li>
-<li>定期更换管理员密码</li>
-<li>应用权限最小化，专人管理</li>
-<li>手动查询权限可审计</li>
-</ul>
-<h3 id="数据库审计设备"><a href="#数据库审计设备" class="headerlink" title="数据库审计设备"></a>数据库审计设备</h3><ul>
-<li>数据库主库不能开一般查询日志（为了性能）</li>
-<li>交换机上镜像流量，接入审计设备，实现实时审计</li>
-<li>不要设计串行在系统里，形成单点和瓶颈</li>
-</ul>
-<h3 id="数据库脱敏"><a href="#数据库脱敏" class="headerlink" title="数据库脱敏"></a>数据库脱敏</h3><ul>
-<li>姓名、身份证、手机号、银行卡号等敏感信息应脱敏处理</li>
-<li>对程序脱敏协同系统架构部共同出规范</li>
-<li>对手动查询权限脱敏，按列授权，录屏</li>
-</ul>
-<h3 id="备份策略"><a href="#备份策略" class="headerlink" title="备份策略"></a>备份策略</h3><ul>
-<li>每周全备，每天增备</li>
-<li>备份文件要每天利用内网流量低谷时间，推送到远程主机，有条件的应跨机房备份</li>
-<li>一定要规划定期恢复测试，保证备份的可用性</li>
-</ul>
-<h2 id="应用安全"><a href="#应用安全" class="headerlink" title="应用安全"></a>应用安全</h2><h3 id="操作系统安全"><a href="#操作系统安全" class="headerlink" title="操作系统安全"></a>操作系统安全</h3><ul>
-<li>系统基础优化（内核优化，优化工具）</li>
-<li>日期，时区同步</li>
-<li>root密码复杂度足够高，需要在操作系统里做定时过期策略</li>
-<li>每三个月使用脚本更新服务器的root密码和iDrac密码，并将更换后的密码加密打包发送给指定管理员邮箱，同时提交gitlab</li>
-<li>对系统关键文件进行md5监控，例如&#x2F;etc&#x2F;passwd，~&#x2F;.ssh&#x2F;authorized_keys文件等，如有变更，触发报警</li>
-<li>定期查毒，漏扫，定期安排更新操作系统</li>
-<li>&#x2F;etc&#x2F;ssh&#x2F;sshd_config里配置：<ul>
-<li>PasswordAuthentication no</li>
-<li>PermitRootLogin without-password</li>
+<h2 id="Tomcat-8-配置"><a href="#Tomcat-8-配置" class="headerlink" title="Tomcat 8 配置"></a>Tomcat 8 配置</h2><ul>
+<li>设置 Tomcat 相关变量：<ul>
+<li><code>vim /usr/local/tomcat8/bin/catalina.sh</code></li>
+<li>在配置文件的可编辑内容最上面（98 行开始），加上如下内容（具体参数根据你服务器情况自行修改）：  <figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">JAVA_HOME</span>=/usr/local/jdk1.<span class="number">8.0</span>_72</span><br><span class="line">   <span class="attr">CATALINA_HOME</span>=/usr/local/tomcat8</span><br><span class="line">   <span class="attr">CATALINA_OPTS</span>=<span class="string">&quot;-Dfile.encoding=UTF-8 -server -Xms2048m -Xmx2048m -Xmn1024m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</span></span><br><span class="line">   <span class="attr">CATALINA_PID</span>=<span class="variable">$CATALINA_HOME</span>/catalina.pid</span><br></pre></td></tr></table></figure></li>
 </ul>
 </li>
-<li>使用saltstack等批量管理软件进行特权命令执行和备份脚本执行（避开ssh协议）</li>
+<li>如果使用 <code>shutdown.sh</code> 还无法停止 tomcat，可以修改其配置：<code>vim /usr/local/tomcat8/bin/shutdown.sh</code><ul>
+<li>把最尾巴这一行：<code>exec &quot;$PRGDIR&quot;/&quot;$EXECUTABLE&quot; stop &quot;$@&quot;</code></li>
+<li>改为：<code>exec &quot;$PRGDIR&quot;/&quot;$EXECUTABLE&quot; stop 10 -force</code></li>
 </ul>
-<h3 id="应用系统安全"><a href="#应用系统安全" class="headerlink" title="应用系统安全"></a>应用系统安全</h3><h4 id="WEB应用防火墙（WAF）"><a href="#WEB应用防火墙（WAF）" class="headerlink" title="WEB应用防火墙（WAF）"></a>WEB应用防火墙（WAF）</h4><ul>
-<li>防SQL注入</li>
-<li>防CC攻击</li>
-<li>防XSS跨站脚本</li>
+</li>
 </ul>
-<h4 id="应用系统漏洞"><a href="#应用系统漏洞" class="headerlink" title="应用系统漏洞"></a>应用系统漏洞</h4><ul>
-<li>关注0day漏洞新闻</li>
-<li>及时整改并上线投产</li>
-<li>组织技术力量测试，复现</li>
-</ul>
-<h4 id="日志收集和分析"><a href="#日志收集和分析" class="headerlink" title="日志收集和分析"></a>日志收集和分析</h4><ul>
-<li>完善日志收集方案，集中转储</li>
-<li>通过应用系统日志分析，进行安全预警</li>
-</ul>
-<h4 id="DNS劫持"><a href="#DNS劫持" class="headerlink" title="DNS劫持"></a>DNS劫持</h4><ul>
-<li>全站https，购买泛域名证书</li>
-<li>有条件的可以自己维护公网DNS，上dnssec数字签名</li>
-<li>采购基调、听云等第三方拨测服务，分布式监控网站质量</li>
-<li>向ISP投诉，工信部举报</li>
-</ul>
-<h4 id="Basic-Auth"><a href="#Basic-Auth" class="headerlink" title="Basic Auth"></a>Basic Auth</h4><ul>
-<li>在nginx上做，非常简单</li>
-<li>对防脚本攻击有奇效</li>
-</ul>
-<h3 id="企业邮箱服务器安全"><a href="#企业邮箱服务器安全" class="headerlink" title="企业邮箱服务器安全"></a>企业邮箱服务器安全</h3><h4 id="推荐使用微软的Exchange"><a href="#推荐使用微软的Exchange" class="headerlink" title="推荐使用微软的Exchange"></a>推荐使用微软的Exchange</h4><p>功能强大，维护相对简单</p>
-<h4 id="投产反垃圾邮件网关"><a href="#投产反垃圾邮件网关" class="headerlink" title="投产反垃圾邮件网关"></a>投产反垃圾邮件网关</h4><p>投产梭子鱼反垃圾邮件网关，防伪造发信人</p>
-<h4 id="群发审核管控"><a href="#群发审核管控" class="headerlink" title="群发审核管控"></a>群发审核管控</h4><h4 id="用好邮件组"><a href="#用好邮件组" class="headerlink" title="用好邮件组"></a>用好邮件组</h4><h4 id="接入AD域控"><a href="#接入AD域控" class="headerlink" title="接入AD域控"></a>接入AD域控</h4><h3 id="域名安全管理"><a href="#域名安全管理" class="headerlink" title="域名安全管理"></a>域名安全管理</h3><h4 id="做好ICP备案"><a href="#做好ICP备案" class="headerlink" title="做好ICP备案"></a>做好ICP备案</h4><ul>
-<li>域名证书</li>
-<li>域名实名认证（公司模板）</li>
-<li>接入商处蓝色幕布拍照</li>
-<li>法人身份证、管理员身份证</li>
-<li>网站真实性核验单</li>
-</ul>
-<h4 id="公网解析"><a href="#公网解析" class="headerlink" title="公网解析"></a>公网解析</h4><ul>
-<li>专人管理，邮件申请，审批</li>
-<li>将业务解析至不同公网IP出口，双活机房</li>
-<li>智能解析，解析至不同线路</li>
-<li>如有条件，可购买公网解析套餐服务，安全服务等</li>
-</ul>
-<h2 id="内网安全"><a href="#内网安全" class="headerlink" title="内网安全"></a>内网安全</h2><p>80%以上的企业IT安全问题出自内网安全</p>
-<h3 id="堡垒机"><a href="#堡垒机" class="headerlink" title="堡垒机"></a>堡垒机</h3><ul>
-<li>一定要强制使用堡垒机登录服务器</li>
-<li>ssh私钥通行短语机制，避免密钥失窃</li>
-<li>定期审计堡垒机操作日志</li>
-<li>如果有必要，可以上2FA（双因子验证）</li>
-</ul>
-<h3 id="AD域控"><a href="#AD域控" class="headerlink" title="AD域控"></a>AD域控</h3><p>有条件一定要接入windows域控，要求密码复杂度和定期过期</p>
+<span id="more"></span>
+
+<h2 id="Tomcat-8-安全配置"><a href="#Tomcat-8-安全配置" class="headerlink" title="Tomcat 8 安全配置"></a>Tomcat 8 安全配置</h2><p>默认tomcat是root身份运行的，这样不安全，不要使用root用户启动tomcat。</p>
+<p>Java程序与C程序不同，nginx,httpd 使用root用户启动守护80端口，子进程&#x2F;线程会通过setuid(),setgid()两个函数切换到普通用户。即父进程所有者是root用户，子进程与多线程所有者是一个非root用户，这个用户没有shell，无法通过ssh与控制台登陆系统，Java 的JVM 是与系统无关的，是建立在OS之上的，你使用什么用户启动Tomcat，那么Tomcat 就会继承该所有者的权限。</p>
+<p>为了防止 Tomcat 被植入 web shell 程序后，可以修改项目文件。因此我们要将 Tomcat 和项目的属主做分离，这样子，即便被搞，他也无法创建和编辑项目文件。<br>设置普通用户，用来启动tomcat</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># groupadd tomcat</span></span><br><span class="line">[root@localhost ~]<span class="comment"># useradd -g tomcat tomcat</span></span><br><span class="line">[root@localhost ~]<span class="comment"># passwd tomcat</span></span><br><span class="line">[root@localhost ~]<span class="comment"># chown tomcat.tomcat -R /usr/local/tomcat8</span></span><br><span class="line">[root@localhost ~]<span class="comment"># su - tomcat /usr/local/tomcat8/bin/startup.sh</span></span><br><span class="line">[root@localhost ~]<span class="comment"># echo &#x27;su - tomcat -c &quot;tomcat /usr/local/tomcat8/bin/startup.sh&quot;&#x27; &gt;&gt; /etc/rc.local  #开机启动</span></span><br><span class="line"></span><br><span class="line">```    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## Tomcat 8 优化</span></span><br><span class="line"></span><br><span class="line">- Tomcat 6/7/8 的优化参数有点不一样，最好按下面的方式看一下官网这个文档是否还保留着这个参数</span><br><span class="line">- 启动tomcat，访问该地址，下面要讲解的一些配置信息，在该文档下都有说明的：</span><br><span class="line">	- 文档：&lt;http://127.0.0.1:8080/docs/config&gt;</span><br><span class="line">	- 你也可以直接看网络版本：</span><br><span class="line">		- Tomcat 6 文档：&lt;https://tomcat.apache.org/tomcat-6.0-doc/config&gt;</span><br><span class="line">		- Tomcat 7 文档：&lt;https://tomcat.apache.org/tomcat-7.0-doc/config/&gt;</span><br><span class="line">		- Tomcat 8 文档：&lt;https://tomcat.apache.org/tomcat-8.0-doc/config/&gt;</span><br><span class="line">- 如果你需要查看 Tomcat 的运行状态可以配置tomcat管理员账户，然后登陆 Tomcat 后台进行查看</span><br><span class="line">- 编辑 /opt/tomcat7/bin/conf/tomcat-users.xml 文件，在里面添加下面信息：</span><br><span class="line">``` xml</span><br><span class="line">&lt;role rolename=<span class="string">&quot;manager&quot;</span>/&gt;</span><br><span class="line">&lt;role rolename=<span class="string">&quot;manager-gui&quot;</span>/&gt;</span><br><span class="line">&lt;role rolename=<span class="string">&quot;admin&quot;</span>/&gt;</span><br><span class="line">&lt;role rolename=<span class="string">&quot;admin-gui&quot;</span>/&gt;</span><br><span class="line">&lt;user username=<span class="string">&quot;tomcat&quot;</span> password=<span class="string">&quot;tomcat&quot;</span> roles=<span class="string">&quot;admin-gui,admin,manager-gui,manager&quot;</span>/&gt;</span><br></pre></td></tr></table></figure>
 <ul>
-<li>邮箱</li>
-<li>wifi</li>
-<li>vpn账号密码</li>
-<li>内网系统账号</li>
-<li>业务系统账号</li>
-<li>网络设备等</li>
+<li>编辑配置文件：<code>vim /usr/local/tomcat8/conf/server.xml</code><ul>
+<li>打开默认被注释的连接池配置：<ul>
+<li>默认值：  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">&lt;Executor name=&quot;tomcatThreadPool&quot; namePrefix=&quot;catalina-exec-&quot;</span></span><br><span class="line"><span class="comment">    maxThreads=&quot;150&quot; minSpareThreads=&quot;4&quot;/&gt;</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>修改为：  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Executor</span></span></span><br><span class="line"><span class="tag">        <span class="attr">name</span>=<span class="string">&quot;tomcatThreadPool&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">namePrefix</span>=<span class="string">&quot;catalina-exec-&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">maxThreads</span>=<span class="string">&quot;500&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">minSpareThreads</span>=<span class="string">&quot;30&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">maxIdleTime</span>=<span class="string">&quot;60000&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">prestartminSpareThreads</span> = <span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">maxQueueSize</span> = <span class="string">&quot;100&quot;</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>重点参数解释：<ul>
+<li>maxThreads，最大并发数，默认设置 200，一般建议在 500 ~ 800，根据硬件设施和业务来判断</li>
+<li>minSpareThreads，Tomcat 初始化时创建的线程数，默认设置 25</li>
+<li>prestartminSpareThreads，在 Tomcat 初始化的时候就初始化 minSpareThreads 的参数值，如果不等于 true，minSpareThreads 的值就没啥效果了</li>
+<li>maxQueueSize，最大的等待队列数，超过则拒绝请求</li>
+<li>maxIdleTime，如果当前线程大于初始化线程，那空闲线程存活的时间，单位毫秒，默认60000&#x3D;60秒&#x3D;1分钟。</li>
 </ul>
-<h3 id="办公网安全"><a href="#办公网安全" class="headerlink" title="办公网安全"></a>办公网安全</h3><ul>
-<li>专业的HelpDesk团队</li>
-<li>企业级杀毒软件</li>
-<li>办公电脑接入域控</li>
-<li>上网行为管理</li>
-<li>流量监控，mac地址绑定</li>
-<li>有条件的可以在办公环境上一个小型的业务机房</li>
-<li>wifi管控，单做guest接入点，不能访问业务核心网络</li>
+</li>
 </ul>
+</li>
+<li>修改默认的链接参数配置：<ul>
+<li><p>默认值：</p>
+  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Connector</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">port</span>=<span class="string">&quot;8080&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">protocol</span>=<span class="string">&quot;HTTP/1.1&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">connectionTimeout</span>=<span class="string">&quot;20000&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">redirectPort</span>=<span class="string">&quot;8443&quot;</span> </span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>修改为：</p>
+  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Connector</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">executor</span>=<span class="string">&quot;tomcatThreadPool&quot;</span></span></span><br><span class="line"><span class="tag">   <span class="attr">port</span>=<span class="string">&quot;8080&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">protocol</span>=<span class="string">&quot;org.apache.coyote.http11.Http11Nio2Protocol&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">connectionTimeout</span>=<span class="string">&quot;20000&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">maxConnections</span>=<span class="string">&quot;10000&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">redirectPort</span>=<span class="string">&quot;8443&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">enableLookups</span>=<span class="string">&quot;false&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">acceptCount</span>=<span class="string">&quot;100&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">maxPostSize</span>=<span class="string">&quot;10485760&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">maxHttpHeaderSize</span>=<span class="string">&quot;8192&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">compression</span>=<span class="string">&quot;on&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">disableUploadTimeout</span>=<span class="string">&quot;true&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">compressionMinSize</span>=<span class="string">&quot;2048&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">acceptorThreadCount</span>=<span class="string">&quot;2&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">compressableMimeType</span>=<span class="string">&quot;text/html,text/xml,text/plain,text/css,text/javascript,application/javascript&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">URIEncoding</span>=<span class="string">&quot;utf-8&quot;</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>重点参数解释：</p>
+<ul>
+<li>protocol，Tomcat 8 设置 nio2 更好：org.apache.coyote.http11.Http11Nio2Protocol（如果这个用不了，就用下面那个）</li>
+<li>protocol，Tomcat 6、7 设置 nio 更好：org.apache.coyote.http11.Http11NioProtocol</li>
+</ul>
+<blockquote>
+<p>BIO：一个线程处理一个请求。缺点：并发量高时，线程数较多，浪费资源。Tomcat7或以- 下，在Linux系统中默认使用这种方式。<br>NIO：利用Java的异步IO处理，可以通过少量的线程处理大量的请求。Tomcat8在Linux系统中默认使用这种方式。<br>APR：即Apache Portable Runtime，从操作系统层面解决io阻塞问题。Tomcat7或Tomcat8在Win7或以上的系统中启动默认使用这种方式。Linux如果安装了apr和native，Tomcat直接启动就支持apr。（安装方法：<a href="http://www.cnblogs.com/nb-blog/p/5278502.html%EF%BC%89">http://www.cnblogs.com/nb-blog/p/5278502.html）</a></p>
+</blockquote>
+<ul>
+<li>enableLookups，禁用DNS查询</li>
+<li>acceptCount，指定当所有可以使用的处理请求的线程数都被使用时，可以放到处理队列中的请求数，超过这个数的请求将不予处理，默认设置 100</li>
+<li>maxPostSize，以 FORM URL 参数方式的 POST 提交方式，限制提交最大的大小，默认是 2097152(2兆)，它使用的单位是字节。10485760 为 10M。如果要禁用限制，则可以设置为 -1。</li>
+<li>acceptorThreadCount，用于接收连接的线程的数量，默认值是1。一般这个指需要改动的时候是因为该服务器是一个多核CPU，如果是多核 CPU 一般配置为 2.</li>
+<li>maxHttpHeaderSize，http请求头信息的最大程度，超过此长度的部分不予处理。一般8K。</li>
+<li>compression：传输时是压缩。</li>
+<li>compressionMinSize：压缩的大小 </li>
+<li>noCompressionUserAgents：不启用压缩的浏览器<blockquote>
+<p>提示：压缩会增加Tomcat负担，最好采用Nginx + Tomcat 或者 Apache + Tomcat 方式，压缩交由Nginx&#x2F;Apache 去做。</p>
+</blockquote>
+<p>  Tomcat 的压缩是在客户端请求服务器对应资源后，从服务器端将资源文件压缩，再输出到客户端，由客户端的浏览器负责解压缩并浏览。相对于普通的 浏览过程 HTML、CSS、Javascript和Text，它可以节省40% 左右的流量。更为重要的是，它可以对动态生成的，包括CGI、PHP、JSP、ASP、Servlet,SHTML等输出的网页也能进行压缩，压缩效率也很高。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>禁用 AJP（如果你服务器没有使用 Apache） <ul>
+<li>把下面这一行注释掉，默认 Tomcat 是开启的。  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- &lt;Connector port=&quot;8009&quot; protocol=&quot;AJP/1.3&quot; redirectPort=&quot;8443&quot; /&gt; --&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="JVM-优化"><a href="#JVM-优化" class="headerlink" title="JVM 优化"></a>JVM 优化</h2><ul>
+<li>模型资料来源：<a href="http://xmuzyq.iteye.com/blog/599750">http://xmuzyq.iteye.com/blog/599750</a></li>
+<li>配比资料：<a href="http://www.jianshu.com/p/d45e12241af4">http://www.jianshu.com/p/d45e12241af4</a></li>
+<li>Java 的内存模型分为：<ul>
+<li>Young，年轻代（易被 GC）。Young 区被划分为三部分，Eden 区和两个大小严格相同的 Survivor 区，其中 Survivor 区间中，某一时刻只有其中一个是被使用的，另外一个留做垃圾收集时复制对象用，在 Young 区间变满的时候，minor GC 就会将存活的对象移到空闲的Survivor 区间中，根据 JVM 的策略，在经过几次垃圾收集后，任然存活于 Survivor 的对象将被移动到 Tenured  区间。</li>
+<li>Tenured，终身代。Tenured 区主要保存生命周期长的对象，一般是一些老的对象，当一些对象在 Young 复制转移一定的次数以后，对象就会被转移到 Tenured 区，一般如果系统中用了 application 级别的缓存，缓存中的对象往往会被转移到这一区间。</li>
+<li>Perm，永久代。主要保存 class,method,filed 对象，这部门的空间一般不会溢出，除非一次性加载了很多的类，不过在涉及到热部署的应用服务器的时候，有时候会遇到 java.lang.OutOfMemoryError : PermGen space 的错误，造成这个错误的很大原因就有可能是每次都重新部署，但是重新部署后，类的 class 没有被卸载掉，这样就造成了大量的 class 对象保存在了 perm 中，这种情况下，一般重新启动应用服务器可以解决问题。</li>
+</ul>
+</li>
+<li>Linux 修改 &#x2F;usr&#x2F;program&#x2F;tomcat7&#x2F;bin&#x2F;catalina.sh 文件，把下面信息添加到文件第一行。<ul>
+<li>如果服务器只运行一个 Tomcat<ul>
+<li>机子内存如果是 4G：<ul>
+<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms2048m -Xmx2048m -Xmn1024m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
+</ul>
+</li>
+<li>机子内存如果是 8G：<ul>
+<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms4096m -Xmx4096m -Xmn2048m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
+</ul>
+</li>
+<li>机子内存如果是 16G：<ul>
+<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms8192m -Xmx8192m -Xmn4096m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
+</ul>
+</li>
+<li>机子内存如果是 32G：<ul>
+<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms16384m -Xmx16384m -Xmn8192m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>如果是 8G 开发机<ul>
+<li><code>-Xms2048m -Xmx2048m -XX:NewSize=512m -XX:MaxNewSize=1024m -XX:PermSize=256m -XX:MaxPermSize=512m</code></li>
+</ul>
+</li>
+<li>如果是 16G 开发机<ul>
+<li><code>-Xms4096m -Xmx4096m -XX:NewSize=1024m -XX:MaxNewSize=2048m -XX:PermSize=256m -XX:MaxPermSize=512m</code></li>
+</ul>
+</li>
+<li>参数说明：  <figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line">-Dfile.encoding：默认文件编码</span><br><span class="line">-server：表示这是应用于服务器的配置，<span class="attribute">JVM</span> 内部会有特殊处理的</span><br><span class="line">-Xmx1024m：设置JVM最大可用内存为1024MB</span><br><span class="line">-Xms1024m：设置JVM最小内存为<span class="number">1024m</span>。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存。</span><br><span class="line">-Xmn1024m：设置JVM新生代大小（JDK1.<span class="number">4</span>之后版本）。一般-Xmn的大小是-Xms的<span class="number">1</span>/<span class="number">2</span>左右，不要设置的过大或过小，过大导致老年代变小，频繁Full GC，过小导致minor GC频繁。如果不设置-Xmn，可以采用-XX:NewRatio=<span class="number">2</span>来设置，也是一样的效果</span><br><span class="line">-XX:NewSize：设置新生代大小</span><br><span class="line">-XX:MaxNewSize：设置最大的新生代大小</span><br><span class="line">-XX:PermSize：设置永久代大小</span><br><span class="line">-XX:MaxPermSize：设置最大永久代大小</span><br><span class="line">-XX:NewRatio=<span class="number">4</span>：设置年轻代（包括 Eden 和两个 Survivor 区）与终身代的比值（除去永久代）。设置为 <span class="number">4</span>，则年轻代与终身代所占比值为 <span class="number">1</span>：<span class="number">4</span>，年轻代占整个堆栈的 <span class="number">1</span>/<span class="number">5</span></span><br><span class="line">-XX:MaxTenuringThreshold=<span class="number">10</span>：设置垃圾最大年龄，默认为：<span class="number">15</span>。如果设置为 <span class="number">0</span> 的话，则年轻代对象不经过 Survivor 区，直接进入年老代。对于年老代比较多的应用，可以提高效率。如果将此值设置为一个较大值，则年轻代对象会在 Survivor 区进行多次复制，这样可以增加对象再年轻代的存活时间，增加在年轻代即被回收的概论。需要注意的是，设置了 -XX:MaxTenuringThreshold，并不代表着，对象一定在年轻代存活<span class="number">15</span>次才被晋升进入老年代，它只是一个最大值，事实上，存在一个动态计算机制，计算每次晋入老年代的阈值，取阈值和MaxTenuringThreshold中较小的一个为准。</span><br><span class="line">-XX:+DisableExplicitGC：这个将会忽略手动调用 GC 的代码使得 System.gc() 的调用就会变成一个空调用，完全不会触发任何 GC</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>Windows 修改 &#x2F;tomcat8&#x2F;bin&#x2F;catalina.bat 文件，找到这一行：<code>echo Using CATALINA_BASE:   &quot;%CATALINA_BASE%&quot;</code>，然后在其上面添加如下内容，此方法只对解压版的 Tomcat 有效果，对于安装版本的需要点击安装后任务栏上的那个 Tomcat 图标，打开配置中有一个 <code>Java</code> Tab 的进行编辑。<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">set</span> JAVA_OPTS=%JAVA_OPTS% -Dfile.encoding=<span class="string">&quot;UTF-8&quot;</span> -Dsun.jnu.encoding=<span class="string">&quot;UTF8&quot;</span> -Ddefault.client.encoding=<span class="string">&quot;UTF-8&quot;</span> -Duser.language=Zh</span><br><span class="line">set JAVA_OPTS=%JAVA_OPTS% -server -Xms4096m -Xmx4096m -Xmn2048m -XX:PermSize=<span class="number">256m</span> -XX:MaxPermSize=<span class="number">512m</span> -XX:SurvivorRatio=<span class="number">10</span> -XX:MaxTenuringThreshold=<span class="number">15</span> -XX:NewRatio=<span class="number">2</span> -XX:+DisableExplicitGC</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Tomcat-8-的-Log-分割"><a href="#Tomcat-8-的-Log-分割" class="headerlink" title="Tomcat 8 的 Log 分割"></a>Tomcat 8 的 Log 分割</h2><ul>
+<li>修改前提：本人为 Tomcat8.5，安装目录为：&#x2F;usr&#x2F;local&#x2F;tomcat8</li>
+<li>网络上的官网地址现在打不开：<a href="http://cronolog.org/download/index.html">http://cronolog.org/download/index.html</a></li>
+<li>阿里云的 CentOS 有 epel 源所以可以直接下载：<code>yum install cronolog</code>，当前版本为：1.6.2-10.el6</li>
+<li>安装完后，查看下安装后的目录位置：<code>which cronolog</code>，我这边得到的结果是：<code>/usr/sbin/cronolog</code>，记下这个结果，后面有用到。</li>
+<li>修改 catalina.sh 中的内容：<code>vim /usr/local/tomcat8/bin/catalina.sh</code></li>
+<li>找到这段代码（预计在 416 行前后）：</li>
+</ul>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">shift</span><br><span class="line">touch &quot;$CATALINA_OUT&quot;</span><br><span class="line">if <span class="section">[ &quot;$1&quot; = &quot;-security&quot; ]</span> <span class="comment">; then</span></span><br><span class="line">if <span class="section">[ $have_tty -eq 1 ]</span><span class="comment">; then</span></span><br><span class="line">  echo &quot;Using Security Manager&quot;</span><br><span class="line">fi</span><br><span class="line">shift</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  -Djava.security.manager \</span><br><span class="line">  <span class="attr">-Djava.security.policy</span>==<span class="string">&quot;\&quot;$CATALINA_BASE/conf/catalina.policy\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start \</span><br><span class="line">  &gt;&gt; &quot;$CATALINA_OUT&quot; 2&gt;&amp;1 &quot;&amp;&quot;</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start \</span><br><span class="line">  &gt;&gt; &quot;$CATALINA_OUT&quot; 2&gt;&amp;1 &quot;&amp;&quot;</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将上面代码改为如下，其中请注意这个关键字：<code>/usr/sbin/cronolog</code>，这个是我上面提到的安装路径，你如果跟我不一样，需要自己修改该相关。</li>
+</ul>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">shift</span><br><span class="line"><span class="comment"># touch &quot;$CATALINA_OUT&quot;</span></span><br><span class="line">if <span class="section">[ &quot;$1&quot; = &quot;-security&quot; ]</span> <span class="comment">; then</span></span><br><span class="line">if <span class="section">[ $have_tty -eq 1 ]</span><span class="comment">; then</span></span><br><span class="line">  echo &quot;Using Security Manager&quot;</span><br><span class="line">fi</span><br><span class="line">shift</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  -Djava.security.manager \</span><br><span class="line">  <span class="attr">-Djava.security.policy</span>==<span class="string">&quot;\&quot;$CATALINA_BASE/conf/catalina.policy\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start 2&gt;&amp;1 | /usr/sbin/cronolog &quot;$CATALINA_BASE&quot;/logs/catalina.%Y-%m-%d.out &gt;&gt; /dev/null &amp;</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start 2&gt;&amp;1 | /usr/sbin/cronolog &quot;$CATALINA_BASE&quot;/logs/catalina.%Y-%m-%d.out &gt;&gt; /dev/null &amp;</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Tomcat-远程监控"><a href="#Tomcat-远程监控" class="headerlink" title="Tomcat 远程监控"></a>Tomcat 远程监控</h2><p>首先检查远程服务器hostname -i<br>192.168.1.190</p>
+<p>1.编辑tomcat&#x2F;bin&#x2F;catalina.sh<br>vi catalina.sh</p>
+<p>搜索 Execute The Requested Command</p>
+<p>在这一行上面加入一下配置</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">JAVA_OPTS</span>=<span class="string">&#x27;-Xms1024m -Xmx1024m -XX:PermSize=256M -XX:MaxNewSize=512m -XX:MaxPermSize=512m -Djava.rmi.server.hostname=192.168.1.190 -Dcom.sun.management.jmxremote.port=8444 -Dcom.sun.management.jmxremote.ssl=false-Dcom.sun.management.jmxremote.authenticate=false&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>2.编辑jmxremote.access和jmxremote.password</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/java/jdk1.6.0_18/jre/lib/management</span><br><span class="line"><span class="built_in">mv</span> jmxremote.password.template jmxremote.password</span><br><span class="line"><span class="built_in">chmod</span> 600 jmxremote.access jmxremote.password</span><br><span class="line">vi jmxremote.password</span><br></pre></td></tr></table></figure>
+
+<p>jmxremote.access 一般保持原始内容不变即可。<br>对于jmxremote.password，将 其中的：<br>monitorRole 123<br>controlRole 123<br>井号注释取消掉。其中monitorRole为只拥有只读权限的角色，controlRole有更高权限：读写等等。</p>
 ]]></content>
       <categories>
-        <category>Linux运维</category>
+        <category>Java架构</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
+        <tag>tomcat</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>利用Spring的Resource类读写中文Properties</title>
+    <url>/2017/05/09/spring-resource-properties/</url>
+    <content><![CDATA[<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>Spring对Properties的读取进行了完善而全面的封装，对于写则仍需配合FileOutputStream进行。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.oolong.common.util;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.PathMatchingResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.ResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserVar</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">configFile</span> <span class="operator">=</span> <span class="string">&quot;classpath*:param.properties&quot;</span>;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> org.springframework.core.io.Resource resourceWritable;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Properties p;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 注意事项:</span></span><br><span class="line"><span class="comment">   * 1、properties放在source目录下</span></span><br><span class="line"><span class="comment">   * 2、param.properties至少有一对键值对</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">static</span> &#123;</span><br><span class="line">    p = <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">    org.springframework.core.io.Resource[] resources = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="type">ResourcePatternResolver</span> <span class="variable">resolver</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PathMatchingResourcePatternResolver</span>();</span><br><span class="line">      resources = resolver.getResources(configFile);</span><br><span class="line">      <span class="keyword">if</span> (resources != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (org.springframework.core.io.Resource r : resources) &#123;</span><br><span class="line">          <span class="keyword">if</span> (r != <span class="literal">null</span>) &#123;</span><br><span class="line">            p.load(r.getInputStream());</span><br><span class="line">            resourceWritable = r;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e1) &#123;</span><br><span class="line">      e1.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">get</span><span class="params">(String key)</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">v</span> <span class="operator">=</span> (String) p.get(key);</span><br><span class="line">    <span class="keyword">if</span> (v != <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">String</span>(v.getBytes(<span class="string">&quot;ISO-8859-1&quot;</span>), <span class="string">&quot;GBK&quot;</span>);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(String key,String value)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">null</span> != resourceWritable) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">OutputStream</span> <span class="variable">fos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(resourceWritable.getFile());</span><br><span class="line">        <span class="type">Properties</span> <span class="variable">p</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">        p.load(resourceWritable.getInputStream());</span><br><span class="line">        value = <span class="keyword">new</span> <span class="title class_">String</span>(value.getBytes(<span class="string">&quot;GBK&quot;</span>),<span class="string">&quot;ISO-8859-1&quot;</span>);</span><br><span class="line">        p.setProperty(key, value);</span><br><span class="line">        p.store(fos, <span class="literal">null</span>);</span><br><span class="line">        fos.close();</span><br><span class="line">      &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Java架构</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
       </tags>
   </entry>
 </search>
