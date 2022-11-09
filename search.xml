@@ -1,0 +1,1132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>MySQL建表规范</title>
+    <url>/2022/11/09/MySQL%E5%BB%BA%E8%A1%A8%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<h2 id="MySQL规范–建表规范"><a href="#MySQL规范–建表规范" class="headerlink" title="MySQL规范–建表规范"></a>MySQL规范–建表规范</h2><p>规范的表结构能降低MySQL出现问题的概率，下面总结一些MySQL的建表规范</p>
+<h3 id="1、库名、表名、字段名全部采用小写格式。"><a href="#1、库名、表名、字段名全部采用小写格式。" class="headerlink" title="1、库名、表名、字段名全部采用小写格式。"></a>1、库名、表名、字段名全部采用小写格式。</h3><p>这是防止出现大小写不一致导致找不到对应表的情况。</p>
+<h3 id="2、避免使用MySQL的保留字。"><a href="#2、避免使用MySQL的保留字。" class="headerlink" title="2、避免使用MySQL的保留字。"></a>2、避免使用MySQL的保留字。</h3><p>使用mysql时一定要注意，尽量不要使用它的保留字作为表名或者列名，否则会出现莫名其妙的错误。如果之前用了，在sql语句中就用&#96;&#96;包括起来。</p>
+<h3 id="3、表名、列名建议不要超过30个字符。"><a href="#3、表名、列名建议不要超过30个字符。" class="headerlink" title="3、表名、列名建议不要超过30个字符。"></a>3、表名、列名建议不要超过30个字符。</h3><h3 id="4、临时库表、备份库表的命名"><a href="#4、临时库表、备份库表的命名" class="headerlink" title="4、临时库表、备份库表的命名"></a>4、临时库表、备份库表的命名</h3><p>临时库表必须以tmp加上日期为后缀，比如user_info_tmp_20221109。<br>备份库表必须以bak加上日期为后缀，比如user_info_bak_20221109。</p>
+<h3 id="5、索引命名"><a href="#5、索引命名" class="headerlink" title="5、索引命名"></a>5、索引命名</h3><p>非唯一索引建议按照”idx字段名”进行命名。<br>唯一索引建议按照 “uniq_字段名”进行命名。</p>
+<h3 id="6、主键的建议"><a href="#6、主键的建议" class="headerlink" title="6、主键的建议"></a>6、主键的建议</h3><p>表必须有主键。<br>不使用有业务意义的的列作为主键，以免收到业务变化的影响。</p>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL数据库开发设计规范</title>
+    <url>/2022/11/09/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>本规范由四部分组成：表结构设计、索引设计、高可用设计、分布式架构设计。</p>
+<p>四大规范，每个规范10条准则。</p>
+<h1 id="表结构设计规范"><a href="#表结构设计规范" class="headerlink" title="表结构设计规范"></a>表结构设计规范</h1><ol>
+<li><p>INT 类型<strong>不使用</strong> unsigned     无符号属性，容易引入额外的计算问题。</p>
+</li>
+<li><p>自增用 8 字节 BIG INT，<strong>不要使用</strong> 4 字节 INT，且自增在 MySQL     8.0 版本前有回溯问题，请考虑是否业务有影响。</p>
+</li>
+<li><p>字符集使用 UTF8MB4 字符编码，<strong>不推荐</strong> GBK、UTF-8 等其他字符集。</p>
+</li>
+<li><p>日期类型用 DATETIME     类型，需要精确到毫秒用 DATETIME(6)，<strong>不要使用</strong> INT、TIMESTAMP。</p>
+</li>
+<li><p>类型 JSON     可用于存储非结构化数据，典型场景为用户标签，<strong>不要</strong>将 JSON 用于频繁更新的字段场景。</p>
+</li>
+<li><p>每张表<strong>一定</strong>要有一个主键，这样至少满足一范式的要求，<strong>核心业务表</strong>用全局唯一字段（雪花算法、有序UUID）做主键，<strong>不要</strong>使用自增做主键。</p>
+</li>
+<li><p>对于日志类的流水表、报警表、日志表，可以使用压缩设计，提升存储效率。MySQL     5.7 版本开始推荐使用透明页压缩，<strong>不要</strong>使用传统的 KEY_BLOCK_SIZE 的页压缩。</p>
+</li>
+<li><p>类别设计，用 ENUM+CHECK 约束，<strong>不要</strong>使用 INT 类型的设计。</p>
+</li>
+<li><p>敏感字段需加密，如账户密码、信用卡号等存储使用：动态盐     + 非固定加密算法（MD5&#x2F;AES256等） + 多轮加密，<strong>不要</strong>简单使用 MD5 算法加密，容易被暴力破解。</p>
+</li>
+<li><p>MySQL 可以通过 KV     的方式访问表中的数据，若业务只是简单的 SET、GET 请求，可考虑将其转化为 Memcached 的 KV 访问方式，减少 SQL     解析的开销，性能可以有至少 50% 的提升。</p>
+</li>
+</ol>
+<h1 id="索引设计规范"><a href="#索引设计规范" class="headerlink" title="索引设计规范"></a>索引设计规范</h1><ol>
+<li><p><strong>不要陷入</strong>设置单表行数、列数限制的固有印象，其他关系型数据库没有行数、列数限制，MySQL     也没有，大表的缺点不是性能，而是后续的 DDL 管理问题，随着 MySQL 8.0 快速加列功能的上线，大表 DDL 问题基本已解决。</p>
+</li>
+<li><p>MySQL 是索引组织表，表中的数据以 B+ 树索引结构，根据主键逻辑排序，由于 B+ 树索引的特点是树的高度为     3~4 层，所以从数十亿的记录中，通过主键查询一条记录只需要 3、4 次 I&#x2F;O，当前到 SSD 存储设备设置每秒至少能完成 10000 次的     I&#x2F;O 查询，<strong>不要</strong>担心通过索引查询一条或几条记录的性能，每秒百万次查询并不难。</p>
+</li>
+<li><p>MySQL     是索引组织表，二级索引只存储（键值、主键值），因此需要再通过一次主键索引查询得到记录，这种方式成为回表。在核心业务中，<strong>使用</strong>索引覆盖技术，提升索引查询性能，对于回表记录数比较大的场景，甚至可以有 10 倍的性能提升；</p>
+</li>
+<li><p>对类似 WHERE a &#x3D; ? ORDER     BY b 这样的查询，<strong>一定</strong>要创建（a、b）组合索引，这样可以避免一次额外排序，提升查询性能。</p>
+</li>
+<li><p>MySQL 优化器是     CBO（Cost-based Optimizer），所有查询基于成本而不是规则，若发现 SQL 执行计划发生变化，<strong>不要怀疑     MySQL 出错，请先分析数据特点、索引创建是否合理，是否可以通过直方图校准数据</strong>。</p>
+</li>
+<li><p>MySQL JOIN 支持     NLJ（Nested Loop Join）和 NHJ（Nested Hash Join）两种方式。对于 OLTP 业务，放心大胆使用 JOIN，但<strong>一定</strong>要做好索引的设计和索引覆盖的考虑（不考虑分布式数据库场景）；对于     OLAP 业务，MySQL 8.0 版本开始，支持 Hash Join，对于大数据量的关联，性能提升非常多，<strong>可以</strong>在不超过 10T 的数仓场景中考虑使用，超过     10T数据量，请<strong>一定</strong>使用大数据产品，如 Hive、Spark、麒麟等产品。</p>
+</li>
+<li><p>MySQL 5.7     版本开始子查询优化已经做得不错，但是编写的子查询<strong>不能</strong>是关联子查询，上线前<strong>一定</strong>需要确认，若发现关联子查询，请改写子查询为     JOIN 或其他方式。</p>
+</li>
+<li><p><strong>不要</strong>因为数据量大，使用分区表，MySQL 是索引组织表，数据量再大，定位记录也只需要3、4 次     I&#x2F;O。可以考虑分区表<strong>唯一</strong>的应用场景是：需要定期清理历史流水类数据，但如果业务可以按月、按天做分表，那么当前     MySQL 8.0 版本，分区表也不推荐使用。</p>
+</li>
+<li><p>业务上线或新版本发布前，DBA <strong>一定</strong>要进行所有 SQL     Review，确保 SQL 走索引，否则不予上线，或由业务以邮件等正式方式，通知 DBA 该 SQL 不会引起线上事故，业务方承担后续责任。</p>
+</li>
+<li><p>DBA <strong>每天</strong>要对数据库进行巡检，及早发现慢查询或潜在数据库风险，将任何潜在问题<strong>尽早</strong>抛出，否则后续自己承担相关责任。</p>
+</li>
+</ol>
+<h1 id="高可用设计规范"><a href="#高可用设计规范" class="headerlink" title="高可用设计规范"></a>高可用设计规范</h1><ol>
+<li><p>MySQL 高可用的基石是利用二进制日志的复制技术，核心业务<strong>一定</strong>要使用无损半同步方式，但凡不使用无损半同步的高可用架构，请业务方业务以邮件等正式方式回复，数据丢失等后续问题自己承担相关责任。</p>
+</li>
+<li><p>MySQL 5.7 版本开始，<strong>一定</strong>要使用基于 WRITESET     的从机回放，避免主从延迟。</p>
+</li>
+<li><p>当前 MySQL     发生主从延迟的可能性主要是存在大事务，比如定期计算收益等操作，这类大事务，<strong>一定</strong>要通知业务方将大事务拆成小事务，否则不予上线；若要上线，请业务方以邮件等方式回复，自己承担后续主从延迟带来的后续一系列问题。</p>
+</li>
+<li><p>MySQL 8.0 版本开始<strong>推荐</strong>金融业务使用 MGR(MySQL Group     Replication），通过 Paxos 协议保证数据一致性，并自己完成选主的逻辑，也可以使用多主模式，数据不冲突的情况下，可以大幅提升写入性能。</p>
+</li>
+<li><p>对于核心业务，<strong>必须</strong>遵循互不信任原则，数据一致性不单单依赖     MySQL 复制本身，DBA 这里需要通过逻辑的方式，对主从数据进行核对，业务这里也需要一套业务层的逻辑进行“对账”。</p>
+</li>
+<li><p>核心业务，<strong>务必</strong>使用一地三中心，两地三中心的跨机房复制架构，这样发生机房级故障，可以切换到另一个机房，保证业务可用性。</p>
+</li>
+<li><p>同城容灾架构<strong>一定</strong>要评估切换到另一个机房后业务访问的性能，多次跨机房访问     DB，虽然每次只多了 2~3ms，但也存在业务雪崩问题，推荐 DB 切换机房，上层业务跟着一起联动切换。</p>
+</li>
+<li><p>对于有跨城容灾需求的业务，<strong>可以</strong>考虑使用三地五中心架构，但是由于 30ms     延迟，业务需要进行评估，对于核心业务，<strong>务必</strong>使用业务层的跨城机制，将数据层的多次网络耗时合并为一次，这样能大大提升业务的性能。</p>
+</li>
+<li><p>业界的 MHA、Ochestrator     等高可用套件都是基于 ssh 访问 MySQL，稳定性、安全性不高，<strong>不推荐</strong>大厂使用；自己开发一个数据库管理平台，通过     agent 的模式管理高可用和 MySQL 数据库的日常操作更为安全、有效。</p>
+</li>
+<li><p><strong>一定</strong>做好数据备份架构的设计，全备 + 增量备份 +     延迟备机（可选），做到可以基于任何一点恢复和回滚，同时，遵循互不信任原则，备份文件一定要进行检查，确保需要时一定能够进行恢复。</p>
+</li>
+</ol>
+<h1 id="分布式架构设计规范"><a href="#分布式架构设计规范" class="headerlink" title="分布式架构设计规范"></a>分布式架构设计规范</h1><ol>
+<li><p>分布式数据库的本质就是根据某几个列的规则，将数据水平打散，存在不同的实例中。数据拆分的列称为分区键（Shard     Key），分区键<strong>一定</strong>是业务大部分访问（超过 80%）的表都会使用的列。若选不出合适的分区键，那就<strong>一定不要</strong>进行分布式数据库架构的设计；互联网业务绝大部分分区键的选择是用户维度。</p>
+</li>
+<li><p>分区算法<strong>绝大部分</strong>场景使用     Hash算法，这样数据的存储和访问可以平均到下面多个实例，真正的做到可扩展性，Range 算法通常无法解决热点问题，会是灾难，但 Range     算法可以在单实例中使用，作为二级拆分数据的规则。</p>
+</li>
+<li><p>分布式数据库分片时，一开始就设计为<strong>不少于</strong> 1000     个分片的规则，不用担心分片过多的问题，管理 1 个分片和 1000 个分片的成本是一样的，但为后续的扩容做好了充足的准备。</p>
+</li>
+<li><p>分布式数据库扩缩容就是通过部分过滤的复制技术，按库或按表进行数据同步，分库分表设计<strong>推荐</strong>库名、表都不同，做到全局唯一，方便后续拆分。</p>
+</li>
+<li><p>分布式数据库索引设计中，非分区键的唯一索引<strong>一定</strong>带入分区键信息，这样业务查询时可以直接定位到数据所在分片，提升查询效率。</p>
+</li>
+<li><p>分布式数据库索引设计中，数据库层的唯一约束只在单个实例中保证，若要保证全局唯一，<strong>一定</strong>要使用全局唯一的索引设计。</p>
+</li>
+<li><p>直接使用 JOIN 请确认<strong>一定</strong>可以单元化在一个分片中完成，如果涉及跨分片的     JOIN，请通知业务修改成多条 SQL 的访问方式，只访问指定分片而不是所有分片。</p>
+</li>
+<li><p>分布式数据库可以进行业务层的分库分表访问，和通过数据库中间件的访问，对于业务耗时敏感的业务，<strong>推荐</strong>业务层直接根据路由规则访问数据，否则使用数据库中间件，简单易用。</p>
+</li>
+<li><p>对于耗时敏感的核心业务，<strong>推荐</strong>使用最终一致的业务层柔性事务，数据库层的     2PC 分布式事务耗时较大，性能较为一般，但是 2PC 使用简单，能满足大部分业务的使用。</p>
+</li>
+<li><p><strong>一定</strong>要利用好分布式数据库架构的特点，设计多活架构，每个机房都可以有写入流量，提升资源使用率和业务连续性，请 DBA     和业务方一起做好全链路的架构设计。</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+        <tag>MySQL开发设计规范</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git入门</title>
+    <url>/2017/03/03/learn-git/</url>
+    <content><![CDATA[<h1 id="基本了解"><a href="#基本了解" class="headerlink" title="基本了解"></a>基本了解</h1><p>git命令是一些命令行工具的集合，它可以用来跟踪，记录文件的变动。比如你可以进行保存，比对，分析，合并等等。这个过程被称之为版本控制。已经有一系列的版本控制系统，比如SVN, Mercurial, Perforce, CVS, Bitkeepe等等。</p>
+<p>Git是分布式的，这意味着它并不依赖于中心服务器，任何一台机器都可以有一个本地版本的控制系统，我们称之为仓库。如果是多人协作的话，你需要还需要一个线上仓库，用来同步信息。这就是GitHub, BitBucket的工作。</p>
+<span id="more"></span>
+
+<h2 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h2><p>安装git非常直接：</p>
+<ul>
+<li><p>Linux - 打开控制台，然后通过包管理安装，在Ubuntu上命令是：</p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install git-all</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Windows - 推荐使用<a href="https://git-for-windows.github.io/">git for windows</a>，它包括了图形工具以及命令行模拟器。</p>
+</li>
+<li><p>OS X - 最简单的方式是使用homebrew安装，命令行执行</p>
+</li>
+</ul>
+<p>如果你是在是先用图形工具的话，那么推荐你使用 <a href="https://desktop.github.com/">Github desktop</a>,<a href="https://www.atlassian.com/software/sourcetree">Sourcetree</a>。但我还是推荐你使用命令行，下面的内容就都是命令行的。</p>
+<h2 id="配置Git"><a href="#配置Git" class="headerlink" title="配置Git"></a>配置Git</h2><p>安装完git,首要任务是配置我们的信息，最重要的是用户名及邮箱，打开终端，执行以下命令。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git config --global user.name <span class="string">&quot;My Name&quot;</span></span><br><span class="line">$ git config --global user.email myEmail@example.com</span><br></pre></td></tr></table></figure>
+
+<p>配置好这两项，用户就能知道谁做了什么，并且一切都更有组织性了不是吗？</p>
+<h2 id="创建一个新仓库-git-init"><a href="#创建一个新仓库-git-init" class="headerlink" title="创建一个新仓库 - git init"></a>创建一个新仓库 - git init</h2><p>git 会把所有文件以及历史记录保存在你的项目中，创建一个新的仓库，首先要去到项目路径，执行 git init。然后git会创建一个隐藏的文件夹.git，所有的信息都储存在其中。</p>
+<p>在桌面创建一个联系文件夹 git_exercise, 打开终端：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> Desktop/git_exercise/</span><br><span class="line">$ git init</span><br></pre></td></tr></table></figure>
+
+<p>OK，现在项目还什么都没有，新建一个 hello.txt 文件试试~</p>
+<h2 id="检查状态-git-status"><a href="#检查状态-git-status" class="headerlink" title="检查状态 - git status"></a>检查状态 - git status</h2><p>git status 是另一个非常重要的命令，它会告诉我们创库的当前状态：是否为最新代码，有什么更新等等<br>执行git status:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git status</span><br><span class="line"></span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">Initial commit</span><br><span class="line"></span><br><span class="line">Untracked files:</span><br><span class="line">  (use <span class="string">&quot;git add ...&quot;</span> to include <span class="keyword">in</span> what will be committed)</span><br><span class="line"></span><br><span class="line">	hello.txt</span><br></pre></td></tr></table></figure>
+
+<p>git 告诉我们，hello.txt尚未跟踪，这是因为这个文件是新的，git不知道是应该跟踪它的变动呢，还是直接忽略不管呢。为了跟踪我们的新文件，我们需要暂存它。</p>
+<h2 id="暂存-git-add"><a href="#暂存-git-add" class="headerlink" title="暂存 - git add"></a>暂存 - git add</h2><p>git 有个概念叫 暂存区，你可以把它看成一块空白帆布，包裹着所有你可能会提交的变动。它一开始为空，你可以通过 git add 命令添加内容，并使用 git commit 提交。</p>
+<p>这个例子中只有一个文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git add hello.txt</span><br></pre></td></tr></table></figure>
+
+<p>如果需要提交目录下的所有内容，可以这样：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git add A</span><br></pre></td></tr></table></figure>
+
+<p>再次使用git status查看：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git status</span><br><span class="line"></span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">Initial commit</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use <span class="string">&quot;git rm --cached ...&quot;</span> to unstage)</span><br><span class="line"></span><br><span class="line">	new file:   hello.txt</span><br></pre></td></tr></table></figure>
+
+<p>我们的文件已经提交了。状态信息还会告诉我们暂存区文件发生了什么变动，不过这里我们提交的是一个全新文件。</p>
+<h2 id="提交-git-commit"><a href="#提交-git-commit" class="headerlink" title="提交 - git commit"></a>提交 - git commit</h2><p>一次提交代表着我们的仓库到了一个交付状态，通常是完成了某一块小功能。它就像是一个快照，允许我们像使用时光机一样回到旧时光。</p>
+<p>创建提交，需要我们提交东西到暂存区（git add），然后：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git commit -m <span class="string">&quot;Initial commit.&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>这就创建了一次提交，-m “Initial commit.”表示对这次提交的描述，建议使用有意义的描述性信息。</p>
+<h1 id="远端仓库"><a href="#远端仓库" class="headerlink" title="远端仓库"></a>远端仓库</h1><p>到目前为止，我们的操作都是在本地的，它存在于.git文件中。为了能够协同开发，我们需要把代码发布到远端仓库上。</p>
+<h2 id="链接远端仓库-git-remote-add"><a href="#链接远端仓库-git-remote-add" class="headerlink" title="链接远端仓库 - git remote add"></a>链接远端仓库 - git remote add</h2><p>为了能够上传到远端仓库，我们需要先建立起链接，这篇教程中，远端仓库的地址为：<a href="https://github.com/tutorialzine/awesome-project">https://github.com/tutorialzine/awesome-project</a>,但你应该自己在Github, BitBucket上搭建仓库，自己一步一步尝试。</p>
+<p>添加测试用的远端仓库</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git remote add origin https://github.com/tutorialzine/awesome-project.git</span><br></pre></td></tr></table></figure>
+
+<p>一个项目可以同时拥有好几个远端仓库为了能够区分，通常会起不同的名字。通常主远端仓库被称为origin。</p>
+<h2 id="上传到服务器-git-push"><a href="#上传到服务器-git-push" class="headerlink" title="上传到服务器 - git push"></a>上传到服务器 - git push</h2><p>每次我们要提交代码到服务器上时，都会使用到git push。<br>git push命令会有两个参数，远端仓库的名字，以及分支的名字：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git push origin master</span><br><span class="line"></span><br><span class="line">Counting objects: 3, <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (3/3), 212 bytes | 0 bytes/s, <span class="keyword">done</span>.</span><br><span class="line">Total 3 (delta 0), reused 0 (delta 0)</span><br><span class="line">To https://github.com/tutorialzine/awesome-project.git</span><br><span class="line"> * [new branch]      master -&gt; master</span><br></pre></td></tr></table></figure>
+
+<p>取决于你使用的服务器，push过程你可能需要验证身份。如果没有出差错，现在使用浏览器去你的远端分支上看，hello.txt已经在那里等着你了。</p>
+<h2 id="克隆仓库-git-clone"><a href="#克隆仓库-git-clone" class="headerlink" title="克隆仓库 - git clone"></a>克隆仓库 - git clone</h2><p>放在Github上的开源项目，人们可以看到你的代码。可以使用 git clone进行下载到本地。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/tutorialzine/awesome-project.git</span><br></pre></td></tr></table></figure>
+
+<p>本地也会创建一个新的仓库，并自动将github上的分支设为远端分支。</p>
+<h2 id="从服务器上拉取代码-git-pull"><a href="#从服务器上拉取代码-git-pull" class="headerlink" title="从服务器上拉取代码 - git pull"></a>从服务器上拉取代码 - git pull</h2><p>如果你更新了代码到仓库上，其他人可以通过git pull命令拉取你的变动：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git pull origin master</span><br><span class="line">From https://github.com/tutorialzine/awesome-project</span><br><span class="line"> * branch            master     -&gt; FETCH_HEAD</span><br><span class="line">Already up-to-date.</span><br></pre></td></tr></table></figure>
+
+<p>因为暂时没有其他人提交，所有没有任何变动</p>
+<h1 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h1><p><img src="http://javabk.oss-cn-hangzhou.aliyuncs.com/images/learn-git-in-30-minutes-branch.jpg" alt="branchs"></p>
+<p>当你在做一个新功能的时候，最好是在一个独立的区域上开发，通常称之为分支。分支之间相互独立，并且拥有自己的历史记录。这样做的原因是：</p>
+<ul>
+<li>稳定版本的代码不会被破坏</li>
+<li>不同的功能可以由不同开发者同时开发。</li>
+<li>开发者可以专注于自己的分支，不用担心被其他人破坏了环境</li>
+<li>在不确定之前，同一个特性可以拥有几个版本，便于比较</li>
+</ul>
+<h2 id="创建新分支-git-branch"><a href="#创建新分支-git-branch" class="headerlink" title="创建新分支 - git branch"></a>创建新分支 - git branch</h2><p>每一个仓库的默认分支都叫master, 创建新分支可以这样：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git branch amazing_new_feature</span><br></pre></td></tr></table></figure>
+
+<p>创建了一个名为amazing_new_feature的新分支，它跟当前分支同一起点</p>
+<h2 id="切换分支-git-checkout"><a href="#切换分支-git-checkout" class="headerlink" title="切换分支 - git checkout"></a>切换分支 - git checkout</h2><p>单独使用git branch，可以查看分支状态：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git branch</span><br><span class="line">  amazing_new_feature</span><br><span class="line">* master</span><br></pre></td></tr></table></figure>
+<p>***** 号表示当前活跃分支为master，使用git checkout切换分支。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git checkout amazing_new_feature</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="合并分支-git-merge"><a href="#合并分支-git-merge" class="headerlink" title="合并分支 - git merge"></a>合并分支 - git merge</h2><p>我们的 amazing_new_feature 分支的任务是增加一个featuer.txt。我们来创建，添加到暂存区，提交。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git add feature.txt</span><br><span class="line">$ git commit -m <span class="string">&quot;New feature complete.&quot;</span></span><br></pre></td></tr></table></figure>
+<p>新分支任务完成了，回到master分支</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git checkout master</span><br></pre></td></tr></table></figure>
+
+<p>现在去查看文件，你会发现，之前创建的feature.txt文件不见了，因为master分支上并没有feature.txt。使用git merge 把 amazing_new_feature 分支合并到master上。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git merge amazing_new_feature</span><br></pre></td></tr></table></figure>
+<p>ok! 然后再把amazing_new_feature 分支删掉吧。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git branch -d amazing_new_feature</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h1 id="高级"><a href="#高级" class="headerlink" title="高级"></a>高级</h1><p>这篇文章的最后一节，我们来说些比较高级并且使用的技巧。</p>
+<h2 id="比对两个不同提交之间的差别"><a href="#比对两个不同提交之间的差别" class="headerlink" title="比对两个不同提交之间的差别"></a>比对两个不同提交之间的差别</h2><p>每次提交都有一个唯一id，查看所有提交和他们的id，可以使用 git log:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git <span class="built_in">log</span></span><br><span class="line"></span><br><span class="line">commit ba25c0ff30e1b2f0259157b42b9f8f5d174d80d7</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Mon May 30 17:15:28 2016 +0300</span><br><span class="line"></span><br><span class="line">    New feature complete</span><br><span class="line"></span><br><span class="line">commit b10cc1238e355c02a044ef9f9860811ff605c9b4</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Mon May 30 16:30:04 2016 +0300</span><br><span class="line"></span><br><span class="line">    Added content to hello.txt</span><br><span class="line"></span><br><span class="line">commit 09bd8cc171d7084e78e4d118a2346b7487dca059</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Sat May 28 17:52:14 2016 +0300</span><br><span class="line"></span><br><span class="line">    Initial commit</span><br></pre></td></tr></table></figure>
+
+<p>id 很长，但是你并不需要复制整个字符串，前一小部分就够了。<br>查看某一次提交更新了什么，使用 git show:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git show b10cc123</span><br><span class="line"></span><br><span class="line">commit b10cc1238e355c02a044ef9f9860811ff605c9b4</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Mon May 30 16:30:04 2016 +0300</span><br><span class="line"></span><br><span class="line">    Added content to hello.txt</span><br><span class="line"></span><br><span class="line">diff --git a/hello.txt b/hello.txt</span><br><span class="line">index e69de29..b546a21 100644</span><br><span class="line">--- a/hello.txt</span><br><span class="line">+++ b/hello.txt</span><br><span class="line">@@ -0,0 +1 @@</span><br><span class="line">+Nice weather today, isn<span class="string">&#x27;t it?</span></span><br></pre></td></tr></table></figure>
+
+<p>查看两次提交的不同，可以使用 git diff [commit-from]..[commit-to] 语法：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git diff 09bd8cc..ba25c0ff</span><br><span class="line"></span><br><span class="line">diff --git a/feature.txt b/feature.txt</span><br><span class="line">new file mode 100644</span><br><span class="line">index 0000000..e69de29</span><br><span class="line">diff --git a/hello.txt b/hello.txt</span><br><span class="line">index e69de29..b546a21 100644</span><br><span class="line">--- a/hello.txt</span><br><span class="line">+++ b/hello.txt</span><br><span class="line">@@ -0,0 +1 @@</span><br><span class="line">+Nice weather today, isn<span class="string">&#x27;t it?</span></span><br></pre></td></tr></table></figure>
+
+<p>比较首次提交和最后一次提交，我们可以看到所有的更改。当然使用git difftool命令更加方便。</p>
+<h2 id="回滚某个文件到之前的版本"><a href="#回滚某个文件到之前的版本" class="headerlink" title="回滚某个文件到之前的版本"></a>回滚某个文件到之前的版本</h2><p>git 允许我们将某个特定的文件回滚到特定的提交，使用的也是 git checkout。</p>
+<p>下面的例子，我们将hello.txt回滚到最初的状态，需要指定回滚到哪个提交，以及文件的全路径。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git checkout 09bd8cc1 hello.txt</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="回滚提交"><a href="#回滚提交" class="headerlink" title="回滚提交"></a>回滚提交</h2><p>如果你发现最新的一次提交完了加某个文件，你可以通过 git commit —amend来修复，它会把最新的提交打回暂存区，并尝试重新提交。</p>
+<p>如果是更复杂的情况，比如不是最新的提交了。那你可以使用git revert。</p>
+<p>最新的一次提交别名也叫HEAD。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git revert HEAD</span><br></pre></td></tr></table></figure>
+<p>其他提交可以使用id:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git revert HEAD</span><br></pre></td></tr></table></figure>
+<p>混滚提交时，发生冲突是非常频繁的。当文件被后面的提交修改了以后，git不能正确回滚。</p>
+<h2 id="解决合并冲突"><a href="#解决合并冲突" class="headerlink" title="解决合并冲突"></a>解决合并冲突</h2><p>冲突经常出现在合并分支或者是拉去别人的代码。有些时候git能自动处理冲突，但大部分需要我们手动处理。</p>
+<p>比如John 和 Tim 分别在各自的分支上写了两部分代码。<br>John 喜欢 for:</p>
+<p>&#x2F;&#x2F; Use a for loop to console.log contents.<br>for(var i&#x3D;0; i&lt;arr.length; i++) {<br>console.log(arr[i]);<br>}<br>Tim 喜欢 forEach:</p>
+<p>&#x2F;&#x2F; Use forEach to console.log contents.<br>arr.forEach(function(item) {<br>console.log(item);<br>});</p>
+<p>假设John 现在去拉取 Tim的代码:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git merge tim_branch</span><br><span class="line"></span><br><span class="line">Auto-merging print_array.js</span><br><span class="line">CONFLICT (content): Merge conflict <span class="keyword">in</span> print_array.js</span><br><span class="line">Automatic merge failed; fix conflicts and <span class="keyword">then</span> commit the result.</span><br></pre></td></tr></table></figure>
+<p>这时候git并不知道如何解决冲突，因为他不知道John和Tim谁写得更好。</p>
+<p>于是它就在代码中插入标记。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt; <span class="variable constant_">HEAD</span></span><br><span class="line"><span class="comment">// Use a for loop to console.log contents.</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;arr.<span class="property">length</span>; i++) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(arr[i]);</span><br><span class="line">&#125;</span><br><span class="line">=======</span><br><span class="line"><span class="comment">// Use forEach to console.log contents.</span></span><br><span class="line">arr.<span class="title function_">forEach</span>(<span class="keyword">function</span>(<span class="params">item</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(item);</span><br><span class="line">&#125;);</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;&gt;&gt; <span class="title class_">Tim</span> s commit.</span><br></pre></td></tr></table></figure>
+
+<p>&#x3D;&#x3D;&#x3D;&#x3D; 号上方是当前最新一次提交，下方是冲突的代码。我们需要解决这样的冲突，经过组委会成员讨论，一致认定，在座的各位都是垃圾！两个都不要。改成下面的代码:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// Not using for loop or forEach.</span><br><span class="line">// Use Array.toString() to console.log contents.</span><br><span class="line">console.log(arr.toString());</span><br></pre></td></tr></table></figure>
+<p>好了，再提交一下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ git add -A</span><br><span class="line">$ git commit -m &quot;Array printing conflict resolved.&quot;</span><br></pre></td></tr></table></figure>
+
+<p>如果在大型项目中，这个过程可能容易出问题。你可以使用<a href="https://git-scm.com/download/gui/linux">GUI工具</a>来帮助你。使用 git mergetool。</p>
+<h2 id="配置-gitignore"><a href="#配置-gitignore" class="headerlink" title="配置 .gitignore"></a>配置 .gitignore</h2><p>大部分项目中，会有写文件，文件夹是我们不想提交的。为了防止一不小心提交，我们需要gitignore文件：</p>
+<ol>
+<li>在项目根目录创建.gitignore文件</li>
+<li>在文件中列出不需要提交的文件名，文件夹名，每个一行</li>
+<li>.gitignore文件需要提交，就像普通文件一样</li>
+</ol>
+<p>通常会被ignore的文件有：</p>
+<ul>
+<li>log文件</li>
+<li>task runner builds</li>
+<li>node_modules等文件夹</li>
+<li>IDES生成的文件</li>
+<li>个人笔记</li>
+</ul>
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">*.log</span><br><span class="line">build/</span><br><span class="line">node_modules/</span><br><span class="line">.idea/</span><br><span class="line">my_notes.txt</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>Java架构</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>常用的磁盘分区形式</title>
+    <url>/2020/05/07/linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%BD%A2%E5%BC%8F/</url>
+    <content><![CDATA[<p>常用的磁盘分区形式如表1所示，并且针对Linux操作系统，不同的磁盘分区形式需要选择不同的分区工具。</p>
+<table>
+<thead>
+<tr>
+<th>磁盘分区形式</th>
+<th>支持最大磁盘容量</th>
+<th>支持分区数量</th>
+<th>Linux分区工具</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主启动记录分区（MBR）</td>
+<td>2 TB</td>
+<td>4个主分区 <br />3个主分区和1个扩展分区<br />MBR分区包含主分区和扩展分区，其中扩展分区里面可以包含若干个逻辑分区。扩展分区不可以直接使用，需要划分成若干个逻辑分区才可以使用。以创建6个分区为例，以下两种分区情况供参考：<br />3个主分区，1个扩展分区，其中扩展分区中包含3个逻辑分区。<br />1个主分区，1个扩展分区，其中扩展分区中包含5个逻辑分区。</td>
+<td>以下两种工具均可以使用：fdisk工具parted工具</td>
+</tr>
+<tr>
+<td>全局分区表（GPT, Guid Partition Table）</td>
+<td>18 EB1 EB &#x3D; 1048576 TB</td>
+<td>不限制分区数量GPT格式下没有主分区、扩展分区以及逻辑分区之分。</td>
+<td>parted工具</td>
+</tr>
+</tbody></table>
+<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，如果您需要使用大于2 TB的磁盘容量，分区形式请采用GPT。</p>
+]]></content>
+      <categories>
+        <category>Linux运维</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CentOS逻辑卷调整分区大小</title>
+    <url>/2018/05/04/lvreduce-lvextend/</url>
+    <content><![CDATA[<h1 id="CentOS逻辑卷调整分区大小目的"><a href="#CentOS逻辑卷调整分区大小目的" class="headerlink" title="CentOS逻辑卷调整分区大小目的"></a>CentOS逻辑卷调整分区大小目的</h1><p>因为系统使用的是逻辑卷分区（LVM），且分区大小不合理</p>
+<p>想增加root大小，减少home</p>
+<h1 id="查看磁盘使用情况"><a href="#查看磁盘使用情况" class="headerlink" title="查看磁盘使用情况"></a>查看磁盘使用情况</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                       50G  3.4G   44G   8% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                      140G   60M  133G   1% /home</span><br><span class="line">/dev/sr0              3.7G  3.7G     0 100% /media/CentOS_6.9_Final</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># vgdisplay </span></span><br><span class="line">  --- Volume group ---</span><br><span class="line">  VG Name               vg_linuxcentos</span><br><span class="line">  System ID             </span><br><span class="line">  Format                lvm2</span><br><span class="line">  Metadata Areas        1</span><br><span class="line">  Metadata Sequence No  4</span><br><span class="line">  VG Access             <span class="built_in">read</span>/write</span><br><span class="line">  VG Status             resizable</span><br><span class="line">  MAX LV                0</span><br><span class="line">  Cur LV                3</span><br><span class="line">  Open LV               3</span><br><span class="line">  Max PV                0</span><br><span class="line">  Cur PV                1</span><br><span class="line">  Act PV                1</span><br><span class="line">  VG Size               199.51 GiB</span><br><span class="line">  PE Size               4.00 MiB</span><br><span class="line">  Total PE              51074</span><br><span class="line">  Alloc PE / Size       51074 / 199.51 GiB</span><br><span class="line">  Free  PE / Size       0 / 0   </span><br><span class="line">  VG UUID               DqgWat-YkkU-V56r-xNFv-XmmX-mgwD-Fi0RWh</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="调整home分区大小"><a href="#调整home分区大小" class="headerlink" title="调整home分区大小"></a>调整home分区大小</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># umount /home</span></span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># e2fsck -f /dev/mapper/vg_linuxcentos-lv_home </span></span><br><span class="line">e2fsck 1.41.12 (17-May-2010)</span><br><span class="line">Pass 1: Checking inodes, blocks, and sizes</span><br><span class="line">Pass 2: Checking directory structure</span><br><span class="line">Pass 3: Checking directory connectivity</span><br><span class="line">Pass 4: Checking reference counts</span><br><span class="line">Pass 5: Checking group summary information</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home: 11/9289728 files (0.0% non-contiguous), 631025/37148672 blocks</span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># resize2fs -p /dev/mapper/vg_linuxcentos-lv_home  20G</span></span><br><span class="line">resize2fs 1.41.12 (17-May-2010)</span><br><span class="line">Resizing the filesystem on /dev/mapper/vg_linuxcentos-lv_home to 5242880 (4k) blocks.</span><br><span class="line">Begin pass 2 (max = 32768)</span><br><span class="line">Relocating blocks             XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</span><br><span class="line">Begin pass 3 (max = 1134)</span><br><span class="line">Scanning inode table          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</span><br><span class="line">The filesystem on /dev/mapper/vg_linuxcentos-lv_home is now 5242880 blocks long.</span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># mount /home</span></span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                       50G  3.4G   44G   8% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                       20G   44M   19G   1% /home</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="释放空间"><a href="#释放空间" class="headerlink" title="释放空间"></a>释放空间</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># lvreduce /dev/mapper/vg_linuxcentos-lv_home -L 20G</span></span><br><span class="line">  WARNING: Reducing active and open logical volume to 20.00 GiB.</span><br><span class="line">  THIS MAY DESTROY YOUR DATA (filesystem etc.)</span><br><span class="line">Do you really want to reduce vg_linuxcentos/lv_home? [y/n]: y</span><br><span class="line">  Size of logical volume vg_linuxcentos/lv_home changed from 141.71 GiB (36278 extents) to 20.00 GiB (5120 extents).</span><br><span class="line">  Logical volume lv_home successfully resized.</span><br><span class="line">  </span><br><span class="line">  [root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                       50G  3.4G   44G   8% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                       20G   44M   19G   1% /home</span><br><span class="line">                       </span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># vgdisplay </span></span><br><span class="line">  --- Volume group ---</span><br><span class="line">  VG Name               vg_linuxcentos</span><br><span class="line">  System ID             </span><br><span class="line">  Format                lvm2</span><br><span class="line">  Metadata Areas        1</span><br><span class="line">  Metadata Sequence No  5</span><br><span class="line">  VG Access             <span class="built_in">read</span>/write</span><br><span class="line">  VG Status             resizable</span><br><span class="line">  MAX LV                0</span><br><span class="line">  Cur LV                3</span><br><span class="line">  Open LV               3</span><br><span class="line">  Max PV                0</span><br><span class="line">  Cur PV                1</span><br><span class="line">  Act PV                1</span><br><span class="line">  VG Size               199.51 GiB</span><br><span class="line">  PE Size               4.00 MiB</span><br><span class="line">  Total PE              51074</span><br><span class="line">  Alloc PE / Size       19916 / 77.80 GiB</span><br><span class="line">  Free  PE / Size       31158 / 121.71 GiB</span><br><span class="line">  VG UUID               DqgWat-YkkU-V56r-xNFv-XmmX-mgwD-Fi0RWh</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="增加释放的空间到root"><a href="#增加释放的空间到root" class="headerlink" title="增加释放的空间到root"></a>增加释放的空间到root</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># lvextend -L +120G /dev/mapper/vg_linuxcentos-lv_root   </span></span><br><span class="line">  Size of logical volume vg_linuxcentos/lv_root changed from 50.00 GiB (12800 extents) to 170.00 GiB (43520 extents).</span><br><span class="line">  Logical volume lv_root successfully resized.</span><br><span class="line">  </span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># resize2fs -p /dev/mapper/vg_linuxcentos-lv_root </span></span><br><span class="line">resize2fs 1.41.12 (17-May-2010)</span><br><span class="line">Filesystem at /dev/mapper/vg_linuxcentos-lv_root is mounted on /; on-line resizing required</span><br><span class="line">old desc_blocks = 4, new_desc_blocks = 11</span><br><span class="line">Performing an on-line resize of /dev/mapper/vg_linuxcentos-lv_root to 44564480 (4k) blocks.</span><br><span class="line">The filesystem on /dev/mapper/vg_linuxcentos-lv_root is now 44564480 blocks long.</span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                      168G  3.5G  156G   3% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                       20G   44M   19G   1% /home</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Linux运维</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL数据库自动备份脚本</title>
+    <url>/2018/05/02/mysql-backup-shell/</url>
+    <content><![CDATA[<h1 id="编写数据库备份脚本-mysqlfullbackup-sh"><a href="#编写数据库备份脚本-mysqlfullbackup-sh" class="headerlink" title="编写数据库备份脚本(mysqlfullbackup.sh)"></a>编写数据库备份脚本(mysqlfullbackup.sh)</h1><p>#数据库备份脚本</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="comment">###############################</span></span><br><span class="line"><span class="comment"># 此脚本用来全量备份</span></span><br><span class="line"><span class="comment"># 此文件名：mysqlfullbackup.sh</span></span><br><span class="line"><span class="comment">#  vim /etc/crontab </span></span><br><span class="line"><span class="comment"># 定时任务,计划在每天晚上23点55分进行数据备份(加 &amp; 为后台执行)</span></span><br><span class="line"><span class="comment"># 55 23 * * * root /backup/mysql/full_backup/mysqlfullbackup.sh &amp;</span></span><br><span class="line"><span class="comment"># # /etc/rc.d/init.d/crond restart</span></span><br><span class="line"><span class="comment">###############################</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#备份数据库(多数据库，用逗号隔开)</span></span><br><span class="line">mysql_databases=<span class="string">&quot;test&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#设置用户名和密码</span></span><br><span class="line">mysql_user=<span class="string">&quot;root&quot;</span></span><br><span class="line">mysql_password=<span class="string">&quot;123456&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#mysql安装全路径</span></span><br><span class="line">mysql_dir=/usr/local/mysql-5.6.38</span><br><span class="line"></span><br><span class="line"><span class="comment">#设置备份基本路径</span></span><br><span class="line">backup_dir=/backup/mysql</span><br><span class="line"></span><br><span class="line"><span class="comment">#创建备份文件夹</span></span><br><span class="line">[ -d <span class="variable">$&#123;backup_dir&#125;</span> ] || <span class="built_in">mkdir</span> -p <span class="variable">$&#123;backup_dir&#125;</span></span><br><span class="line"></span><br><span class="line">full_backup_dir=<span class="variable">$backup_dir</span>/full_backup</span><br><span class="line"></span><br><span class="line"><span class="comment">#备份的时间</span></span><br><span class="line">today=$(<span class="built_in">date</span> +<span class="string">&quot;%Y%m%d_%H%M%S&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#备份日志文件</span></span><br><span class="line">log_file=full_backup.log</span><br><span class="line"></span><br><span class="line"><span class="comment">#只保留最近10天的备份（其他删除）</span></span><br><span class="line">time=$(<span class="built_in">date</span> -d <span class="string">&quot;10 day ago&quot;</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#开始备份,记录备份开始时间 并压缩备份文件</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span><span class="variable">$mysql_databases</span><span class="string">&#x27; - &#x27;</span><span class="string">&quot;备份开始\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#判断目标目录是否已经存在</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d <span class="variable">$full_backup_dir</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">mkdir</span> -p <span class="variable">$full_backup_dir</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span><span class="variable">$mysql_databases</span><span class="string">&#x27; - &#x27;</span><span class="string">&quot;备份并压缩备份文件\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#备份并压缩备份文件</span></span><br><span class="line"><span class="variable">$mysql_dir</span>/bin/mysqldump -u<span class="variable">$mysql_user</span> -p<span class="variable">$mysql_password</span>  --databases <span class="variable">$mysql_databases</span> | gzip &gt; <span class="variable">$full_backup_dir</span>/<span class="variable">$mysql_databases</span>.<span class="variable">$today</span>.sql.gz</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[ $? -eq 0 ] &amp;&amp; <span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span>All DB<span class="string">&#x27; - &#x27;</span><span class="string">&quot;备份并压缩备份文件 OK!!!\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#找出10天前备份的文件，然后删除</span></span><br><span class="line"><span class="comment">#echo -e &#x27;[&#x27;$(date +&quot;%Y-%m-%d %H:%M:%S&quot;)&#x27;] - &#x27;$mysql_databases&#x27; - &#x27;&quot;删除10天前的备份\n&quot; &gt;&gt; #$backup_dir/$log_file</span></span><br><span class="line"><span class="comment">#for file in `find -not -type d -mtime +10`</span></span><br><span class="line"><span class="comment">#do</span></span><br><span class="line"><span class="comment">#    mv $file /tmp/</span></span><br><span class="line"><span class="comment">#done</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#基于ssh key认证，mysqldump的远程mysql备份方案</span></span><br><span class="line">copytoremote=1</span><br><span class="line">remoteuser=<span class="string">&quot;root&quot;</span></span><br><span class="line">remoteip=<span class="string">&quot;xx.xx.xxx.xx&quot;</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$copytoremote</span> = 1 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">if</span> [ -z <span class="variable">$remoteuser</span> ];<span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">&quot;remote user not set,Copy to remote Failed ...\n&quot;</span> &gt;&gt; <span class="variable">$log_file</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line">    <span class="keyword">elif</span> [ -z <span class="variable">$remoteip</span> ];<span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">&quot;remote ip not set,Copy to remote Failed ...\n&quot;</span> &gt;&gt; <span class="variable">$log_file</span></span><br><span class="line">        <span class="built_in">exit</span> 2</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span><span class="variable">$mysql_databases</span><span class="string">&#x27; - &#x27;</span><span class="string">&quot;开始使用SSH备份数据文件到远程服务器\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line">        scp <span class="variable">$mysql_databases</span>.<span class="variable">$today</span><span class="string">&quot;.sql.gz&quot;</span> <span class="variable">$remoteuser</span>@<span class="variable">$remoteip</span>:<span class="variable">$full_backup_dir</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span><span class="variable">$mysql_databases</span><span class="string">&#x27; - &#x27;</span><span class="string">&quot;备份完成\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="给脚本添加执行权限"><a href="#给脚本添加执行权限" class="headerlink" title="给脚本添加执行权限"></a>给脚本添加执行权限</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x /backup/mysql/full_backup/mysqlfullbackup.sh</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="定时任务设置"><a href="#定时任务设置" class="headerlink" title="定时任务设置"></a>定时任务设置</h1><p>修改&#x2F;etc&#x2F;crontab   #添加计划任务</p>
+<p> 定时任务,计划在每天晚上23点55分进行数据备份(加 &amp; 为后台执行)</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/crontab </span><br><span class="line"></span><br><span class="line"><span class="comment">#在最后一行添加以下内容</span></span><br><span class="line">55 23 * * * root /backup/mysql/full_backup/mysqlfullbackup.sh &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment">#重启定时任务</span></span><br><span class="line">/etc/rc.d/init.d/crond restart</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="设置免密SSH拷贝备份到远程服务器"><a href="#设置免密SSH拷贝备份到远程服务器" class="headerlink" title="设置免密SSH拷贝备份到远程服务器"></a>设置免密SSH拷贝备份到远程服务器</h1><p>设置远程无密码拷贝</p>
+<p>数据库服务器上执行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br><span class="line"><span class="comment">#输出，连续回车</span></span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file <span class="keyword">in</span> <span class="built_in">which</span> to save the key (/root/.ssh/id_rsa): </span><br><span class="line">Enter passphrase (empty <span class="keyword">for</span> no passphrase): </span><br><span class="line">Enter same passphrase again: </span><br><span class="line">Your identification has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">60:4d:8e:08:6d:cf:a4:5c:7f:b8:2a:29:62:ce:cf:a4 root@iZ2ze7vlqunx6jumrds0v4Z</span><br><span class="line">The key<span class="string">&#x27;s randomart image is:</span></span><br><span class="line"><span class="string">+--[ RSA 2048]----+</span></span><br><span class="line"><span class="string">|  ..    .        |</span></span><br><span class="line"><span class="string">|   .o.o=         |</span></span><br><span class="line"><span class="string">|   o.*+.o.       |</span></span><br><span class="line"><span class="string">|    o.o.o .      |</span></span><br><span class="line"><span class="string">|        So       |</span></span><br><span class="line"><span class="string">|        .        |</span></span><br><span class="line"><span class="string">|   . . .         |</span></span><br><span class="line"><span class="string">|o.= o .          |</span></span><br><span class="line"><span class="string">|oE.+ .           |</span></span><br><span class="line"><span class="string">+-----------------+</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<p>会在用户目录~&#x2F;.ssh&#x2F;产生两个文件，id_rsa，id_rsa.pub</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@iZ2ze7vlqunx6jumrds0v4Z .ssh]<span class="comment"># ls</span></span><br><span class="line">id_rsa  id_rsa.pub  </span><br></pre></td></tr></table></figure>
+
+<p>将id_rsa.pub文件拷贝到远程主机的root用户主目录下的.ssh目录下,并且改名为authorized_keys</p>
+<p>这样数据库服务器上使用scp命令复制文件到远程主机上将不提示输入密码了，直接自动复制了</p>
+<p>说明：当远程主机的SSH远程端口修改后，SCP指令要加上端口号：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scp -p 端口号 <span class="variable">$mysql_databases</span>.<span class="variable">$today</span><span class="string">&quot;.sql.gz&quot;</span> <span class="variable">$remoteuser</span>@<span class="variable">$remoteip</span>:<span class="variable">$full_backup_dir</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Linux运维</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>初始化Linux数据盘（fdisk）</title>
+    <url>/2020/05/07/linux-init-disk/</url>
+    <content><![CDATA[<h1 id="初始化Linux数据盘（fdisk）"><a href="#初始化Linux数据盘（fdisk）" class="headerlink" title="初始化Linux数据盘（fdisk）"></a>初始化Linux数据盘（fdisk）</h1><h4 id="操作场景"><a href="#操作场景" class="headerlink" title="操作场景"></a>操作场景</h4><p>本文以云服务器的操作系统为“CentOS 7.7 64位”为例，采用fdisk分区工具为数据盘设置分区。</p>
+<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，因此当您初始化容量大于2 TB的磁盘时，分区形式请采用GPT。对于Linux操作系统而言，当磁盘分区形式选用GPT时，fdisk分区工具将无法使用，需要采用parted工具。</p>
+<h4 id="划分分区并挂载磁盘"><a href="#划分分区并挂载磁盘" class="headerlink" title="划分分区并挂载磁盘"></a>划分分区并挂载磁盘</h4><p>本操作以该场景为例，当服务器挂载了一块新的数据盘时，使用fdisk分区工具将该数据盘设为主分区，分区形式默认设置为MBR，文件系统设为xfs格式，挂载在“&#x2F;opt”下，并设置开机启动自动挂载。</p>
+<ol>
+<li><p>执行以下命令，查看新增数据盘。</p>
+<p><strong>fdisk -l</strong></p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# fdisk -l</span><br><span class="line"></span><br><span class="line">Disk /dev/sda: 68.7 GB, 68719476736 bytes, 134217728 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line">Disk label type: dos</span><br><span class="line">Disk identifier: 0x0002fb1b</span><br><span class="line"></span><br><span class="line">   Device Boot      Start         End      Blocks   Id  System</span><br><span class="line">/dev/sda1   *        2048     2099199     1048576   83  Linux</span><br><span class="line">/dev/sda2         2099200   134217727    66059264   8e  Linux LVM</span><br><span class="line"></span><br><span class="line">Disk /dev/sdb: 1073.7 GB, 1073741824000 bytes, 2097152000 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disk /dev/mapper/rootvg-lvroot: 27.9 GB, 27917287424 bytes, 54525952 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disk /dev/mapper/rootvg-lvswap: 17.2 GB, 17179869184 bytes, 33554432 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disk /dev/mapper/rootvg-lvhome: 1073 MB, 1073741824 bytes, 2097152 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disk /dev/mapper/rootvg-lvvar: 10.7 GB, 10737418240 bytes, 20971520 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disk /dev/mapper/rootvg-lvopt: 10.7 GB, 10733223936 bytes, 20963328 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br></pre></td></tr></table></figure>
+
+
+
+<p>表示当前的服务器有两块磁盘，<strong>“&#x2F;dev&#x2F;sda”</strong>是系统盘，<strong>“&#x2F;dev&#x2F;sdb”</strong>是新增数据盘。</p>
+</li>
+<li><p>执行以下命令，进入fdisk分区工具，开始对新增数据盘执行分区操作。</p>
+<p><strong>fdisk</strong> <em>新增数据盘</em></p>
+<p>以新挂载的数据盘“&#x2F;dev&#x2F;sdb”为例：</p>
+<p><strong>fdisk &#x2F;dev&#x2F;sdb</strong></p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# fdisk /dev/sdb</span><br><span class="line">Welcome to fdisk (util-linux 2.23.2).</span><br><span class="line"></span><br><span class="line">Changes will remain in memory only, until you decide to write them.</span><br><span class="line">Be careful before using the write command.</span><br><span class="line"></span><br><span class="line">Device does not contain a recognized partition table</span><br><span class="line">Building a new DOS disklabel with disk identifier 0xa04eb0bd.</span><br><span class="line"></span><br><span class="line">Command (m for help): </span><br></pre></td></tr></table></figure>
+
+
+
+
+</li>
+<li><p>输入“n”，按“Enter”，开始新建分区。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Command (m for help): n</span><br><span class="line">Partition type:</span><br><span class="line">   p   primary (0 primary, 0 extended, 4 free)</span><br><span class="line">   e   extended</span><br></pre></td></tr></table></figure>
+
+
+
+<p>表示磁盘有两种分区类型：</p>
+<ul>
+<li>“p”表示主分区。</li>
+<li>“e”表示扩展分区。</li>
+</ul>
+<p>说明：</p>
+<p>磁盘使用MBR分区形式，最多可以创建4个主分区，或者3个主分区加1个扩展分区，扩展分区不可以直接使用，需要划分成若干个逻辑分区才可以使用。</p>
+<p>磁盘使用GPT分区形式时，没有主分区、扩展分区以及逻辑分区之分。</p>
+</li>
+<li><p>以创建一个主要分区为例，输入“p”，按“Enter”，开始创建一个主分区。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Select (default p): p</span><br><span class="line">Partition number (1-4, default 1): </span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>“Partition number”</strong>表示主分区编号，可以选择1-4。</p>
+</li>
+<li><p>以分区编号选择“1”为例，输入主分区编号“1”，按“Enter”。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Partition number (1-4, default 1): 1</span><br><span class="line">First sector (2048-209715199, default 2048):</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>“First sector”</strong>表示起始磁柱值，可以选择2048-209715199，默认为2048。</p>
+</li>
+<li><p>以选择默认起始磁柱值2048为例，按“Enter”。</p>
+<p>系统会自动提示分区可用空间的起始磁柱值和截止磁柱值，可以在该区间内自定义，或者使用默认值。起始磁柱值必须小于分区的截止磁柱值。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">First sector (2048-209715199, default 2048):</span><br><span class="line">Using default value 2048</span><br><span class="line">Last sector, +sectors or +size&#123;K,M,G&#125; (2048-209715199, default 209715199):</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>“Last sector”</strong>表示截止磁柱值，可以选择2048-209715199，默认为209715199。</p>
+</li>
+<li><p>以选择默认截止磁柱值209715199为例，按“Enter”。</p>
+<p>系统会自动提示分区可用空间的起始磁柱值和截止磁柱值，可以在该区间内自定义，或者使用默认值。起始磁柱值必须小于分区的截止磁柱值。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Last sector, +sectors or +size&#123;K,M,G&#125; (2048-209715199, default 209715199):</span><br><span class="line">Using default value 209715199</span><br><span class="line">Partition 1 of type Linux and of size 100 GiB is set</span><br><span class="line"></span><br><span class="line">Command (m for help):</span><br></pre></td></tr></table></figure>
+
+
+
+<p>表示分区完成，即为数据盘新建了1个分区。</p>
+</li>
+<li><p>输入“p”，按“Enter”，查看新建分区的详细信息。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Command (m for help): p</span><br><span class="line"></span><br><span class="line">Disk /dev/sdb: 1073.7 GB, 1073741824000 bytes, 2097152000 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line">Disk label type: dos</span><br><span class="line">Disk identifier: 0xa04eb0bd</span><br><span class="line"></span><br><span class="line">   Device Boot      Start         End      Blocks   Id  System</span><br><span class="line">/dev/sdb1            2048  2097151999  1048574976   83  Linux</span><br></pre></td></tr></table></figure>
+
+
+
+<p>表示新建分区<strong>“&#x2F;dev&#x2F;sdb1”</strong>的详细信息。</p>
+</li>
+<li><p>输入“w”，按“Enter”，将分区结果写入分区表中。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Command (m for help): w</span><br><span class="line">The partition table has been altered!</span><br><span class="line"></span><br><span class="line">Calling ioctl() to re-read partition table.</span><br><span class="line">Syncing disks.</span><br></pre></td></tr></table></figure>
+
+
+
+<p>表示分区创建完成。</p>
+<p>说明：</p>
+<p>如果之前分区操作有误，请输入“q”，则会退出fdisk分区工具，之前的分区结果将不会被保留。</p>
+</li>
+<li><p>执行以下命令，将新的分区表变更同步至操作系统。</p>
+</li>
+</ol>
+<p>   <strong>partprobe</strong></p>
+<ol start="11">
+<li>执行以下命令，将新建分区文件系统设为系统所需格式。</li>
+</ol>
+<p>  ​    </p>
+<pre><code>**mkfs** **-t** *文件系统格式* **/dev/sdb1**
+
+以设置文件系统为“xfs”为例：
+
+**mkfs -t xfs /dev/sdb1**
+
+回显类似如下信息：
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# mkfs -t xfs /dev/sdb1</span><br><span class="line">meta-data=/dev/sdb1              isize=512    agcount=4, agsize=65535936 blks</span><br><span class="line">         =                       sectsz=512   attr=2, projid32bit=1</span><br><span class="line">         =                       crc=1        finobt=0, sparse=0</span><br><span class="line">data     =                       bsize=4096   blocks=262143744, imaxpct=25</span><br><span class="line">         =                       sunit=0      swidth=0 blks</span><br><span class="line">naming   =version 2              bsize=4096   ascii-ci=0 ftype=1</span><br><span class="line">log      =internal log           bsize=4096   blocks=127999, version=2</span><br><span class="line">         =                       sectsz=512   sunit=0 blks, lazy-count=1</span><br><span class="line">realtime =none                   extsz=4096   blocks=0, rtextents=0</span><br></pre></td></tr></table></figure>
+
+
+
+格式化需要等待一段时间，请观察系统运行状态，不要退出。
+
+不同文件系统支持的分区大小不同，请根据您的业务需求选择合适的文件系统。
+</code></pre>
+<ol start="12">
+<li><p>执行以下命令，新建挂载目录。</p>
+<p><strong>mkdir</strong> <em>挂载目录</em></p>
+<p>以挂载目录“&#x2F;opt”为例：</p>
+</li>
+<li><p>执行以下命令，将新建分区挂载到<a href="https://support.huaweicloud.com/qs-ecs/zh-cn_topic_0085634797.html#zh-cn_topic_0085634797__zh-cn_topic_0044524669_li1758111811323">12</a>中创建的目录下。</p>
+</li>
+</ol>
+<p>  ​    </p>
+<pre><code>**mount** *磁盘分区* *挂载目录*
+
+以挂载新建分区“/dev/sdb1”至“/opt”为例：
+
+**mount /dev/sdb1 /opt**
+</code></pre>
+<ol start="14">
+<li>执行以下命令，查看挂载结果。</li>
+</ol>
+<p>  ​    </p>
+<pre><code>**df -TH**
+
+回显类似如下信息：
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# df -HT</span><br><span class="line">Filesystem                Type      Size  Used Avail Use% Mounted on</span><br><span class="line">devtmpfs                  devtmpfs   17G     0   17G   0% /dev</span><br><span class="line">tmpfs                     tmpfs      17G     0   17G   0% /dev/shm</span><br><span class="line">tmpfs                     tmpfs      17G   55M   17G   1% /run</span><br><span class="line">tmpfs                     tmpfs      17G     0   17G   0% /sys/fs/cgroup</span><br><span class="line">/dev/mapper/rootvg-lvroot xfs        28G  4.7G   24G  17% /</span><br><span class="line">/dev/sda1                 xfs       1.1G  178M  886M  17% /boot</span><br><span class="line">/dev/sdb1                 xfs       1.1T   34M  1.1T   1% /opt</span><br><span class="line">/dev/mapper/rootvg-lvhome xfs       1.1G   34M  1.1G   4% /home</span><br><span class="line">/dev/mapper/rootvg-lvvar  xfs        11G  320M   11G   3% /var</span><br><span class="line">tmpfs                     tmpfs     3.4G   13k  3.4G   1% /run/user/42</span><br><span class="line">tmpfs                     tmpfs     3.4G     0  3.4G   0% /run/user/1000</span><br></pre></td></tr></table></figure>
+
+
+
+表示新建分区**“/dev/sdb1”**已挂载至“/opt”。
+
+
+
+说明：
+
+服务器重启后，挂载会失效。您可以修改“/etc/fstab”文件，将新建磁盘分区设置为开机自动挂载
+</code></pre>
+<h4 id="设置开机自动挂载磁盘分区"><a href="#设置开机自动挂载磁盘分区" class="headerlink" title="设置开机自动挂载磁盘分区"></a>设置开机自动挂载磁盘分区</h4><p>设置云服务器系统启动时自动挂载磁盘分区，不能采用在“&#x2F;etc&#x2F;fstab”直接指定设备名（比如&#x2F;dev&#x2F;sdb1）的方法，因为设备的顺序编码在关闭或者开启服务器过程中可能发生改变，例如&#x2F;dev&#x2F;sdb1可能会变成&#x2F;dev&#x2F;sdb2。推荐使用UUID来配置自动挂载磁盘分区。</p>
+<p>说明：</p>
+<p>UUID（universally unique identifier）是Linux系统为磁盘分区提供的唯一的标识字符串。</p>
+<ol>
+<li><p>执行如下命令，查询磁盘分区的UUID。</p>
+<p><strong>blkid</strong> <em>磁盘分区</em></p>
+<p>以查询磁盘分区<strong>“&#x2F;dev&#x2F;sdb1”</strong>的UUID为例：</p>
+<p><strong>blkid &#x2F;dev&#x2F;sdb1</strong></p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# blkid /dev/sdb1</span><br><span class="line">/dev/sdb1: UUID=&quot;94a71f8e-1900-41d5-82c8-9e79b6754981&quot; TYPE=&quot;xfs&quot; </span><br></pre></td></tr></table></figure>
+
+
+
+<p>表示<strong>“&#x2F;dev&#x2F;sdb1”</strong>的UUID。</p>
+</li>
+<li><p>执行以下命令，使用VI编辑器打开“fstab”文件。</p>
+<p><strong>vim &#x2F;etc&#x2F;fstab</strong></p>
+</li>
+<li><p>按“i”，进入编辑模式。</p>
+</li>
+<li><p>将光标移至文件末尾，按“Enter”，添加如下内容。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">UUID=94a71f8e-1900-41d5-82c8-9e79b6754981 /opt  xfs defaults    0 0</span><br></pre></td></tr></table></figure>
+
+
+
+<p>以内容上仅为示例，具体请以实际情况为准，参数说明如下：</p>
+<ul>
+<li><p>第一列为UUID，此处填写<a href="https://support.huaweicloud.com/qs-ecs/zh-cn_topic_0085634797.html#zh-cn_topic_0085634797__zh-cn_topic_0044524669_li840964143216">1</a>中查询到的磁盘分区的UUID。</p>
+</li>
+<li><p>第二列为磁盘分区的挂载目录，可以通过<strong>df -TH</strong>命令查询。</p>
+</li>
+<li><p>第三列为磁盘分区的文件系统格式， 可以通过<strong>df -TH</strong>命令查询。</p>
+</li>
+<li><p>第四列为磁盘分区的挂载选项，此处通常设置为defaults即可。</p>
+</li>
+<li><p>第五列为Linux dump备份选项。</p>
+<ul>
+<li>0表示不使用Linux dump备份。现在通常不使用dump备份，此处设置为0即可。</li>
+<li>1表示使用Linux dump备份。</li>
+</ul>
+</li>
+<li><p>第六列为fsck选项，即开机时是否使用fsck检查磁盘。</p>
+<ul>
+<li><p>0表示不检验。</p>
+</li>
+<li><p>挂载点为（&#x2F;）根目录的分区，此处必须填写1。</p>
+<p>根分区设置为1，其他分区只能从2开始，系统会按照数字从小到大依次检查下去。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>按“ESC”后，输入“:wq”，按“Enter”。</p>
+<p>保存设置并退出编辑器。</p>
+</li>
+<li><p>执行以下步骤，验证自动挂载功能。</p>
+<ol>
+<li><p>执行如下命令，卸载已挂载的分区。</p>
+<p><strong>umount</strong> <em>磁盘分区</em></p>
+<p>命令示例：</p>
+<p><strong>umount &#x2F;dev&#x2F;sdb1</strong></p>
+</li>
+<li><p>执行如下命令，将“&#x2F;etc&#x2F;fstab”文件所有内容重新加载。</p>
+<p><strong>mount -a</strong></p>
+</li>
+<li><p>执行如下命令，查询文件系统挂载信息。</p>
+<p><strong>mount</strong> <strong>|</strong> <strong>grep</strong> <em>挂载目录</em></p>
+<p>命令示例：</p>
+<p><strong>mount</strong> <strong>|</strong> <strong>grep</strong> <strong>&#x2F;opt</strong></p>
+<p>回显类似如下信息，说明自动挂载功能生效：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@DB-Sub12003574 etc]# mount | grep /opt</span><br><span class="line">/dev/mapper/rootvg-lvopt on /opt type xfs (rw,relatime,attr2,inode64,noquota)</span><br><span class="line">/dev/sdb1 on /opt type xfs (rw,relatime,attr2,inode64,noquota)</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Linux运维</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>利用Spring的Resource类读写中文Properties</title>
+    <url>/2017/05/09/spring-resource-properties/</url>
+    <content><![CDATA[<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>Spring对Properties的读取进行了完善而全面的封装，对于写则仍需配合FileOutputStream进行。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.oolong.common.util;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.PathMatchingResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.ResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserVar</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">configFile</span> <span class="operator">=</span> <span class="string">&quot;classpath*:param.properties&quot;</span>;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> org.springframework.core.io.Resource resourceWritable;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Properties p;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 注意事项:</span></span><br><span class="line"><span class="comment">   * 1、properties放在source目录下</span></span><br><span class="line"><span class="comment">   * 2、param.properties至少有一对键值对</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">static</span> &#123;</span><br><span class="line">    p = <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">    org.springframework.core.io.Resource[] resources = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="type">ResourcePatternResolver</span> <span class="variable">resolver</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PathMatchingResourcePatternResolver</span>();</span><br><span class="line">      resources = resolver.getResources(configFile);</span><br><span class="line">      <span class="keyword">if</span> (resources != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (org.springframework.core.io.Resource r : resources) &#123;</span><br><span class="line">          <span class="keyword">if</span> (r != <span class="literal">null</span>) &#123;</span><br><span class="line">            p.load(r.getInputStream());</span><br><span class="line">            resourceWritable = r;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e1) &#123;</span><br><span class="line">      e1.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">get</span><span class="params">(String key)</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">v</span> <span class="operator">=</span> (String) p.get(key);</span><br><span class="line">    <span class="keyword">if</span> (v != <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">String</span>(v.getBytes(<span class="string">&quot;ISO-8859-1&quot;</span>), <span class="string">&quot;GBK&quot;</span>);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(String key,String value)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">null</span> != resourceWritable) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">OutputStream</span> <span class="variable">fos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(resourceWritable.getFile());</span><br><span class="line">        <span class="type">Properties</span> <span class="variable">p</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">        p.load(resourceWritable.getInputStream());</span><br><span class="line">        value = <span class="keyword">new</span> <span class="title class_">String</span>(value.getBytes(<span class="string">&quot;GBK&quot;</span>),<span class="string">&quot;ISO-8859-1&quot;</span>);</span><br><span class="line">        p.setProperty(key, value);</span><br><span class="line">        p.store(fos, <span class="literal">null</span>);</span><br><span class="line">        fos.close();</span><br><span class="line">      &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Java架构</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>tomcat8安装配置优化</title>
+    <url>/2017/06/02/tomcat-install-and-settings/</url>
+    <content><![CDATA[<h2 id="Tomcat-8-安装"><a href="#Tomcat-8-安装" class="headerlink" title="Tomcat 8 安装"></a>Tomcat 8 安装</h2><ul>
+<li>Tomcat 8 安装<ul>
+<li>官网：<a href="http://tomcat.apache.org/">http://tomcat.apache.org/</a></li>
+<li>Tomcat 8 官网下载：<a href="http://tomcat.apache.org/download-80.cgi">http://tomcat.apache.org/download-80.cgi</a></li>
+<li>此时（20170602） Tomcat 8 最新版本为：<code>apache-tomcat-8.5.15.tar.gz</code></li>
+<li>Tomcat 8 下载：<code>wget http://mirror.bit.edu.cn/apache/tomcat/tomcat-8/v8.5.15/bin/apache-tomcat-8.5.15.tar.gz</code></li>
+<li>压缩包解压：<code>tar -zxvf apache-tomcat-8.5.15.tar.gz</code></li>
+<li>移到解压出来文件夹到 &#x2F;usr&#x2F;local 下：<code>mv apache-tomcat-8.5.15/ /usr/local/</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="Tomcat-8-配置"><a href="#Tomcat-8-配置" class="headerlink" title="Tomcat 8 配置"></a>Tomcat 8 配置</h2><ul>
+<li>设置 Tomcat 相关变量：<ul>
+<li><code>vim /usr/local/tomcat8/bin/catalina.sh</code></li>
+<li>在配置文件的可编辑内容最上面（98 行开始），加上如下内容（具体参数根据你服务器情况自行修改）：  <figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">JAVA_HOME</span>=/usr/local/jdk1.<span class="number">8.0</span>_72</span><br><span class="line">   <span class="attr">CATALINA_HOME</span>=/usr/local/tomcat8</span><br><span class="line">   <span class="attr">CATALINA_OPTS</span>=<span class="string">&quot;-Dfile.encoding=UTF-8 -server -Xms2048m -Xmx2048m -Xmn1024m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</span></span><br><span class="line">   <span class="attr">CATALINA_PID</span>=<span class="variable">$CATALINA_HOME</span>/catalina.pid</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>如果使用 <code>shutdown.sh</code> 还无法停止 tomcat，可以修改其配置：<code>vim /usr/local/tomcat8/bin/shutdown.sh</code><ul>
+<li>把最尾巴这一行：<code>exec &quot;$PRGDIR&quot;/&quot;$EXECUTABLE&quot; stop &quot;$@&quot;</code></li>
+<li>改为：<code>exec &quot;$PRGDIR&quot;/&quot;$EXECUTABLE&quot; stop 10 -force</code></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="Tomcat-8-安全配置"><a href="#Tomcat-8-安全配置" class="headerlink" title="Tomcat 8 安全配置"></a>Tomcat 8 安全配置</h2><p>默认tomcat是root身份运行的，这样不安全，不要使用root用户启动tomcat。</p>
+<p>Java程序与C程序不同，nginx,httpd 使用root用户启动守护80端口，子进程&#x2F;线程会通过setuid(),setgid()两个函数切换到普通用户。即父进程所有者是root用户，子进程与多线程所有者是一个非root用户，这个用户没有shell，无法通过ssh与控制台登陆系统，Java 的JVM 是与系统无关的，是建立在OS之上的，你使用什么用户启动Tomcat，那么Tomcat 就会继承该所有者的权限。</p>
+<p>为了防止 Tomcat 被植入 web shell 程序后，可以修改项目文件。因此我们要将 Tomcat 和项目的属主做分离，这样子，即便被搞，他也无法创建和编辑项目文件。<br>设置普通用户，用来启动tomcat</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># groupadd tomcat</span></span><br><span class="line">[root@localhost ~]<span class="comment"># useradd -g tomcat tomcat</span></span><br><span class="line">[root@localhost ~]<span class="comment"># passwd tomcat</span></span><br><span class="line">[root@localhost ~]<span class="comment"># chown tomcat.tomcat -R /usr/local/tomcat8</span></span><br><span class="line">[root@localhost ~]<span class="comment"># su - tomcat /usr/local/tomcat8/bin/startup.sh</span></span><br><span class="line">[root@localhost ~]<span class="comment"># echo &#x27;su - tomcat -c &quot;tomcat /usr/local/tomcat8/bin/startup.sh&quot;&#x27; &gt;&gt; /etc/rc.local  #开机启动</span></span><br><span class="line"></span><br><span class="line">```    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## Tomcat 8 优化</span></span><br><span class="line"></span><br><span class="line">- Tomcat 6/7/8 的优化参数有点不一样，最好按下面的方式看一下官网这个文档是否还保留着这个参数</span><br><span class="line">- 启动tomcat，访问该地址，下面要讲解的一些配置信息，在该文档下都有说明的：</span><br><span class="line">	- 文档：&lt;http://127.0.0.1:8080/docs/config&gt;</span><br><span class="line">	- 你也可以直接看网络版本：</span><br><span class="line">		- Tomcat 6 文档：&lt;https://tomcat.apache.org/tomcat-6.0-doc/config&gt;</span><br><span class="line">		- Tomcat 7 文档：&lt;https://tomcat.apache.org/tomcat-7.0-doc/config/&gt;</span><br><span class="line">		- Tomcat 8 文档：&lt;https://tomcat.apache.org/tomcat-8.0-doc/config/&gt;</span><br><span class="line">- 如果你需要查看 Tomcat 的运行状态可以配置tomcat管理员账户，然后登陆 Tomcat 后台进行查看</span><br><span class="line">- 编辑 /opt/tomcat7/bin/conf/tomcat-users.xml 文件，在里面添加下面信息：</span><br><span class="line">``` xml</span><br><span class="line">&lt;role rolename=<span class="string">&quot;manager&quot;</span>/&gt;</span><br><span class="line">&lt;role rolename=<span class="string">&quot;manager-gui&quot;</span>/&gt;</span><br><span class="line">&lt;role rolename=<span class="string">&quot;admin&quot;</span>/&gt;</span><br><span class="line">&lt;role rolename=<span class="string">&quot;admin-gui&quot;</span>/&gt;</span><br><span class="line">&lt;user username=<span class="string">&quot;tomcat&quot;</span> password=<span class="string">&quot;tomcat&quot;</span> roles=<span class="string">&quot;admin-gui,admin,manager-gui,manager&quot;</span>/&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>编辑配置文件：<code>vim /usr/local/tomcat8/conf/server.xml</code><ul>
+<li>打开默认被注释的连接池配置：<ul>
+<li>默认值：  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">&lt;Executor name=&quot;tomcatThreadPool&quot; namePrefix=&quot;catalina-exec-&quot;</span></span><br><span class="line"><span class="comment">    maxThreads=&quot;150&quot; minSpareThreads=&quot;4&quot;/&gt;</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>修改为：  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Executor</span></span></span><br><span class="line"><span class="tag">        <span class="attr">name</span>=<span class="string">&quot;tomcatThreadPool&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">namePrefix</span>=<span class="string">&quot;catalina-exec-&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">maxThreads</span>=<span class="string">&quot;500&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">minSpareThreads</span>=<span class="string">&quot;30&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">maxIdleTime</span>=<span class="string">&quot;60000&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">prestartminSpareThreads</span> = <span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">maxQueueSize</span> = <span class="string">&quot;100&quot;</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>重点参数解释：<ul>
+<li>maxThreads，最大并发数，默认设置 200，一般建议在 500 ~ 800，根据硬件设施和业务来判断</li>
+<li>minSpareThreads，Tomcat 初始化时创建的线程数，默认设置 25</li>
+<li>prestartminSpareThreads，在 Tomcat 初始化的时候就初始化 minSpareThreads 的参数值，如果不等于 true，minSpareThreads 的值就没啥效果了</li>
+<li>maxQueueSize，最大的等待队列数，超过则拒绝请求</li>
+<li>maxIdleTime，如果当前线程大于初始化线程，那空闲线程存活的时间，单位毫秒，默认60000&#x3D;60秒&#x3D;1分钟。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>修改默认的链接参数配置：<ul>
+<li><p>默认值：</p>
+  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Connector</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">port</span>=<span class="string">&quot;8080&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">protocol</span>=<span class="string">&quot;HTTP/1.1&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">connectionTimeout</span>=<span class="string">&quot;20000&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">redirectPort</span>=<span class="string">&quot;8443&quot;</span> </span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>修改为：</p>
+  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Connector</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">executor</span>=<span class="string">&quot;tomcatThreadPool&quot;</span></span></span><br><span class="line"><span class="tag">   <span class="attr">port</span>=<span class="string">&quot;8080&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">protocol</span>=<span class="string">&quot;org.apache.coyote.http11.Http11Nio2Protocol&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">connectionTimeout</span>=<span class="string">&quot;20000&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">maxConnections</span>=<span class="string">&quot;10000&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">redirectPort</span>=<span class="string">&quot;8443&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">enableLookups</span>=<span class="string">&quot;false&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">acceptCount</span>=<span class="string">&quot;100&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">maxPostSize</span>=<span class="string">&quot;10485760&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">maxHttpHeaderSize</span>=<span class="string">&quot;8192&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">compression</span>=<span class="string">&quot;on&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">disableUploadTimeout</span>=<span class="string">&quot;true&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">compressionMinSize</span>=<span class="string">&quot;2048&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">acceptorThreadCount</span>=<span class="string">&quot;2&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">compressableMimeType</span>=<span class="string">&quot;text/html,text/xml,text/plain,text/css,text/javascript,application/javascript&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">URIEncoding</span>=<span class="string">&quot;utf-8&quot;</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>重点参数解释：</p>
+<ul>
+<li>protocol，Tomcat 8 设置 nio2 更好：org.apache.coyote.http11.Http11Nio2Protocol（如果这个用不了，就用下面那个）</li>
+<li>protocol，Tomcat 6、7 设置 nio 更好：org.apache.coyote.http11.Http11NioProtocol</li>
+</ul>
+<blockquote>
+<p>BIO：一个线程处理一个请求。缺点：并发量高时，线程数较多，浪费资源。Tomcat7或以- 下，在Linux系统中默认使用这种方式。<br>NIO：利用Java的异步IO处理，可以通过少量的线程处理大量的请求。Tomcat8在Linux系统中默认使用这种方式。<br>APR：即Apache Portable Runtime，从操作系统层面解决io阻塞问题。Tomcat7或Tomcat8在Win7或以上的系统中启动默认使用这种方式。Linux如果安装了apr和native，Tomcat直接启动就支持apr。（安装方法：<a href="http://www.cnblogs.com/nb-blog/p/5278502.html%EF%BC%89">http://www.cnblogs.com/nb-blog/p/5278502.html）</a></p>
+</blockquote>
+<ul>
+<li>enableLookups，禁用DNS查询</li>
+<li>acceptCount，指定当所有可以使用的处理请求的线程数都被使用时，可以放到处理队列中的请求数，超过这个数的请求将不予处理，默认设置 100</li>
+<li>maxPostSize，以 FORM URL 参数方式的 POST 提交方式，限制提交最大的大小，默认是 2097152(2兆)，它使用的单位是字节。10485760 为 10M。如果要禁用限制，则可以设置为 -1。</li>
+<li>acceptorThreadCount，用于接收连接的线程的数量，默认值是1。一般这个指需要改动的时候是因为该服务器是一个多核CPU，如果是多核 CPU 一般配置为 2.</li>
+<li>maxHttpHeaderSize，http请求头信息的最大程度，超过此长度的部分不予处理。一般8K。</li>
+<li>compression：传输时是压缩。</li>
+<li>compressionMinSize：压缩的大小 </li>
+<li>noCompressionUserAgents：不启用压缩的浏览器<blockquote>
+<p>提示：压缩会增加Tomcat负担，最好采用Nginx + Tomcat 或者 Apache + Tomcat 方式，压缩交由Nginx&#x2F;Apache 去做。</p>
+</blockquote>
+<p>  Tomcat 的压缩是在客户端请求服务器对应资源后，从服务器端将资源文件压缩，再输出到客户端，由客户端的浏览器负责解压缩并浏览。相对于普通的 浏览过程 HTML、CSS、Javascript和Text，它可以节省40% 左右的流量。更为重要的是，它可以对动态生成的，包括CGI、PHP、JSP、ASP、Servlet,SHTML等输出的网页也能进行压缩，压缩效率也很高。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>禁用 AJP（如果你服务器没有使用 Apache） <ul>
+<li>把下面这一行注释掉，默认 Tomcat 是开启的。  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- &lt;Connector port=&quot;8009&quot; protocol=&quot;AJP/1.3&quot; redirectPort=&quot;8443&quot; /&gt; --&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="JVM-优化"><a href="#JVM-优化" class="headerlink" title="JVM 优化"></a>JVM 优化</h2><ul>
+<li>模型资料来源：<a href="http://xmuzyq.iteye.com/blog/599750">http://xmuzyq.iteye.com/blog/599750</a></li>
+<li>配比资料：<a href="http://www.jianshu.com/p/d45e12241af4">http://www.jianshu.com/p/d45e12241af4</a></li>
+<li>Java 的内存模型分为：<ul>
+<li>Young，年轻代（易被 GC）。Young 区被划分为三部分，Eden 区和两个大小严格相同的 Survivor 区，其中 Survivor 区间中，某一时刻只有其中一个是被使用的，另外一个留做垃圾收集时复制对象用，在 Young 区间变满的时候，minor GC 就会将存活的对象移到空闲的Survivor 区间中，根据 JVM 的策略，在经过几次垃圾收集后，任然存活于 Survivor 的对象将被移动到 Tenured  区间。</li>
+<li>Tenured，终身代。Tenured 区主要保存生命周期长的对象，一般是一些老的对象，当一些对象在 Young 复制转移一定的次数以后，对象就会被转移到 Tenured 区，一般如果系统中用了 application 级别的缓存，缓存中的对象往往会被转移到这一区间。</li>
+<li>Perm，永久代。主要保存 class,method,filed 对象，这部门的空间一般不会溢出，除非一次性加载了很多的类，不过在涉及到热部署的应用服务器的时候，有时候会遇到 java.lang.OutOfMemoryError : PermGen space 的错误，造成这个错误的很大原因就有可能是每次都重新部署，但是重新部署后，类的 class 没有被卸载掉，这样就造成了大量的 class 对象保存在了 perm 中，这种情况下，一般重新启动应用服务器可以解决问题。</li>
+</ul>
+</li>
+<li>Linux 修改 &#x2F;usr&#x2F;program&#x2F;tomcat7&#x2F;bin&#x2F;catalina.sh 文件，把下面信息添加到文件第一行。<ul>
+<li>如果服务器只运行一个 Tomcat<ul>
+<li>机子内存如果是 4G：<ul>
+<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms2048m -Xmx2048m -Xmn1024m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
+</ul>
+</li>
+<li>机子内存如果是 8G：<ul>
+<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms4096m -Xmx4096m -Xmn2048m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
+</ul>
+</li>
+<li>机子内存如果是 16G：<ul>
+<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms8192m -Xmx8192m -Xmn4096m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
+</ul>
+</li>
+<li>机子内存如果是 32G：<ul>
+<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms16384m -Xmx16384m -Xmn8192m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>如果是 8G 开发机<ul>
+<li><code>-Xms2048m -Xmx2048m -XX:NewSize=512m -XX:MaxNewSize=1024m -XX:PermSize=256m -XX:MaxPermSize=512m</code></li>
+</ul>
+</li>
+<li>如果是 16G 开发机<ul>
+<li><code>-Xms4096m -Xmx4096m -XX:NewSize=1024m -XX:MaxNewSize=2048m -XX:PermSize=256m -XX:MaxPermSize=512m</code></li>
+</ul>
+</li>
+<li>参数说明：  <figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line">-Dfile.encoding：默认文件编码</span><br><span class="line">-server：表示这是应用于服务器的配置，<span class="attribute">JVM</span> 内部会有特殊处理的</span><br><span class="line">-Xmx1024m：设置JVM最大可用内存为1024MB</span><br><span class="line">-Xms1024m：设置JVM最小内存为<span class="number">1024m</span>。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存。</span><br><span class="line">-Xmn1024m：设置JVM新生代大小（JDK1.<span class="number">4</span>之后版本）。一般-Xmn的大小是-Xms的<span class="number">1</span>/<span class="number">2</span>左右，不要设置的过大或过小，过大导致老年代变小，频繁Full GC，过小导致minor GC频繁。如果不设置-Xmn，可以采用-XX:NewRatio=<span class="number">2</span>来设置，也是一样的效果</span><br><span class="line">-XX:NewSize：设置新生代大小</span><br><span class="line">-XX:MaxNewSize：设置最大的新生代大小</span><br><span class="line">-XX:PermSize：设置永久代大小</span><br><span class="line">-XX:MaxPermSize：设置最大永久代大小</span><br><span class="line">-XX:NewRatio=<span class="number">4</span>：设置年轻代（包括 Eden 和两个 Survivor 区）与终身代的比值（除去永久代）。设置为 <span class="number">4</span>，则年轻代与终身代所占比值为 <span class="number">1</span>：<span class="number">4</span>，年轻代占整个堆栈的 <span class="number">1</span>/<span class="number">5</span></span><br><span class="line">-XX:MaxTenuringThreshold=<span class="number">10</span>：设置垃圾最大年龄，默认为：<span class="number">15</span>。如果设置为 <span class="number">0</span> 的话，则年轻代对象不经过 Survivor 区，直接进入年老代。对于年老代比较多的应用，可以提高效率。如果将此值设置为一个较大值，则年轻代对象会在 Survivor 区进行多次复制，这样可以增加对象再年轻代的存活时间，增加在年轻代即被回收的概论。需要注意的是，设置了 -XX:MaxTenuringThreshold，并不代表着，对象一定在年轻代存活<span class="number">15</span>次才被晋升进入老年代，它只是一个最大值，事实上，存在一个动态计算机制，计算每次晋入老年代的阈值，取阈值和MaxTenuringThreshold中较小的一个为准。</span><br><span class="line">-XX:+DisableExplicitGC：这个将会忽略手动调用 GC 的代码使得 System.gc() 的调用就会变成一个空调用，完全不会触发任何 GC</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>Windows 修改 &#x2F;tomcat8&#x2F;bin&#x2F;catalina.bat 文件，找到这一行：<code>echo Using CATALINA_BASE:   &quot;%CATALINA_BASE%&quot;</code>，然后在其上面添加如下内容，此方法只对解压版的 Tomcat 有效果，对于安装版本的需要点击安装后任务栏上的那个 Tomcat 图标，打开配置中有一个 <code>Java</code> Tab 的进行编辑。<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">set</span> JAVA_OPTS=%JAVA_OPTS% -Dfile.encoding=<span class="string">&quot;UTF-8&quot;</span> -Dsun.jnu.encoding=<span class="string">&quot;UTF8&quot;</span> -Ddefault.client.encoding=<span class="string">&quot;UTF-8&quot;</span> -Duser.language=Zh</span><br><span class="line">set JAVA_OPTS=%JAVA_OPTS% -server -Xms4096m -Xmx4096m -Xmn2048m -XX:PermSize=<span class="number">256m</span> -XX:MaxPermSize=<span class="number">512m</span> -XX:SurvivorRatio=<span class="number">10</span> -XX:MaxTenuringThreshold=<span class="number">15</span> -XX:NewRatio=<span class="number">2</span> -XX:+DisableExplicitGC</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Tomcat-8-的-Log-分割"><a href="#Tomcat-8-的-Log-分割" class="headerlink" title="Tomcat 8 的 Log 分割"></a>Tomcat 8 的 Log 分割</h2><ul>
+<li>修改前提：本人为 Tomcat8.5，安装目录为：&#x2F;usr&#x2F;local&#x2F;tomcat8</li>
+<li>网络上的官网地址现在打不开：<a href="http://cronolog.org/download/index.html">http://cronolog.org/download/index.html</a></li>
+<li>阿里云的 CentOS 有 epel 源所以可以直接下载：<code>yum install cronolog</code>，当前版本为：1.6.2-10.el6</li>
+<li>安装完后，查看下安装后的目录位置：<code>which cronolog</code>，我这边得到的结果是：<code>/usr/sbin/cronolog</code>，记下这个结果，后面有用到。</li>
+<li>修改 catalina.sh 中的内容：<code>vim /usr/local/tomcat8/bin/catalina.sh</code></li>
+<li>找到这段代码（预计在 416 行前后）：</li>
+</ul>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">shift</span><br><span class="line">touch &quot;$CATALINA_OUT&quot;</span><br><span class="line">if <span class="section">[ &quot;$1&quot; = &quot;-security&quot; ]</span> <span class="comment">; then</span></span><br><span class="line">if <span class="section">[ $have_tty -eq 1 ]</span><span class="comment">; then</span></span><br><span class="line">  echo &quot;Using Security Manager&quot;</span><br><span class="line">fi</span><br><span class="line">shift</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  -Djava.security.manager \</span><br><span class="line">  <span class="attr">-Djava.security.policy</span>==<span class="string">&quot;\&quot;$CATALINA_BASE/conf/catalina.policy\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start \</span><br><span class="line">  &gt;&gt; &quot;$CATALINA_OUT&quot; 2&gt;&amp;1 &quot;&amp;&quot;</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start \</span><br><span class="line">  &gt;&gt; &quot;$CATALINA_OUT&quot; 2&gt;&amp;1 &quot;&amp;&quot;</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将上面代码改为如下，其中请注意这个关键字：<code>/usr/sbin/cronolog</code>，这个是我上面提到的安装路径，你如果跟我不一样，需要自己修改该相关。</li>
+</ul>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">shift</span><br><span class="line"><span class="comment"># touch &quot;$CATALINA_OUT&quot;</span></span><br><span class="line">if <span class="section">[ &quot;$1&quot; = &quot;-security&quot; ]</span> <span class="comment">; then</span></span><br><span class="line">if <span class="section">[ $have_tty -eq 1 ]</span><span class="comment">; then</span></span><br><span class="line">  echo &quot;Using Security Manager&quot;</span><br><span class="line">fi</span><br><span class="line">shift</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  -Djava.security.manager \</span><br><span class="line">  <span class="attr">-Djava.security.policy</span>==<span class="string">&quot;\&quot;$CATALINA_BASE/conf/catalina.policy\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start 2&gt;&amp;1 | /usr/sbin/cronolog &quot;$CATALINA_BASE&quot;/logs/catalina.%Y-%m-%d.out &gt;&gt; /dev/null &amp;</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start 2&gt;&amp;1 | /usr/sbin/cronolog &quot;$CATALINA_BASE&quot;/logs/catalina.%Y-%m-%d.out &gt;&gt; /dev/null &amp;</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Tomcat-远程监控"><a href="#Tomcat-远程监控" class="headerlink" title="Tomcat 远程监控"></a>Tomcat 远程监控</h2><p>首先检查远程服务器hostname -i<br>192.168.1.190</p>
+<p>1.编辑tomcat&#x2F;bin&#x2F;catalina.sh<br>vi catalina.sh</p>
+<p>搜索 Execute The Requested Command</p>
+<p>在这一行上面加入一下配置</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">JAVA_OPTS</span>=<span class="string">&#x27;-Xms1024m -Xmx1024m -XX:PermSize=256M -XX:MaxNewSize=512m -XX:MaxPermSize=512m -Djava.rmi.server.hostname=192.168.1.190 -Dcom.sun.management.jmxremote.port=8444 -Dcom.sun.management.jmxremote.ssl=false-Dcom.sun.management.jmxremote.authenticate=false&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>2.编辑jmxremote.access和jmxremote.password</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/java/jdk1.6.0_18/jre/lib/management</span><br><span class="line"><span class="built_in">mv</span> jmxremote.password.template jmxremote.password</span><br><span class="line"><span class="built_in">chmod</span> 600 jmxremote.access jmxremote.password</span><br><span class="line">vi jmxremote.password</span><br></pre></td></tr></table></figure>
+
+<p>jmxremote.access 一般保持原始内容不变即可。<br>对于jmxremote.password，将 其中的：<br>monitorRole 123<br>controlRole 123<br>井号注释取消掉。其中monitorRole为只拥有只读权限的角色，controlRole有更高权限：读写等等。</p>
+]]></content>
+      <categories>
+        <category>Java架构</category>
+      </categories>
+      <tags>
+        <tag>tomcat</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>初始化Linux数据盘（parted）</title>
+    <url>/2020/05/10/%E5%88%9D%E5%A7%8B%E5%8C%96Linux%E6%95%B0%E6%8D%AE%E7%9B%98%EF%BC%88parted%EF%BC%89/</url>
+    <content><![CDATA[<h4 id="操作场景"><a href="#操作场景" class="headerlink" title="操作场景"></a>操作场景</h4><p>本文以云服务器的操作系统为“CentOS 7.4 64位”为例，采用Parted分区工具为数据盘设置分区。</p>
+<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，因此当您初始化容量大于2 TB的磁盘时，分区形式请采用GPT。对于Linux操作系统而言，当磁盘分区形式选用GPT时，fdisk分区工具将无法使用，需要采用parted工具。</p>
+<h4 id="划分分区并挂载磁盘"><a href="#划分分区并挂载磁盘" class="headerlink" title="划分分区并挂载磁盘"></a>划分分区并挂载磁盘</h4><p>本操作以该场景为例，当云服务器挂载了一块新的数据盘时，采用parted分区工具为数据盘设置分区，分区形式设置为GPT，文件系统设为ext4格式，挂载在“&#x2F;mnt&#x2F;sdc”下，并设置开机启动自动挂载。</p>
+<ol>
+<li><p>执行以下命令，查看新增数据盘。</p>
+<p><strong>lsblk</strong></p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root@ecs-test-0001 ~]# lsblk</span><br><span class="line">NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT</span><br><span class="line">vda    253:0    0   40G  0 disk</span><br><span class="line">└─vda1 253:1    0   40G  0 part /</span><br><span class="line">vdb    253:16   0  100G  0 disk</span><br></pre></td></tr></table></figure>
+
+
+
+<p>表示当前的云服务器有两块磁盘，<strong>“&#x2F;dev&#x2F;vda”</strong>是系统盘，<strong>“&#x2F;dev&#x2F;vdb”</strong>是新增数据盘。</p>
+</li>
+<li><p>执行以下命令，进入parted分区工具，开始对新增数据盘执行分区操作。</p>
+<p><strong>parted</strong> <em>新增数据盘</em></p>
+<p>命令示例：</p>
+<p><strong>parted &#x2F;dev&#x2F;vdb</strong></p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ecs-test-0001 ~]# parted /dev/vdb</span><br><span class="line">GNU Parted 3.1</span><br><span class="line">Using /dev/vdb</span><br><span class="line">Welcome to GNU Parted! Type &#x27;help&#x27; to view a list of commands.</span><br><span class="line">(parted) </span><br></pre></td></tr></table></figure>
+
+
+
+
+</li>
+<li><p>输入“p”，按“Enter”，查看当前磁盘分区形式。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(parted) p</span><br><span class="line">Error: /dev/vdb: unrecognised disk label</span><br><span class="line">Model: Virtio Block Device (virtblk)</span><br><span class="line">Disk /dev/vdb: 107GB</span><br><span class="line">Sector size (logical/physical): 512B/512B</span><br><span class="line">Partition Table: unknown</span><br><span class="line">Disk Flags:</span><br><span class="line">(parted) </span><br></pre></td></tr></table></figure>
+
+
+
+<p>“Partition Table”为“unknown”表示磁盘分区形式未知，新的数据盘还未设置分区形式。</p>
+</li>
+<li><p>输入以下命令，设置磁盘分区形式。</p>
+<p><strong>mklabel</strong> <em>磁盘分区形式</em></p>
+<p>磁盘分区形式有MBR和GPT两种，以GPT为例：</p>
+<p><strong>mklabel gpt</strong></p>
+<p><img src="https://res-img2.huaweicloud.com/content/dam/cloudbu-site/archive/china/zh-cn/support/resource/framework/v3/images/support-doc-new-notice.svg" alt="img">须知：</p>
+<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，当前数据盘支持的最大容量为32 TB，如果您需要使用大于2 TB的磁盘容量，分区形式请采用GPT。</p>
+<p>当磁盘已经投入使用后，此时切换磁盘分区形式时，磁盘上的原有数据将会清除，因此请在磁盘初始化时谨慎选择磁盘分区形式。</p>
+</li>
+<li><p>输入“p”，按“Enter”，设置分区形式后，再次查看磁盘分区形式。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(parted) mklabel gpt</span><br><span class="line">(parted) p</span><br><span class="line">Model: Virtio Block Device (virtblk)</span><br><span class="line">Disk /dev/vdb: 107GB</span><br><span class="line">Sector size (logical/physical): 512B/512B</span><br><span class="line">Partition Table: gpt</span><br><span class="line">Disk Flags:</span><br><span class="line"></span><br><span class="line">Number  Start  End  Size  File system  Name  Flags</span><br><span class="line"></span><br><span class="line">(parted) </span><br></pre></td></tr></table></figure>
+
+
+
+<p>“Partition Table”为“gpt”表示磁盘分区形式已设置为GPT。</p>
+</li>
+<li><p>输入“unit s”，按“Enter”，设置磁盘的计量单位为磁柱。</p>
+</li>
+<li><p>以整个磁盘创建一个分区为例，执行以下命令，按“Enter”。</p>
+<p><strong>mkpart</strong> <em>磁盘分区名称 起始磁柱值</em> <em>截止磁柱**值</em></p>
+<p>命令示例：</p>
+<p><strong>mkpart test 2048s 100%</strong></p>
+<p>“2048s”表示磁盘起始磁柱值，“100%”表示磁盘截止磁柱值，此处仅供参考，您可以根据业务需要自行规划磁盘分区数量及容量。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(parted) mkpart opt 2048s 100%</span><br><span class="line">(parted)</span><br></pre></td></tr></table></figure>
+
+
+
+
+</li>
+<li><p>输入“p”，按“Enter”，查看新建分区的详细信息。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(parted) p</span><br><span class="line">Model: Virtio Block Device (virtblk)</span><br><span class="line">Disk /dev/vdb: 209715200s</span><br><span class="line">Sector size (logical/physical): 512B/512B</span><br><span class="line">Partition Table: gpt</span><br><span class="line">Disk Flags:</span><br><span class="line"></span><br><span class="line">Number  Start  End         Size        File system  Name  Flags</span><br><span class="line"> 1      2048s  209713151s  209711104s               test</span><br><span class="line"></span><br><span class="line">(parted) </span><br></pre></td></tr></table></figure>
+
+
+
+
+</li>
+<li><p>输入“q”，按“Enter”，退出parted分区工具。</p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(parted) q</span><br><span class="line">Information: You may need to update /etc/fstab.</span><br></pre></td></tr></table></figure>
+
+
+
+<p>“&#x2F;etc&#x2F;fstab”文件控制磁盘开机自动挂载，请先参考以下步骤为磁盘分区设置文件系统和挂载目录后，再根据文档指导更新“&#x2F;etc&#x2F;fstab”文件。</p>
+</li>
+<li><p>执行以下命令，查看磁盘分区信息。</p>
+<p><strong>lsblk</strong></p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ecs-test-0001 ~]# lsblk</span><br><span class="line">NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT</span><br><span class="line">vda    253:0    0   40G  0 disk</span><br><span class="line">└─vda1 253:1    0   40G  0 part /</span><br><span class="line">vdb    253:16   0  100G  0 disk</span><br><span class="line">└─vdb1 253:17   0  100G  0 part</span><br></pre></td></tr></table></figure>
+
+
+
+<p>此时可以查看到新建分区“&#x2F;dev&#x2F;vdb1”</p>
+</li>
+<li><p>执行以下命令，将新建分区文件系统设为系统所需格式。</p>
+<p><strong>mkfs</strong> <strong>-t</strong> <em>文件系统格式</em> <strong>&#x2F;dev&#x2F;vdb1</strong></p>
+<p>以设置文件系统为“ext4”为例：</p>
+<p><strong>mkfs -t ext4 &#x2F;dev&#x2F;vdb1</strong></p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ecs-test-0001 ~]# mkfs -t ext4 /dev/vdb1</span><br><span class="line">mke2fs 1.42.9 (28-Dec-2013)</span><br><span class="line">Filesystem label=</span><br><span class="line">OS type: Linux</span><br><span class="line">Block size=4096 (log=2)</span><br><span class="line">Fragment size=4096 (log=2)</span><br><span class="line">Stride=0 blocks, Stripe width=0 blocks</span><br><span class="line">6553600 inodes, 26213888 blocks</span><br><span class="line">1310694 blocks (5.00%) reserved for the super user</span><br><span class="line">First data block=0</span><br><span class="line">Maximum filesystem blocks=2174746624</span><br><span class="line">800 block groups</span><br><span class="line">32768 blocks per group, 32768 fragments per group</span><br><span class="line">8192 inodes per group</span><br><span class="line">Superblock backups stored on blocks:</span><br><span class="line">        32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,</span><br><span class="line">        4096000, 7962624, 11239424, 20480000, 23887872</span><br><span class="line"></span><br><span class="line">Allocating group tables: done</span><br><span class="line">Writing inode tables: done</span><br><span class="line">Creating journal (32768 blocks): done</span><br><span class="line">Writing superblocks and filesystem accounting information: done</span><br></pre></td></tr></table></figure>
+
+
+
+<p>格式化需要等待一段时间，请观察系统运行状态，不要退出。</p>
+<p><img src="https://res-img2.huaweicloud.com/content/dam/cloudbu-site/archive/china/zh-cn/support/resource/framework/v3/images/support-doc-new-notice.svg" alt="img">须知：</p>
+<p>不同文件系统支持的分区大小不同，请根据您的业务需求选择合适的文件系统。</p>
+</li>
+<li><p>执行以下命令，新建挂载目录。</p>
+<p><strong>mkdir</strong> <em>挂载目录</em></p>
+<p>以新建挂载目录“&#x2F;mnt&#x2F;sdc”为例：</p>
+<p><strong>mkdir &#x2F;mnt&#x2F;sdc</strong></p>
+</li>
+<li><p>执行以下命令，将新建分区挂载到<a href="https://support.huaweicloud.com/qs-ecs/ecs_02_0020.html#ecs_02_0020__zh-cn_topic_0084935709_li1910362714149">12</a>中创建的目录下。</p>
+<p><strong>mount</strong> <em>磁盘分区</em> <em>挂载目录</em></p>
+<p>以挂载新建分区“&#x2F;dev&#x2F;vdb1”至“&#x2F;mnt&#x2F;sdc”为例：</p>
+<p><strong>mount &#x2F;dev&#x2F;vdb1 &#x2F;mnt&#x2F;sdc</strong></p>
+</li>
+<li><p>执行以下命令，查看挂载结果。</p>
+<p><strong>df -TH</strong></p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ecs-test-0001 ~]# df -TH</span><br><span class="line">Filesystem     Type      Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/vda1      ext4       43G  1.9G   39G   5% /</span><br><span class="line">devtmpfs       devtmpfs  2.0G     0  2.0G   0% /dev</span><br><span class="line">tmpfs          tmpfs     2.0G     0  2.0G   0% /dev/shm</span><br><span class="line">tmpfs          tmpfs     2.0G  9.0M  2.0G   1% /run</span><br><span class="line">tmpfs          tmpfs     2.0G     0  2.0G   0% /sys/fs/cgroup</span><br><span class="line">tmpfs          tmpfs     398M     0  398M   0% /run/user/0</span><br><span class="line">/dev/vdb1      ext4      106G   63M  101G   1% /mnt/sdc</span><br></pre></td></tr></table></figure>
+
+
+
+<p>表示新建分区<strong>“&#x2F;dev&#x2F;vdb1”</strong>已挂载至“&#x2F;mnt&#x2F;sdc”。</p>
+<p>说明：</p>
+<p>云服务器重启后，挂载会失效。您可以修改“&#x2F;etc&#x2F;fstab”文件，将新建磁盘分区设置为开机自动挂载</p>
+</li>
+</ol>
+<h4 id="设置开机自动挂载磁盘分区"><a href="#设置开机自动挂载磁盘分区" class="headerlink" title="设置开机自动挂载磁盘分区"></a>设置开机自动挂载磁盘分区</h4><p>设置云服务器系统启动时自动挂载磁盘分区，不能采用在“&#x2F;etc&#x2F;fstab”直接指定设备名（比如&#x2F;dev&#x2F;vdb1）的方法，因为云中设备的顺序编码在关闭或者开启云服务器过程中可能发生改变，例如&#x2F;dev&#x2F;vdb1可能会变成&#x2F;dev&#x2F;vdb2。推荐使用UUID来配置自动挂载磁盘分区。</p>
+<p>说明：</p>
+<p>UUID（universally unique identifier）是Linux系统为磁盘分区提供的唯一的标识字符串。</p>
+<ol>
+<li><p>执行如下命令，查询磁盘分区的UUID。</p>
+<p><strong>blkid</strong> <em>磁盘分区</em></p>
+<p>以查询磁盘分区<strong>“&#x2F;dev&#x2F;vdb1”</strong>的UUID为例：</p>
+<p><strong>blkid &#x2F;dev&#x2F;vdb1</strong></p>
+<p>回显类似如下信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ecs-test-0001 ~]# blkid /dev/vdb1</span><br><span class="line">/dev/vdb1: UUID=&quot;0b3040e2-1367-4abb-841d-ddb0b92693df&quot; TYPE=&quot;ext4&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>表示<strong>“&#x2F;dev&#x2F;vdb1”</strong>的UUID。</p>
+</li>
+<li><p>执行以下命令，使用VI编辑器打开“fstab”文件。</p>
+<p><strong>vi &#x2F;etc&#x2F;fstab</strong></p>
+</li>
+<li><p>按“i”，进入编辑模式。</p>
+</li>
+<li><p>将光标移至文件末尾，按“Enter”，添加如下内容。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">UUID=0b3040e2-1367-4abb-841d-ddb0b92693df /mnt/sdc                ext4    defaults        0 2</span><br></pre></td></tr></table></figure>
+
+
+
+<p>以内容上仅为示例，具体请以实际情况为准，参数说明如下：</p>
+<ul>
+<li><p>第一列为UUID，此处填写<a href="https://support.huaweicloud.com/qs-ecs/ecs_02_0020.html#ecs_02_0020__zh-cn_topic_0084935709_zh-cn_topic_0044524669_li840964143216">1</a>中查询到的磁盘分区的UUID。</p>
+</li>
+<li><p>第二列为磁盘分区的挂载目录，可以通过<strong>df -TH</strong>命令查询。</p>
+</li>
+<li><p>第三列为磁盘分区的文件系统格式， 可以通过<strong>df -TH</strong>命令查询。</p>
+</li>
+<li><p>第四列为磁盘分区的挂载选项，此处通常设置为defaults即可。</p>
+</li>
+<li><p>第五列为Linux dump备份选项。</p>
+<ul>
+<li>0表示不使用Linux dump备份。现在通常不使用dump备份，此处设置为0即可。</li>
+<li>1表示使用Linux dump备份。</li>
+</ul>
+</li>
+<li><p>第六列为fsck选项，即开机时是否使用fsck检查磁盘。</p>
+<ul>
+<li><p>0表示不检验。</p>
+</li>
+<li><p>挂载点为（&#x2F;）根目录的分区，此处必须填写1。</p>
+<p>根分区设置为1，其他分区只能从2开始，系统会按照数字从小到大依次检查下去。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>按“ESC”后，输入“:wq”，按“Enter”。</p>
+<p>保存设置并退出编辑器。</p>
+</li>
+<li><p>执行以下步骤，验证自动挂载功能。</p>
+<ol>
+<li><p>执行如下命令，卸载已挂载的分区。</p>
+<p><strong>umount</strong> <em>磁盘分区</em></p>
+<p>命令示例：</p>
+<p><strong>umount &#x2F;dev&#x2F;vdb1</strong></p>
+</li>
+<li><p>执行如下命令，将“&#x2F;etc&#x2F;fstab”文件所有内容重新加载。</p>
+<p><strong>mount -a</strong></p>
+</li>
+<li><p>执行如下命令，查询文件系统挂载信息。</p>
+<p><strong>mount</strong> <strong>|</strong> <strong>grep</strong> <em>挂载目录</em></p>
+<p>命令示例：</p>
+<p><strong>mount</strong> <strong>|</strong> <strong>grep</strong> <strong>&#x2F;mnt&#x2F;sdc</strong></p>
+<p>回显类似如下信息，说明自动挂载功能生效：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root@ecs-test-0001 ~]# mount | grep /mnt/sdc</span><br><span class="line">/dev/vdb1 on /mnt/sdc type ext4 (rw,relatime,data=ordered)</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Linux运维</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>运维安全的四个层次</title>
+    <url>/2020/05/07/%E8%BF%90%E7%BB%B4%E5%AE%89%E5%85%A8%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%B1%82%E6%AC%A1/</url>
+    <content><![CDATA[<h1 id="运维安全的四个层次"><a href="#运维安全的四个层次" class="headerlink" title="运维安全的四个层次"></a>运维安全的四个层次</h1><h2 id="网络安全"><a href="#网络安全" class="headerlink" title="网络安全"></a>网络安全</h2><h3 id="网络设备的安全"><a href="#网络设备的安全" class="headerlink" title="网络设备的安全"></a>网络设备的安全</h3><ul>
+<li>思科、华为等网络设备定期升级，修复bug和曝出的漏洞</li>
+<li>公网防火墙，核心交换机等核心网络设备的管理</li>
+</ul>
+<h3 id="外网安全策略"><a href="#外网安全策略" class="headerlink" title="外网安全策略"></a>外网安全策略</h3><ul>
+<li>IDC，防火墙策略，严把上行端口开放</li>
+<li>公网上下行流量监控</li>
+<li>对DDos攻击提高警惕，提前准备应急预案<ul>
+<li>临时提高流量，硬抗</li>
+<li>启动流量清洗，将攻击流量引入黑洞，有可能误杀正常用户</li>
+</ul>
+</li>
+</ul>
+<h3 id="专线安全策略"><a href="#专线安全策略" class="headerlink" title="专线安全策略"></a>专线安全策略</h3><ul>
+<li>对涉及金融、支付等项目设立专线</li>
+</ul>
+<h3 id="VPN安全策略"><a href="#VPN安全策略" class="headerlink" title="VPN安全策略"></a>VPN安全策略</h3><ul>
+<li>IPsec VPN：site to site</li>
+<li>OpenVPN： peer to site</li>
+<li>摒弃PPTP等不含加密算法的vpn服务</li>
+<li>端口全禁止，需要通信的申请审批后，再由管理员开放</li>
+</ul>
+<h2 id="数据安全"><a href="#数据安全" class="headerlink" title="数据安全"></a>数据安全</h2><h3 id="数据库用户权限"><a href="#数据库用户权限" class="headerlink" title="数据库用户权限"></a>数据库用户权限</h3><ul>
+<li>管理员权限限定，不允许远程root</li>
+<li>定期更换管理员密码</li>
+<li>应用权限最小化，专人管理</li>
+<li>手动查询权限可审计</li>
+</ul>
+<h3 id="数据库审计设备"><a href="#数据库审计设备" class="headerlink" title="数据库审计设备"></a>数据库审计设备</h3><ul>
+<li>数据库主库不能开一般查询日志（为了性能）</li>
+<li>交换机上镜像流量，接入审计设备，实现实时审计</li>
+<li>不要设计串行在系统里，形成单点和瓶颈</li>
+</ul>
+<h3 id="数据库脱敏"><a href="#数据库脱敏" class="headerlink" title="数据库脱敏"></a>数据库脱敏</h3><ul>
+<li>姓名、身份证、手机号、银行卡号等敏感信息应脱敏处理</li>
+<li>对程序脱敏协同系统架构部共同出规范</li>
+<li>对手动查询权限脱敏，按列授权，录屏</li>
+</ul>
+<h3 id="备份策略"><a href="#备份策略" class="headerlink" title="备份策略"></a>备份策略</h3><ul>
+<li>每周全备，每天增备</li>
+<li>备份文件要每天利用内网流量低谷时间，推送到远程主机，有条件的应跨机房备份</li>
+<li>一定要规划定期恢复测试，保证备份的可用性</li>
+</ul>
+<h2 id="应用安全"><a href="#应用安全" class="headerlink" title="应用安全"></a>应用安全</h2><h3 id="操作系统安全"><a href="#操作系统安全" class="headerlink" title="操作系统安全"></a>操作系统安全</h3><ul>
+<li>系统基础优化（内核优化，优化工具）</li>
+<li>日期，时区同步</li>
+<li>root密码复杂度足够高，需要在操作系统里做定时过期策略</li>
+<li>每三个月使用脚本更新服务器的root密码和iDrac密码，并将更换后的密码加密打包发送给指定管理员邮箱，同时提交gitlab</li>
+<li>对系统关键文件进行md5监控，例如&#x2F;etc&#x2F;passwd，~&#x2F;.ssh&#x2F;authorized_keys文件等，如有变更，触发报警</li>
+<li>定期查毒，漏扫，定期安排更新操作系统</li>
+<li>&#x2F;etc&#x2F;ssh&#x2F;sshd_config里配置：<ul>
+<li>PasswordAuthentication no</li>
+<li>PermitRootLogin without-password</li>
+</ul>
+</li>
+<li>使用saltstack等批量管理软件进行特权命令执行和备份脚本执行（避开ssh协议）</li>
+</ul>
+<h3 id="应用系统安全"><a href="#应用系统安全" class="headerlink" title="应用系统安全"></a>应用系统安全</h3><h4 id="WEB应用防火墙（WAF）"><a href="#WEB应用防火墙（WAF）" class="headerlink" title="WEB应用防火墙（WAF）"></a>WEB应用防火墙（WAF）</h4><ul>
+<li>防SQL注入</li>
+<li>防CC攻击</li>
+<li>防XSS跨站脚本</li>
+</ul>
+<h4 id="应用系统漏洞"><a href="#应用系统漏洞" class="headerlink" title="应用系统漏洞"></a>应用系统漏洞</h4><ul>
+<li>关注0day漏洞新闻</li>
+<li>及时整改并上线投产</li>
+<li>组织技术力量测试，复现</li>
+</ul>
+<h4 id="日志收集和分析"><a href="#日志收集和分析" class="headerlink" title="日志收集和分析"></a>日志收集和分析</h4><ul>
+<li>完善日志收集方案，集中转储</li>
+<li>通过应用系统日志分析，进行安全预警</li>
+</ul>
+<h4 id="DNS劫持"><a href="#DNS劫持" class="headerlink" title="DNS劫持"></a>DNS劫持</h4><ul>
+<li>全站https，购买泛域名证书</li>
+<li>有条件的可以自己维护公网DNS，上dnssec数字签名</li>
+<li>采购基调、听云等第三方拨测服务，分布式监控网站质量</li>
+<li>向ISP投诉，工信部举报</li>
+</ul>
+<h4 id="Basic-Auth"><a href="#Basic-Auth" class="headerlink" title="Basic Auth"></a>Basic Auth</h4><ul>
+<li>在nginx上做，非常简单</li>
+<li>对防脚本攻击有奇效</li>
+</ul>
+<h3 id="企业邮箱服务器安全"><a href="#企业邮箱服务器安全" class="headerlink" title="企业邮箱服务器安全"></a>企业邮箱服务器安全</h3><h4 id="推荐使用微软的Exchange"><a href="#推荐使用微软的Exchange" class="headerlink" title="推荐使用微软的Exchange"></a>推荐使用微软的Exchange</h4><p>功能强大，维护相对简单</p>
+<h4 id="投产反垃圾邮件网关"><a href="#投产反垃圾邮件网关" class="headerlink" title="投产反垃圾邮件网关"></a>投产反垃圾邮件网关</h4><p>投产梭子鱼反垃圾邮件网关，防伪造发信人</p>
+<h4 id="群发审核管控"><a href="#群发审核管控" class="headerlink" title="群发审核管控"></a>群发审核管控</h4><h4 id="用好邮件组"><a href="#用好邮件组" class="headerlink" title="用好邮件组"></a>用好邮件组</h4><h4 id="接入AD域控"><a href="#接入AD域控" class="headerlink" title="接入AD域控"></a>接入AD域控</h4><h3 id="域名安全管理"><a href="#域名安全管理" class="headerlink" title="域名安全管理"></a>域名安全管理</h3><h4 id="做好ICP备案"><a href="#做好ICP备案" class="headerlink" title="做好ICP备案"></a>做好ICP备案</h4><ul>
+<li>域名证书</li>
+<li>域名实名认证（公司模板）</li>
+<li>接入商处蓝色幕布拍照</li>
+<li>法人身份证、管理员身份证</li>
+<li>网站真实性核验单</li>
+</ul>
+<h4 id="公网解析"><a href="#公网解析" class="headerlink" title="公网解析"></a>公网解析</h4><ul>
+<li>专人管理，邮件申请，审批</li>
+<li>将业务解析至不同公网IP出口，双活机房</li>
+<li>智能解析，解析至不同线路</li>
+<li>如有条件，可购买公网解析套餐服务，安全服务等</li>
+</ul>
+<h2 id="内网安全"><a href="#内网安全" class="headerlink" title="内网安全"></a>内网安全</h2><p>80%以上的企业IT安全问题出自内网安全</p>
+<h3 id="堡垒机"><a href="#堡垒机" class="headerlink" title="堡垒机"></a>堡垒机</h3><ul>
+<li>一定要强制使用堡垒机登录服务器</li>
+<li>ssh私钥通行短语机制，避免密钥失窃</li>
+<li>定期审计堡垒机操作日志</li>
+<li>如果有必要，可以上2FA（双因子验证）</li>
+</ul>
+<h3 id="AD域控"><a href="#AD域控" class="headerlink" title="AD域控"></a>AD域控</h3><p>有条件一定要接入windows域控，要求密码复杂度和定期过期</p>
+<ul>
+<li>邮箱</li>
+<li>wifi</li>
+<li>vpn账号密码</li>
+<li>内网系统账号</li>
+<li>业务系统账号</li>
+<li>网络设备等</li>
+</ul>
+<h3 id="办公网安全"><a href="#办公网安全" class="headerlink" title="办公网安全"></a>办公网安全</h3><ul>
+<li>专业的HelpDesk团队</li>
+<li>企业级杀毒软件</li>
+<li>办公电脑接入域控</li>
+<li>上网行为管理</li>
+<li>流量监控，mac地址绑定</li>
+<li>有条件的可以在办公环境上一个小型的业务机房</li>
+<li>wifi管控，单做guest接入点，不能访问业务核心网络</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Linux运维</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+</search>
