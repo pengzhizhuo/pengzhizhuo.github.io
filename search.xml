@@ -319,33 +319,6 @@
       </tags>
   </entry>
   <entry>
-    <title>CentOS逻辑卷调整分区大小</title>
-    <url>/2018/05/04/lvreduce-lvextend/</url>
-    <content><![CDATA[<h1 id="CentOS逻辑卷调整分区大小目的"><a href="#CentOS逻辑卷调整分区大小目的" class="headerlink" title="CentOS逻辑卷调整分区大小目的"></a>CentOS逻辑卷调整分区大小目的</h1><p>因为系统使用的是逻辑卷分区（LVM），且分区大小不合理</p>
-<p>想增加root大小，减少home</p>
-<h1 id="查看磁盘使用情况"><a href="#查看磁盘使用情况" class="headerlink" title="查看磁盘使用情况"></a>查看磁盘使用情况</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                       50G  3.4G   44G   8% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                      140G   60M  133G   1% /home</span><br><span class="line">/dev/sr0              3.7G  3.7G     0 100% /media/CentOS_6.9_Final</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># vgdisplay </span></span><br><span class="line">  --- Volume group ---</span><br><span class="line">  VG Name               vg_linuxcentos</span><br><span class="line">  System ID             </span><br><span class="line">  Format                lvm2</span><br><span class="line">  Metadata Areas        1</span><br><span class="line">  Metadata Sequence No  4</span><br><span class="line">  VG Access             <span class="built_in">read</span>/write</span><br><span class="line">  VG Status             resizable</span><br><span class="line">  MAX LV                0</span><br><span class="line">  Cur LV                3</span><br><span class="line">  Open LV               3</span><br><span class="line">  Max PV                0</span><br><span class="line">  Cur PV                1</span><br><span class="line">  Act PV                1</span><br><span class="line">  VG Size               199.51 GiB</span><br><span class="line">  PE Size               4.00 MiB</span><br><span class="line">  Total PE              51074</span><br><span class="line">  Alloc PE / Size       51074 / 199.51 GiB</span><br><span class="line">  Free  PE / Size       0 / 0   </span><br><span class="line">  VG UUID               DqgWat-YkkU-V56r-xNFv-XmmX-mgwD-Fi0RWh</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="调整home分区大小"><a href="#调整home分区大小" class="headerlink" title="调整home分区大小"></a>调整home分区大小</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># umount /home</span></span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># e2fsck -f /dev/mapper/vg_linuxcentos-lv_home </span></span><br><span class="line">e2fsck 1.41.12 (17-May-2010)</span><br><span class="line">Pass 1: Checking inodes, blocks, and sizes</span><br><span class="line">Pass 2: Checking directory structure</span><br><span class="line">Pass 3: Checking directory connectivity</span><br><span class="line">Pass 4: Checking reference counts</span><br><span class="line">Pass 5: Checking group summary information</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home: 11/9289728 files (0.0% non-contiguous), 631025/37148672 blocks</span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># resize2fs -p /dev/mapper/vg_linuxcentos-lv_home  20G</span></span><br><span class="line">resize2fs 1.41.12 (17-May-2010)</span><br><span class="line">Resizing the filesystem on /dev/mapper/vg_linuxcentos-lv_home to 5242880 (4k) blocks.</span><br><span class="line">Begin pass 2 (max = 32768)</span><br><span class="line">Relocating blocks             XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</span><br><span class="line">Begin pass 3 (max = 1134)</span><br><span class="line">Scanning inode table          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</span><br><span class="line">The filesystem on /dev/mapper/vg_linuxcentos-lv_home is now 5242880 blocks long.</span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># mount /home</span></span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                       50G  3.4G   44G   8% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                       20G   44M   19G   1% /home</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="释放空间"><a href="#释放空间" class="headerlink" title="释放空间"></a>释放空间</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># lvreduce /dev/mapper/vg_linuxcentos-lv_home -L 20G</span></span><br><span class="line">  WARNING: Reducing active and open logical volume to 20.00 GiB.</span><br><span class="line">  THIS MAY DESTROY YOUR DATA (filesystem etc.)</span><br><span class="line">Do you really want to reduce vg_linuxcentos/lv_home? [y/n]: y</span><br><span class="line">  Size of logical volume vg_linuxcentos/lv_home changed from 141.71 GiB (36278 extents) to 20.00 GiB (5120 extents).</span><br><span class="line">  Logical volume lv_home successfully resized.</span><br><span class="line">  </span><br><span class="line">  [root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                       50G  3.4G   44G   8% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                       20G   44M   19G   1% /home</span><br><span class="line">                       </span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># vgdisplay </span></span><br><span class="line">  --- Volume group ---</span><br><span class="line">  VG Name               vg_linuxcentos</span><br><span class="line">  System ID             </span><br><span class="line">  Format                lvm2</span><br><span class="line">  Metadata Areas        1</span><br><span class="line">  Metadata Sequence No  5</span><br><span class="line">  VG Access             <span class="built_in">read</span>/write</span><br><span class="line">  VG Status             resizable</span><br><span class="line">  MAX LV                0</span><br><span class="line">  Cur LV                3</span><br><span class="line">  Open LV               3</span><br><span class="line">  Max PV                0</span><br><span class="line">  Cur PV                1</span><br><span class="line">  Act PV                1</span><br><span class="line">  VG Size               199.51 GiB</span><br><span class="line">  PE Size               4.00 MiB</span><br><span class="line">  Total PE              51074</span><br><span class="line">  Alloc PE / Size       19916 / 77.80 GiB</span><br><span class="line">  Free  PE / Size       31158 / 121.71 GiB</span><br><span class="line">  VG UUID               DqgWat-YkkU-V56r-xNFv-XmmX-mgwD-Fi0RWh</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="增加释放的空间到root"><a href="#增加释放的空间到root" class="headerlink" title="增加释放的空间到root"></a>增加释放的空间到root</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># lvextend -L +120G /dev/mapper/vg_linuxcentos-lv_root   </span></span><br><span class="line">  Size of logical volume vg_linuxcentos/lv_root changed from 50.00 GiB (12800 extents) to 170.00 GiB (43520 extents).</span><br><span class="line">  Logical volume lv_root successfully resized.</span><br><span class="line">  </span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># resize2fs -p /dev/mapper/vg_linuxcentos-lv_root </span></span><br><span class="line">resize2fs 1.41.12 (17-May-2010)</span><br><span class="line">Filesystem at /dev/mapper/vg_linuxcentos-lv_root is mounted on /; on-line resizing required</span><br><span class="line">old desc_blocks = 4, new_desc_blocks = 11</span><br><span class="line">Performing an on-line resize of /dev/mapper/vg_linuxcentos-lv_root to 44564480 (4k) blocks.</span><br><span class="line">The filesystem on /dev/mapper/vg_linuxcentos-lv_root is now 44564480 blocks long.</span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                      168G  3.5G  156G   3% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                       20G   44M   19G   1% /home</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Linux运维</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>初始化Linux数据盘（fdisk）</title>
     <url>/2020/05/07/linux-init-disk/</url>
     <content><![CDATA[<h1 id="初始化Linux数据盘（fdisk）"><a href="#初始化Linux数据盘（fdisk）" class="headerlink" title="初始化Linux数据盘（fdisk）"></a>初始化Linux数据盘（fdisk）</h1><h4 id="操作场景"><a href="#操作场景" class="headerlink" title="操作场景"></a>操作场景</h4><p>本文以云服务器的操作系统为“CentOS 7.7 64位”为例，采用fdisk分区工具为数据盘设置分区。</p>
@@ -581,6 +554,33 @@
       </tags>
   </entry>
   <entry>
+    <title>CentOS逻辑卷调整分区大小</title>
+    <url>/2018/05/04/lvreduce-lvextend/</url>
+    <content><![CDATA[<h1 id="CentOS逻辑卷调整分区大小目的"><a href="#CentOS逻辑卷调整分区大小目的" class="headerlink" title="CentOS逻辑卷调整分区大小目的"></a>CentOS逻辑卷调整分区大小目的</h1><p>因为系统使用的是逻辑卷分区（LVM），且分区大小不合理</p>
+<p>想增加root大小，减少home</p>
+<h1 id="查看磁盘使用情况"><a href="#查看磁盘使用情况" class="headerlink" title="查看磁盘使用情况"></a>查看磁盘使用情况</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                       50G  3.4G   44G   8% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                      140G   60M  133G   1% /home</span><br><span class="line">/dev/sr0              3.7G  3.7G     0 100% /media/CentOS_6.9_Final</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># vgdisplay </span></span><br><span class="line">  --- Volume group ---</span><br><span class="line">  VG Name               vg_linuxcentos</span><br><span class="line">  System ID             </span><br><span class="line">  Format                lvm2</span><br><span class="line">  Metadata Areas        1</span><br><span class="line">  Metadata Sequence No  4</span><br><span class="line">  VG Access             <span class="built_in">read</span>/write</span><br><span class="line">  VG Status             resizable</span><br><span class="line">  MAX LV                0</span><br><span class="line">  Cur LV                3</span><br><span class="line">  Open LV               3</span><br><span class="line">  Max PV                0</span><br><span class="line">  Cur PV                1</span><br><span class="line">  Act PV                1</span><br><span class="line">  VG Size               199.51 GiB</span><br><span class="line">  PE Size               4.00 MiB</span><br><span class="line">  Total PE              51074</span><br><span class="line">  Alloc PE / Size       51074 / 199.51 GiB</span><br><span class="line">  Free  PE / Size       0 / 0   </span><br><span class="line">  VG UUID               DqgWat-YkkU-V56r-xNFv-XmmX-mgwD-Fi0RWh</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="调整home分区大小"><a href="#调整home分区大小" class="headerlink" title="调整home分区大小"></a>调整home分区大小</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># umount /home</span></span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># e2fsck -f /dev/mapper/vg_linuxcentos-lv_home </span></span><br><span class="line">e2fsck 1.41.12 (17-May-2010)</span><br><span class="line">Pass 1: Checking inodes, blocks, and sizes</span><br><span class="line">Pass 2: Checking directory structure</span><br><span class="line">Pass 3: Checking directory connectivity</span><br><span class="line">Pass 4: Checking reference counts</span><br><span class="line">Pass 5: Checking group summary information</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home: 11/9289728 files (0.0% non-contiguous), 631025/37148672 blocks</span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># resize2fs -p /dev/mapper/vg_linuxcentos-lv_home  20G</span></span><br><span class="line">resize2fs 1.41.12 (17-May-2010)</span><br><span class="line">Resizing the filesystem on /dev/mapper/vg_linuxcentos-lv_home to 5242880 (4k) blocks.</span><br><span class="line">Begin pass 2 (max = 32768)</span><br><span class="line">Relocating blocks             XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</span><br><span class="line">Begin pass 3 (max = 1134)</span><br><span class="line">Scanning inode table          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</span><br><span class="line">The filesystem on /dev/mapper/vg_linuxcentos-lv_home is now 5242880 blocks long.</span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># mount /home</span></span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                       50G  3.4G   44G   8% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                       20G   44M   19G   1% /home</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="释放空间"><a href="#释放空间" class="headerlink" title="释放空间"></a>释放空间</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># lvreduce /dev/mapper/vg_linuxcentos-lv_home -L 20G</span></span><br><span class="line">  WARNING: Reducing active and open logical volume to 20.00 GiB.</span><br><span class="line">  THIS MAY DESTROY YOUR DATA (filesystem etc.)</span><br><span class="line">Do you really want to reduce vg_linuxcentos/lv_home? [y/n]: y</span><br><span class="line">  Size of logical volume vg_linuxcentos/lv_home changed from 141.71 GiB (36278 extents) to 20.00 GiB (5120 extents).</span><br><span class="line">  Logical volume lv_home successfully resized.</span><br><span class="line">  </span><br><span class="line">  [root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                       50G  3.4G   44G   8% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                       20G   44M   19G   1% /home</span><br><span class="line">                       </span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># vgdisplay </span></span><br><span class="line">  --- Volume group ---</span><br><span class="line">  VG Name               vg_linuxcentos</span><br><span class="line">  System ID             </span><br><span class="line">  Format                lvm2</span><br><span class="line">  Metadata Areas        1</span><br><span class="line">  Metadata Sequence No  5</span><br><span class="line">  VG Access             <span class="built_in">read</span>/write</span><br><span class="line">  VG Status             resizable</span><br><span class="line">  MAX LV                0</span><br><span class="line">  Cur LV                3</span><br><span class="line">  Open LV               3</span><br><span class="line">  Max PV                0</span><br><span class="line">  Cur PV                1</span><br><span class="line">  Act PV                1</span><br><span class="line">  VG Size               199.51 GiB</span><br><span class="line">  PE Size               4.00 MiB</span><br><span class="line">  Total PE              51074</span><br><span class="line">  Alloc PE / Size       19916 / 77.80 GiB</span><br><span class="line">  Free  PE / Size       31158 / 121.71 GiB</span><br><span class="line">  VG UUID               DqgWat-YkkU-V56r-xNFv-XmmX-mgwD-Fi0RWh</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="增加释放的空间到root"><a href="#增加释放的空间到root" class="headerlink" title="增加释放的空间到root"></a>增加释放的空间到root</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># lvextend -L +120G /dev/mapper/vg_linuxcentos-lv_root   </span></span><br><span class="line">  Size of logical volume vg_linuxcentos/lv_root changed from 50.00 GiB (12800 extents) to 170.00 GiB (43520 extents).</span><br><span class="line">  Logical volume lv_root successfully resized.</span><br><span class="line">  </span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># resize2fs -p /dev/mapper/vg_linuxcentos-lv_root </span></span><br><span class="line">resize2fs 1.41.12 (17-May-2010)</span><br><span class="line">Filesystem at /dev/mapper/vg_linuxcentos-lv_root is mounted on /; on-line resizing required</span><br><span class="line">old desc_blocks = 4, new_desc_blocks = 11</span><br><span class="line">Performing an on-line resize of /dev/mapper/vg_linuxcentos-lv_root to 44564480 (4k) blocks.</span><br><span class="line">The filesystem on /dev/mapper/vg_linuxcentos-lv_root is now 44564480 blocks long.</span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                      168G  3.5G  156G   3% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                       20G   44M   19G   1% /home</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Linux运维</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL数据库自动备份脚本</title>
     <url>/2018/05/02/mysql-backup-shell/</url>
     <content><![CDATA[<h1 id="编写数据库备份脚本-mysqlfullbackup-sh"><a href="#编写数据库备份脚本-mysqlfullbackup-sh" class="headerlink" title="编写数据库备份脚本(mysqlfullbackup.sh)"></a>编写数据库备份脚本(mysqlfullbackup.sh)</h1><p>#数据库备份脚本</p>
@@ -614,138 +614,6 @@
       </categories>
       <tags>
         <tag>MySQL</tag>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>运维安全的四个层次</title>
-    <url>/2020/05/07/%E8%BF%90%E7%BB%B4%E5%AE%89%E5%85%A8%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%B1%82%E6%AC%A1/</url>
-    <content><![CDATA[<h1 id="运维安全的四个层次"><a href="#运维安全的四个层次" class="headerlink" title="运维安全的四个层次"></a>运维安全的四个层次</h1><h2 id="网络安全"><a href="#网络安全" class="headerlink" title="网络安全"></a>网络安全</h2><h3 id="网络设备的安全"><a href="#网络设备的安全" class="headerlink" title="网络设备的安全"></a>网络设备的安全</h3><ul>
-<li>思科、华为等网络设备定期升级，修复bug和曝出的漏洞</li>
-<li>公网防火墙，核心交换机等核心网络设备的管理</li>
-</ul>
-<h3 id="外网安全策略"><a href="#外网安全策略" class="headerlink" title="外网安全策略"></a>外网安全策略</h3><ul>
-<li>IDC，防火墙策略，严把上行端口开放</li>
-<li>公网上下行流量监控</li>
-<li>对DDos攻击提高警惕，提前准备应急预案<ul>
-<li>临时提高流量，硬抗</li>
-<li>启动流量清洗，将攻击流量引入黑洞，有可能误杀正常用户</li>
-</ul>
-</li>
-</ul>
-<h3 id="专线安全策略"><a href="#专线安全策略" class="headerlink" title="专线安全策略"></a>专线安全策略</h3><ul>
-<li>对涉及金融、支付等项目设立专线</li>
-</ul>
-<h3 id="VPN安全策略"><a href="#VPN安全策略" class="headerlink" title="VPN安全策略"></a>VPN安全策略</h3><ul>
-<li>IPsec VPN：site to site</li>
-<li>OpenVPN： peer to site</li>
-<li>摒弃PPTP等不含加密算法的vpn服务</li>
-<li>端口全禁止，需要通信的申请审批后，再由管理员开放</li>
-</ul>
-<h2 id="数据安全"><a href="#数据安全" class="headerlink" title="数据安全"></a>数据安全</h2><h3 id="数据库用户权限"><a href="#数据库用户权限" class="headerlink" title="数据库用户权限"></a>数据库用户权限</h3><ul>
-<li>管理员权限限定，不允许远程root</li>
-<li>定期更换管理员密码</li>
-<li>应用权限最小化，专人管理</li>
-<li>手动查询权限可审计</li>
-</ul>
-<h3 id="数据库审计设备"><a href="#数据库审计设备" class="headerlink" title="数据库审计设备"></a>数据库审计设备</h3><ul>
-<li>数据库主库不能开一般查询日志（为了性能）</li>
-<li>交换机上镜像流量，接入审计设备，实现实时审计</li>
-<li>不要设计串行在系统里，形成单点和瓶颈</li>
-</ul>
-<h3 id="数据库脱敏"><a href="#数据库脱敏" class="headerlink" title="数据库脱敏"></a>数据库脱敏</h3><ul>
-<li>姓名、身份证、手机号、银行卡号等敏感信息应脱敏处理</li>
-<li>对程序脱敏协同系统架构部共同出规范</li>
-<li>对手动查询权限脱敏，按列授权，录屏</li>
-</ul>
-<h3 id="备份策略"><a href="#备份策略" class="headerlink" title="备份策略"></a>备份策略</h3><ul>
-<li>每周全备，每天增备</li>
-<li>备份文件要每天利用内网流量低谷时间，推送到远程主机，有条件的应跨机房备份</li>
-<li>一定要规划定期恢复测试，保证备份的可用性</li>
-</ul>
-<h2 id="应用安全"><a href="#应用安全" class="headerlink" title="应用安全"></a>应用安全</h2><h3 id="操作系统安全"><a href="#操作系统安全" class="headerlink" title="操作系统安全"></a>操作系统安全</h3><ul>
-<li>系统基础优化（内核优化，优化工具）</li>
-<li>日期，时区同步</li>
-<li>root密码复杂度足够高，需要在操作系统里做定时过期策略</li>
-<li>每三个月使用脚本更新服务器的root密码和iDrac密码，并将更换后的密码加密打包发送给指定管理员邮箱，同时提交gitlab</li>
-<li>对系统关键文件进行md5监控，例如&#x2F;etc&#x2F;passwd，~&#x2F;.ssh&#x2F;authorized_keys文件等，如有变更，触发报警</li>
-<li>定期查毒，漏扫，定期安排更新操作系统</li>
-<li>&#x2F;etc&#x2F;ssh&#x2F;sshd_config里配置：<ul>
-<li>PasswordAuthentication no</li>
-<li>PermitRootLogin without-password</li>
-</ul>
-</li>
-<li>使用saltstack等批量管理软件进行特权命令执行和备份脚本执行（避开ssh协议）</li>
-</ul>
-<h3 id="应用系统安全"><a href="#应用系统安全" class="headerlink" title="应用系统安全"></a>应用系统安全</h3><h4 id="WEB应用防火墙（WAF）"><a href="#WEB应用防火墙（WAF）" class="headerlink" title="WEB应用防火墙（WAF）"></a>WEB应用防火墙（WAF）</h4><ul>
-<li>防SQL注入</li>
-<li>防CC攻击</li>
-<li>防XSS跨站脚本</li>
-</ul>
-<h4 id="应用系统漏洞"><a href="#应用系统漏洞" class="headerlink" title="应用系统漏洞"></a>应用系统漏洞</h4><ul>
-<li>关注0day漏洞新闻</li>
-<li>及时整改并上线投产</li>
-<li>组织技术力量测试，复现</li>
-</ul>
-<h4 id="日志收集和分析"><a href="#日志收集和分析" class="headerlink" title="日志收集和分析"></a>日志收集和分析</h4><ul>
-<li>完善日志收集方案，集中转储</li>
-<li>通过应用系统日志分析，进行安全预警</li>
-</ul>
-<h4 id="DNS劫持"><a href="#DNS劫持" class="headerlink" title="DNS劫持"></a>DNS劫持</h4><ul>
-<li>全站https，购买泛域名证书</li>
-<li>有条件的可以自己维护公网DNS，上dnssec数字签名</li>
-<li>采购基调、听云等第三方拨测服务，分布式监控网站质量</li>
-<li>向ISP投诉，工信部举报</li>
-</ul>
-<h4 id="Basic-Auth"><a href="#Basic-Auth" class="headerlink" title="Basic Auth"></a>Basic Auth</h4><ul>
-<li>在nginx上做，非常简单</li>
-<li>对防脚本攻击有奇效</li>
-</ul>
-<h3 id="企业邮箱服务器安全"><a href="#企业邮箱服务器安全" class="headerlink" title="企业邮箱服务器安全"></a>企业邮箱服务器安全</h3><h4 id="推荐使用微软的Exchange"><a href="#推荐使用微软的Exchange" class="headerlink" title="推荐使用微软的Exchange"></a>推荐使用微软的Exchange</h4><p>功能强大，维护相对简单</p>
-<h4 id="投产反垃圾邮件网关"><a href="#投产反垃圾邮件网关" class="headerlink" title="投产反垃圾邮件网关"></a>投产反垃圾邮件网关</h4><p>投产梭子鱼反垃圾邮件网关，防伪造发信人</p>
-<h4 id="群发审核管控"><a href="#群发审核管控" class="headerlink" title="群发审核管控"></a>群发审核管控</h4><h4 id="用好邮件组"><a href="#用好邮件组" class="headerlink" title="用好邮件组"></a>用好邮件组</h4><h4 id="接入AD域控"><a href="#接入AD域控" class="headerlink" title="接入AD域控"></a>接入AD域控</h4><h3 id="域名安全管理"><a href="#域名安全管理" class="headerlink" title="域名安全管理"></a>域名安全管理</h3><h4 id="做好ICP备案"><a href="#做好ICP备案" class="headerlink" title="做好ICP备案"></a>做好ICP备案</h4><ul>
-<li>域名证书</li>
-<li>域名实名认证（公司模板）</li>
-<li>接入商处蓝色幕布拍照</li>
-<li>法人身份证、管理员身份证</li>
-<li>网站真实性核验单</li>
-</ul>
-<h4 id="公网解析"><a href="#公网解析" class="headerlink" title="公网解析"></a>公网解析</h4><ul>
-<li>专人管理，邮件申请，审批</li>
-<li>将业务解析至不同公网IP出口，双活机房</li>
-<li>智能解析，解析至不同线路</li>
-<li>如有条件，可购买公网解析套餐服务，安全服务等</li>
-</ul>
-<h2 id="内网安全"><a href="#内网安全" class="headerlink" title="内网安全"></a>内网安全</h2><p>80%以上的企业IT安全问题出自内网安全</p>
-<h3 id="堡垒机"><a href="#堡垒机" class="headerlink" title="堡垒机"></a>堡垒机</h3><ul>
-<li>一定要强制使用堡垒机登录服务器</li>
-<li>ssh私钥通行短语机制，避免密钥失窃</li>
-<li>定期审计堡垒机操作日志</li>
-<li>如果有必要，可以上2FA（双因子验证）</li>
-</ul>
-<h3 id="AD域控"><a href="#AD域控" class="headerlink" title="AD域控"></a>AD域控</h3><p>有条件一定要接入windows域控，要求密码复杂度和定期过期</p>
-<ul>
-<li>邮箱</li>
-<li>wifi</li>
-<li>vpn账号密码</li>
-<li>内网系统账号</li>
-<li>业务系统账号</li>
-<li>网络设备等</li>
-</ul>
-<h3 id="办公网安全"><a href="#办公网安全" class="headerlink" title="办公网安全"></a>办公网安全</h3><ul>
-<li>专业的HelpDesk团队</li>
-<li>企业级杀毒软件</li>
-<li>办公电脑接入域控</li>
-<li>上网行为管理</li>
-<li>流量监控，mac地址绑定</li>
-<li>有条件的可以在办公环境上一个小型的业务机房</li>
-<li>wifi管控，单做guest接入点，不能访问业务核心网络</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Linux运维</category>
-      </categories>
-      <tags>
         <tag>Linux</tag>
       </tags>
   </entry>
@@ -948,6 +816,138 @@
 </ol>
 </li>
 </ol>
+]]></content>
+      <categories>
+        <category>Linux运维</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>运维安全的四个层次</title>
+    <url>/2020/05/07/%E8%BF%90%E7%BB%B4%E5%AE%89%E5%85%A8%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%B1%82%E6%AC%A1/</url>
+    <content><![CDATA[<h1 id="运维安全的四个层次"><a href="#运维安全的四个层次" class="headerlink" title="运维安全的四个层次"></a>运维安全的四个层次</h1><h2 id="网络安全"><a href="#网络安全" class="headerlink" title="网络安全"></a>网络安全</h2><h3 id="网络设备的安全"><a href="#网络设备的安全" class="headerlink" title="网络设备的安全"></a>网络设备的安全</h3><ul>
+<li>思科、华为等网络设备定期升级，修复bug和曝出的漏洞</li>
+<li>公网防火墙，核心交换机等核心网络设备的管理</li>
+</ul>
+<h3 id="外网安全策略"><a href="#外网安全策略" class="headerlink" title="外网安全策略"></a>外网安全策略</h3><ul>
+<li>IDC，防火墙策略，严把上行端口开放</li>
+<li>公网上下行流量监控</li>
+<li>对DDos攻击提高警惕，提前准备应急预案<ul>
+<li>临时提高流量，硬抗</li>
+<li>启动流量清洗，将攻击流量引入黑洞，有可能误杀正常用户</li>
+</ul>
+</li>
+</ul>
+<h3 id="专线安全策略"><a href="#专线安全策略" class="headerlink" title="专线安全策略"></a>专线安全策略</h3><ul>
+<li>对涉及金融、支付等项目设立专线</li>
+</ul>
+<h3 id="VPN安全策略"><a href="#VPN安全策略" class="headerlink" title="VPN安全策略"></a>VPN安全策略</h3><ul>
+<li>IPsec VPN：site to site</li>
+<li>OpenVPN： peer to site</li>
+<li>摒弃PPTP等不含加密算法的vpn服务</li>
+<li>端口全禁止，需要通信的申请审批后，再由管理员开放</li>
+</ul>
+<h2 id="数据安全"><a href="#数据安全" class="headerlink" title="数据安全"></a>数据安全</h2><h3 id="数据库用户权限"><a href="#数据库用户权限" class="headerlink" title="数据库用户权限"></a>数据库用户权限</h3><ul>
+<li>管理员权限限定，不允许远程root</li>
+<li>定期更换管理员密码</li>
+<li>应用权限最小化，专人管理</li>
+<li>手动查询权限可审计</li>
+</ul>
+<h3 id="数据库审计设备"><a href="#数据库审计设备" class="headerlink" title="数据库审计设备"></a>数据库审计设备</h3><ul>
+<li>数据库主库不能开一般查询日志（为了性能）</li>
+<li>交换机上镜像流量，接入审计设备，实现实时审计</li>
+<li>不要设计串行在系统里，形成单点和瓶颈</li>
+</ul>
+<h3 id="数据库脱敏"><a href="#数据库脱敏" class="headerlink" title="数据库脱敏"></a>数据库脱敏</h3><ul>
+<li>姓名、身份证、手机号、银行卡号等敏感信息应脱敏处理</li>
+<li>对程序脱敏协同系统架构部共同出规范</li>
+<li>对手动查询权限脱敏，按列授权，录屏</li>
+</ul>
+<h3 id="备份策略"><a href="#备份策略" class="headerlink" title="备份策略"></a>备份策略</h3><ul>
+<li>每周全备，每天增备</li>
+<li>备份文件要每天利用内网流量低谷时间，推送到远程主机，有条件的应跨机房备份</li>
+<li>一定要规划定期恢复测试，保证备份的可用性</li>
+</ul>
+<h2 id="应用安全"><a href="#应用安全" class="headerlink" title="应用安全"></a>应用安全</h2><h3 id="操作系统安全"><a href="#操作系统安全" class="headerlink" title="操作系统安全"></a>操作系统安全</h3><ul>
+<li>系统基础优化（内核优化，优化工具）</li>
+<li>日期，时区同步</li>
+<li>root密码复杂度足够高，需要在操作系统里做定时过期策略</li>
+<li>每三个月使用脚本更新服务器的root密码和iDrac密码，并将更换后的密码加密打包发送给指定管理员邮箱，同时提交gitlab</li>
+<li>对系统关键文件进行md5监控，例如&#x2F;etc&#x2F;passwd，~&#x2F;.ssh&#x2F;authorized_keys文件等，如有变更，触发报警</li>
+<li>定期查毒，漏扫，定期安排更新操作系统</li>
+<li>&#x2F;etc&#x2F;ssh&#x2F;sshd_config里配置：<ul>
+<li>PasswordAuthentication no</li>
+<li>PermitRootLogin without-password</li>
+</ul>
+</li>
+<li>使用saltstack等批量管理软件进行特权命令执行和备份脚本执行（避开ssh协议）</li>
+</ul>
+<h3 id="应用系统安全"><a href="#应用系统安全" class="headerlink" title="应用系统安全"></a>应用系统安全</h3><h4 id="WEB应用防火墙（WAF）"><a href="#WEB应用防火墙（WAF）" class="headerlink" title="WEB应用防火墙（WAF）"></a>WEB应用防火墙（WAF）</h4><ul>
+<li>防SQL注入</li>
+<li>防CC攻击</li>
+<li>防XSS跨站脚本</li>
+</ul>
+<h4 id="应用系统漏洞"><a href="#应用系统漏洞" class="headerlink" title="应用系统漏洞"></a>应用系统漏洞</h4><ul>
+<li>关注0day漏洞新闻</li>
+<li>及时整改并上线投产</li>
+<li>组织技术力量测试，复现</li>
+</ul>
+<h4 id="日志收集和分析"><a href="#日志收集和分析" class="headerlink" title="日志收集和分析"></a>日志收集和分析</h4><ul>
+<li>完善日志收集方案，集中转储</li>
+<li>通过应用系统日志分析，进行安全预警</li>
+</ul>
+<h4 id="DNS劫持"><a href="#DNS劫持" class="headerlink" title="DNS劫持"></a>DNS劫持</h4><ul>
+<li>全站https，购买泛域名证书</li>
+<li>有条件的可以自己维护公网DNS，上dnssec数字签名</li>
+<li>采购基调、听云等第三方拨测服务，分布式监控网站质量</li>
+<li>向ISP投诉，工信部举报</li>
+</ul>
+<h4 id="Basic-Auth"><a href="#Basic-Auth" class="headerlink" title="Basic Auth"></a>Basic Auth</h4><ul>
+<li>在nginx上做，非常简单</li>
+<li>对防脚本攻击有奇效</li>
+</ul>
+<h3 id="企业邮箱服务器安全"><a href="#企业邮箱服务器安全" class="headerlink" title="企业邮箱服务器安全"></a>企业邮箱服务器安全</h3><h4 id="推荐使用微软的Exchange"><a href="#推荐使用微软的Exchange" class="headerlink" title="推荐使用微软的Exchange"></a>推荐使用微软的Exchange</h4><p>功能强大，维护相对简单</p>
+<h4 id="投产反垃圾邮件网关"><a href="#投产反垃圾邮件网关" class="headerlink" title="投产反垃圾邮件网关"></a>投产反垃圾邮件网关</h4><p>投产梭子鱼反垃圾邮件网关，防伪造发信人</p>
+<h4 id="群发审核管控"><a href="#群发审核管控" class="headerlink" title="群发审核管控"></a>群发审核管控</h4><h4 id="用好邮件组"><a href="#用好邮件组" class="headerlink" title="用好邮件组"></a>用好邮件组</h4><h4 id="接入AD域控"><a href="#接入AD域控" class="headerlink" title="接入AD域控"></a>接入AD域控</h4><h3 id="域名安全管理"><a href="#域名安全管理" class="headerlink" title="域名安全管理"></a>域名安全管理</h3><h4 id="做好ICP备案"><a href="#做好ICP备案" class="headerlink" title="做好ICP备案"></a>做好ICP备案</h4><ul>
+<li>域名证书</li>
+<li>域名实名认证（公司模板）</li>
+<li>接入商处蓝色幕布拍照</li>
+<li>法人身份证、管理员身份证</li>
+<li>网站真实性核验单</li>
+</ul>
+<h4 id="公网解析"><a href="#公网解析" class="headerlink" title="公网解析"></a>公网解析</h4><ul>
+<li>专人管理，邮件申请，审批</li>
+<li>将业务解析至不同公网IP出口，双活机房</li>
+<li>智能解析，解析至不同线路</li>
+<li>如有条件，可购买公网解析套餐服务，安全服务等</li>
+</ul>
+<h2 id="内网安全"><a href="#内网安全" class="headerlink" title="内网安全"></a>内网安全</h2><p>80%以上的企业IT安全问题出自内网安全</p>
+<h3 id="堡垒机"><a href="#堡垒机" class="headerlink" title="堡垒机"></a>堡垒机</h3><ul>
+<li>一定要强制使用堡垒机登录服务器</li>
+<li>ssh私钥通行短语机制，避免密钥失窃</li>
+<li>定期审计堡垒机操作日志</li>
+<li>如果有必要，可以上2FA（双因子验证）</li>
+</ul>
+<h3 id="AD域控"><a href="#AD域控" class="headerlink" title="AD域控"></a>AD域控</h3><p>有条件一定要接入windows域控，要求密码复杂度和定期过期</p>
+<ul>
+<li>邮箱</li>
+<li>wifi</li>
+<li>vpn账号密码</li>
+<li>内网系统账号</li>
+<li>业务系统账号</li>
+<li>网络设备等</li>
+</ul>
+<h3 id="办公网安全"><a href="#办公网安全" class="headerlink" title="办公网安全"></a>办公网安全</h3><ul>
+<li>专业的HelpDesk团队</li>
+<li>企业级杀毒软件</li>
+<li>办公电脑接入域控</li>
+<li>上网行为管理</li>
+<li>流量监控，mac地址绑定</li>
+<li>有条件的可以在办公环境上一个小型的业务机房</li>
+<li>wifi管控，单做guest接入点，不能访问业务核心网络</li>
+</ul>
 ]]></content>
       <categories>
         <category>Linux运维</category>
