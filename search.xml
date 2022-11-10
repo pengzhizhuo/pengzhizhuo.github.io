@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>MySQL建表规范</title>
+    <url>/2022/11/09/MySQL%E5%BB%BA%E8%A1%A8%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<h2 id="MySQL规范–建表规范"><a href="#MySQL规范–建表规范" class="headerlink" title="MySQL规范–建表规范"></a>MySQL规范–建表规范</h2><p>规范的表结构能降低MySQL出现问题的概率，下面总结一些MySQL的建表规范</p>
+<h3 id="1、库名、表名、字段名全部采用小写格式。"><a href="#1、库名、表名、字段名全部采用小写格式。" class="headerlink" title="1、库名、表名、字段名全部采用小写格式。"></a>1、库名、表名、字段名全部采用小写格式。</h3><p>这是防止出现大小写不一致导致找不到对应表的情况。</p>
+<h3 id="2、避免使用MySQL的保留字。"><a href="#2、避免使用MySQL的保留字。" class="headerlink" title="2、避免使用MySQL的保留字。"></a>2、避免使用MySQL的保留字。</h3><p>使用mysql时一定要注意，尽量不要使用它的保留字作为表名或者列名，否则会出现莫名其妙的错误。如果之前用了，在sql语句中就用&#96;&#96;包括起来。</p>
+<h3 id="3、表名、列名建议不要超过30个字符。"><a href="#3、表名、列名建议不要超过30个字符。" class="headerlink" title="3、表名、列名建议不要超过30个字符。"></a>3、表名、列名建议不要超过30个字符。</h3><h3 id="4、临时库表、备份库表的命名"><a href="#4、临时库表、备份库表的命名" class="headerlink" title="4、临时库表、备份库表的命名"></a>4、临时库表、备份库表的命名</h3><p>临时库表必须以tmp加上日期为后缀，比如user_info_tmp_20221109。<br>备份库表必须以bak加上日期为后缀，比如user_info_bak_20221109。</p>
+<h3 id="5、索引命名"><a href="#5、索引命名" class="headerlink" title="5、索引命名"></a>5、索引命名</h3><p>非唯一索引建议按照”idx字段名”进行命名。<br>唯一索引建议按照 “uniq_字段名”进行命名。</p>
+<h3 id="6、主键的建议"><a href="#6、主键的建议" class="headerlink" title="6、主键的建议"></a>6、主键的建议</h3><p>表必须有主键。<br>不使用有业务意义的的列作为主键，以免收到业务变化的影响。<br>不使用更新频繁的列作为主键。<br>不使用UUID、MD5等作为主键，因为它们可能会导致数据过于离散。<br>建议使用非空的唯一键作为主键，并配置自增或者发号器。</p>
+<h3 id="7、建议使用-InnoDB"><a href="#7、建议使用-InnoDB" class="headerlink" title="7、建议使用 InnoDB"></a>7、建议使用 InnoDB</h3><p>InnoDB 具有支持事务、行锁设计、在高并发场景下性能更好等特性。因此在绝大多数业务场景下，InnoDB 都是唯一选择。</p>
+<h3 id="8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci"><a href="#8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci" class="headerlink" title="8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci"></a>8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci</h3><p>utf8mb4 为万国码，无乱码风险；与 utf8 编码相比，utf8mb4 支持 Emoji 表情。</p>
+<h3 id="9、所有表、字段都需要增加-comment-来描述此表、字段的含义"><a href="#9、所有表、字段都需要增加-comment-来描述此表、字段的含义" class="headerlink" title="9、所有表、字段都需要增加 comment 来描述此表、字段的含义"></a>9、所有表、字段都需要增加 comment 来描述此表、字段的含义</h3><h3 id="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"><a href="#10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段" class="headerlink" title="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"></a>10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段</h3><h3 id="11、用尽量少的存储空间来存储一个字段的数据"><a href="#11、用尽量少的存储空间来存储一个字段的数据" class="headerlink" title="11、用尽量少的存储空间来存储一个字段的数据"></a>11、用尽量少的存储空间来存储一个字段的数据</h3><p>能用 int 的就不用 char 或 varchar<br>能用 tinyint 的就不用 int<br>使用 unsigned 存储非负数值</p>
+<h3 id="12、尽可能不使用-text-和-blob-类型"><a href="#12、尽可能不使用-text-和-blob-类型" class="headerlink" title="12、尽可能不使用 text 和 blob 类型"></a>12、尽可能不使用 text 和 blob 类型</h3><p>使用 text 或 blob 类型，会浪费更多的磁盘空间和内存空间。如无法避免使用 text 或 blob 类型，则建议独立出一张表，使用主键或其他唯一的字段来对应，以避免影响原有表的查询效率。</p>
+<h3 id="13、禁止在数据库中存储明文密码"><a href="#13、禁止在数据库中存储明文密码" class="headerlink" title="13、禁止在数据库中存储明文密码"></a>13、禁止在数据库中存储明文密码</h3><p>数据安全第一，防止密码泄露</p>
+<h3 id="14、索引设计"><a href="#14、索引设计" class="headerlink" title="14、索引设计"></a>14、索引设计</h3><p>在设计索引时，建议考虑以下因素：<br>经常作为条件、排序、join关联的字段，建议加上索引。<br>单表索引数不建议过多，因为索引也会占用空间。<br>如果可以使用覆盖索引，或者几个字段经常同时作为条件，则可以考虑使用联合索引。<br>不在低基数的列上创建索引，如性别字段。</p>
+<h3 id="15、不建议使用外键"><a href="#15、不建议使用外键" class="headerlink" title="15、不建议使用外键"></a>15、不建议使用外键</h3><p>在有外键的情况下，update 操作和 delete 操作都会涉及相关联的表，不仅会影响 SQL 的性能，还会大大增加死锁出现的概率</p>
+<h3 id="16、线上业务禁止使用存储过程、视图、触发器、Event-等"><a href="#16、线上业务禁止使用存储过程、视图、触发器、Event-等" class="headerlink" title="16、线上业务禁止使用存储过程、视图、触发器、Event 等"></a>16、线上业务禁止使用存储过程、视图、触发器、Event 等</h3><p>在高并发的情况下，这些功能很可能会影响数据库的性能，如果有类似的需求，则建议把这些逻辑放到服务层实现</p>
+<h3 id="17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定"><a href="#17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定" class="headerlink" title="17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定"></a>17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定</h3>]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Git入门</title>
     <url>/2017/03/03/learn-git/</url>
     <content><![CDATA[<h1 id="基本了解"><a href="#基本了解" class="headerlink" title="基本了解"></a>基本了解</h1><p>git命令是一些命令行工具的集合，它可以用来跟踪，记录文件的变动。比如你可以进行保存，比对，分析，合并等等。这个过程被称之为版本控制。已经有一系列的版本控制系统，比如SVN, Mercurial, Perforce, CVS, Bitkeepe等等。</p>
@@ -165,31 +190,6 @@
       </tags>
   </entry>
   <entry>
-    <title>MySQL建表规范</title>
-    <url>/2022/11/09/MySQL%E5%BB%BA%E8%A1%A8%E8%A7%84%E8%8C%83/</url>
-    <content><![CDATA[<h2 id="MySQL规范–建表规范"><a href="#MySQL规范–建表规范" class="headerlink" title="MySQL规范–建表规范"></a>MySQL规范–建表规范</h2><p>规范的表结构能降低MySQL出现问题的概率，下面总结一些MySQL的建表规范</p>
-<h3 id="1、库名、表名、字段名全部采用小写格式。"><a href="#1、库名、表名、字段名全部采用小写格式。" class="headerlink" title="1、库名、表名、字段名全部采用小写格式。"></a>1、库名、表名、字段名全部采用小写格式。</h3><p>这是防止出现大小写不一致导致找不到对应表的情况。</p>
-<h3 id="2、避免使用MySQL的保留字。"><a href="#2、避免使用MySQL的保留字。" class="headerlink" title="2、避免使用MySQL的保留字。"></a>2、避免使用MySQL的保留字。</h3><p>使用mysql时一定要注意，尽量不要使用它的保留字作为表名或者列名，否则会出现莫名其妙的错误。如果之前用了，在sql语句中就用&#96;&#96;包括起来。</p>
-<h3 id="3、表名、列名建议不要超过30个字符。"><a href="#3、表名、列名建议不要超过30个字符。" class="headerlink" title="3、表名、列名建议不要超过30个字符。"></a>3、表名、列名建议不要超过30个字符。</h3><h3 id="4、临时库表、备份库表的命名"><a href="#4、临时库表、备份库表的命名" class="headerlink" title="4、临时库表、备份库表的命名"></a>4、临时库表、备份库表的命名</h3><p>临时库表必须以tmp加上日期为后缀，比如user_info_tmp_20221109。<br>备份库表必须以bak加上日期为后缀，比如user_info_bak_20221109。</p>
-<h3 id="5、索引命名"><a href="#5、索引命名" class="headerlink" title="5、索引命名"></a>5、索引命名</h3><p>非唯一索引建议按照”idx字段名”进行命名。<br>唯一索引建议按照 “uniq_字段名”进行命名。</p>
-<h3 id="6、主键的建议"><a href="#6、主键的建议" class="headerlink" title="6、主键的建议"></a>6、主键的建议</h3><p>表必须有主键。<br>不使用有业务意义的的列作为主键，以免收到业务变化的影响。<br>不使用更新频繁的列作为主键。<br>不使用UUID、MD5等作为主键，因为它们可能会导致数据过于离散。<br>建议使用非空的唯一键作为主键，并配置自增或者发号器。</p>
-<h3 id="7、建议使用-InnoDB"><a href="#7、建议使用-InnoDB" class="headerlink" title="7、建议使用 InnoDB"></a>7、建议使用 InnoDB</h3><p>InnoDB 具有支持事务、行锁设计、在高并发场景下性能更好等特性。因此在绝大多数业务场景下，InnoDB 都是唯一选择。</p>
-<h3 id="8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci"><a href="#8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci" class="headerlink" title="8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci"></a>8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci</h3><p>utf8mb4 为万国码，无乱码风险；与 utf8 编码相比，utf8mb4 支持 Emoji 表情。</p>
-<h3 id="9、所有表、字段都需要增加-comment-来描述此表、字段的含义"><a href="#9、所有表、字段都需要增加-comment-来描述此表、字段的含义" class="headerlink" title="9、所有表、字段都需要增加 comment 来描述此表、字段的含义"></a>9、所有表、字段都需要增加 comment 来描述此表、字段的含义</h3><h3 id="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"><a href="#10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段" class="headerlink" title="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"></a>10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段</h3><h3 id="11、用尽量少的存储空间来存储一个字段的数据"><a href="#11、用尽量少的存储空间来存储一个字段的数据" class="headerlink" title="11、用尽量少的存储空间来存储一个字段的数据"></a>11、用尽量少的存储空间来存储一个字段的数据</h3><p>能用 int 的就不用 char 或 varchar<br>能用 tinyint 的就不用 int<br>使用 unsigned 存储非负数值</p>
-<h3 id="12、尽可能不使用-text-和-blob-类型"><a href="#12、尽可能不使用-text-和-blob-类型" class="headerlink" title="12、尽可能不使用 text 和 blob 类型"></a>12、尽可能不使用 text 和 blob 类型</h3><p>使用 text 或 blob 类型，会浪费更多的磁盘空间和内存空间。如无法避免使用 text 或 blob 类型，则建议独立出一张表，使用主键或其他唯一的字段来对应，以避免影响原有表的查询效率。</p>
-<h3 id="13、禁止在数据库中存储明文密码"><a href="#13、禁止在数据库中存储明文密码" class="headerlink" title="13、禁止在数据库中存储明文密码"></a>13、禁止在数据库中存储明文密码</h3><p>数据安全第一，防止密码泄露</p>
-<h3 id="14、索引设计"><a href="#14、索引设计" class="headerlink" title="14、索引设计"></a>14、索引设计</h3><p>在设计索引时，建议考虑以下因素：<br>经常作为条件、排序、join关联的字段，建议加上索引。<br>单表索引数不建议过多，因为索引也会占用空间。<br>如果可以使用覆盖索引，或者几个字段经常同时作为条件，则可以考虑使用联合索引。<br>不在低基数的列上创建索引，如性别字段。</p>
-<h3 id="15、不建议使用外键"><a href="#15、不建议使用外键" class="headerlink" title="15、不建议使用外键"></a>15、不建议使用外键</h3><p>在有外键的情况下，update 操作和 delete 操作都会涉及相关联的表，不仅会影响 SQL 的性能，还会大大增加死锁出现的概率</p>
-<h3 id="16、线上业务禁止使用存储过程、视图、触发器、Event-等"><a href="#16、线上业务禁止使用存储过程、视图、触发器、Event-等" class="headerlink" title="16、线上业务禁止使用存储过程、视图、触发器、Event 等"></a>16、线上业务禁止使用存储过程、视图、触发器、Event 等</h3><p>在高并发的情况下，这些功能很可能会影响数据库的性能，如果有类似的需求，则建议把这些逻辑放到服务层实现</p>
-<h3 id="17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定"><a href="#17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定" class="headerlink" title="17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定"></a>17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定</h3>]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>MySQL</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>MySQL数据库开发设计规范</title>
     <url>/2022/11/09/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/</url>
     <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>本规范由四部分组成：表结构设计、索引设计、高可用设计、分布式架构设计。</p>
@@ -289,6 +289,41 @@
       <tags>
         <tag>MySQL</tag>
         <tag>MySQL开发设计规范</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>常用的磁盘分区形式</title>
+    <url>/2020/05/07/linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%BD%A2%E5%BC%8F/</url>
+    <content><![CDATA[<p>常用的磁盘分区形式如表1所示，并且针对Linux操作系统，不同的磁盘分区形式需要选择不同的分区工具。</p>
+<table>
+<thead>
+<tr>
+<th>磁盘分区形式</th>
+<th>支持最大磁盘容量</th>
+<th>支持分区数量</th>
+<th>Linux分区工具</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主启动记录分区（MBR）</td>
+<td>2 TB</td>
+<td>4个主分区 <br />3个主分区和1个扩展分区<br />MBR分区包含主分区和扩展分区，其中扩展分区里面可以包含若干个逻辑分区。扩展分区不可以直接使用，需要划分成若干个逻辑分区才可以使用。以创建6个分区为例，以下两种分区情况供参考：<br />3个主分区，1个扩展分区，其中扩展分区中包含3个逻辑分区。<br />1个主分区，1个扩展分区，其中扩展分区中包含5个逻辑分区。</td>
+<td>以下两种工具均可以使用：fdisk工具parted工具</td>
+</tr>
+<tr>
+<td>全局分区表（GPT, Guid Partition Table）</td>
+<td>18 EB1 EB &#x3D; 1048576 TB</td>
+<td>不限制分区数量GPT格式下没有主分区、扩展分区以及逻辑分区之分。</td>
+<td>parted工具</td>
+</tr>
+</tbody></table>
+<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，如果您需要使用大于2 TB的磁盘容量，分区形式请采用GPT。</p>
+]]></content>
+      <categories>
+        <category>Linux运维</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -527,41 +562,6 @@
       </tags>
   </entry>
   <entry>
-    <title>常用的磁盘分区形式</title>
-    <url>/2020/05/07/linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%BD%A2%E5%BC%8F/</url>
-    <content><![CDATA[<p>常用的磁盘分区形式如表1所示，并且针对Linux操作系统，不同的磁盘分区形式需要选择不同的分区工具。</p>
-<table>
-<thead>
-<tr>
-<th>磁盘分区形式</th>
-<th>支持最大磁盘容量</th>
-<th>支持分区数量</th>
-<th>Linux分区工具</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>主启动记录分区（MBR）</td>
-<td>2 TB</td>
-<td>4个主分区 <br />3个主分区和1个扩展分区<br />MBR分区包含主分区和扩展分区，其中扩展分区里面可以包含若干个逻辑分区。扩展分区不可以直接使用，需要划分成若干个逻辑分区才可以使用。以创建6个分区为例，以下两种分区情况供参考：<br />3个主分区，1个扩展分区，其中扩展分区中包含3个逻辑分区。<br />1个主分区，1个扩展分区，其中扩展分区中包含5个逻辑分区。</td>
-<td>以下两种工具均可以使用：fdisk工具parted工具</td>
-</tr>
-<tr>
-<td>全局分区表（GPT, Guid Partition Table）</td>
-<td>18 EB1 EB &#x3D; 1048576 TB</td>
-<td>不限制分区数量GPT格式下没有主分区、扩展分区以及逻辑分区之分。</td>
-<td>parted工具</td>
-</tr>
-</tbody></table>
-<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，如果您需要使用大于2 TB的磁盘容量，分区形式请采用GPT。</p>
-]]></content>
-      <categories>
-        <category>Linux运维</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>CentOS逻辑卷调整分区大小</title>
     <url>/2018/05/04/lvreduce-lvextend/</url>
     <content><![CDATA[<h1 id="CentOS逻辑卷调整分区大小目的"><a href="#CentOS逻辑卷调整分区大小目的" class="headerlink" title="CentOS逻辑卷调整分区大小目的"></a>CentOS逻辑卷调整分区大小目的</h1><p>因为系统使用的是逻辑卷分区（LVM），且分区大小不合理</p>
@@ -586,6 +586,18 @@
       </categories>
       <tags>
         <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>利用Spring的Resource类读写中文Properties</title>
+    <url>/2017/05/09/spring-resource-properties/</url>
+    <content><![CDATA[<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>Spring对Properties的读取进行了完善而全面的封装，对于写则仍需配合FileOutputStream进行。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.oolong.common.util;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.PathMatchingResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.ResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserVar</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">configFile</span> <span class="operator">=</span> <span class="string">&quot;classpath*:param.properties&quot;</span>;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> org.springframework.core.io.Resource resourceWritable;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Properties p;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 注意事项:</span></span><br><span class="line"><span class="comment">   * 1、properties放在source目录下</span></span><br><span class="line"><span class="comment">   * 2、param.properties至少有一对键值对</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">static</span> &#123;</span><br><span class="line">    p = <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">    org.springframework.core.io.Resource[] resources = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="type">ResourcePatternResolver</span> <span class="variable">resolver</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PathMatchingResourcePatternResolver</span>();</span><br><span class="line">      resources = resolver.getResources(configFile);</span><br><span class="line">      <span class="keyword">if</span> (resources != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (org.springframework.core.io.Resource r : resources) &#123;</span><br><span class="line">          <span class="keyword">if</span> (r != <span class="literal">null</span>) &#123;</span><br><span class="line">            p.load(r.getInputStream());</span><br><span class="line">            resourceWritable = r;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e1) &#123;</span><br><span class="line">      e1.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">get</span><span class="params">(String key)</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">v</span> <span class="operator">=</span> (String) p.get(key);</span><br><span class="line">    <span class="keyword">if</span> (v != <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">String</span>(v.getBytes(<span class="string">&quot;ISO-8859-1&quot;</span>), <span class="string">&quot;GBK&quot;</span>);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(String key,String value)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">null</span> != resourceWritable) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">OutputStream</span> <span class="variable">fos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(resourceWritable.getFile());</span><br><span class="line">        <span class="type">Properties</span> <span class="variable">p</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">        p.load(resourceWritable.getInputStream());</span><br><span class="line">        value = <span class="keyword">new</span> <span class="title class_">String</span>(value.getBytes(<span class="string">&quot;GBK&quot;</span>),<span class="string">&quot;ISO-8859-1&quot;</span>);</span><br><span class="line">        p.setProperty(key, value);</span><br><span class="line">        p.store(fos, <span class="literal">null</span>);</span><br><span class="line">        fos.close();</span><br><span class="line">      &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Java架构</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
       </tags>
   </entry>
   <entry>
@@ -623,18 +635,6 @@
       <tags>
         <tag>MySQL</tag>
         <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>利用Spring的Resource类读写中文Properties</title>
-    <url>/2017/05/09/spring-resource-properties/</url>
-    <content><![CDATA[<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>Spring对Properties的读取进行了完善而全面的封装，对于写则仍需配合FileOutputStream进行。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.oolong.common.util;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.PathMatchingResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.ResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserVar</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">configFile</span> <span class="operator">=</span> <span class="string">&quot;classpath*:param.properties&quot;</span>;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> org.springframework.core.io.Resource resourceWritable;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Properties p;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 注意事项:</span></span><br><span class="line"><span class="comment">   * 1、properties放在source目录下</span></span><br><span class="line"><span class="comment">   * 2、param.properties至少有一对键值对</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">static</span> &#123;</span><br><span class="line">    p = <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">    org.springframework.core.io.Resource[] resources = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="type">ResourcePatternResolver</span> <span class="variable">resolver</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PathMatchingResourcePatternResolver</span>();</span><br><span class="line">      resources = resolver.getResources(configFile);</span><br><span class="line">      <span class="keyword">if</span> (resources != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (org.springframework.core.io.Resource r : resources) &#123;</span><br><span class="line">          <span class="keyword">if</span> (r != <span class="literal">null</span>) &#123;</span><br><span class="line">            p.load(r.getInputStream());</span><br><span class="line">            resourceWritable = r;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e1) &#123;</span><br><span class="line">      e1.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">get</span><span class="params">(String key)</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">v</span> <span class="operator">=</span> (String) p.get(key);</span><br><span class="line">    <span class="keyword">if</span> (v != <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">String</span>(v.getBytes(<span class="string">&quot;ISO-8859-1&quot;</span>), <span class="string">&quot;GBK&quot;</span>);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(String key,String value)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">null</span> != resourceWritable) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">OutputStream</span> <span class="variable">fos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(resourceWritable.getFile());</span><br><span class="line">        <span class="type">Properties</span> <span class="variable">p</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">        p.load(resourceWritable.getInputStream());</span><br><span class="line">        value = <span class="keyword">new</span> <span class="title class_">String</span>(value.getBytes(<span class="string">&quot;GBK&quot;</span>),<span class="string">&quot;ISO-8859-1&quot;</span>);</span><br><span class="line">        p.setProperty(key, value);</span><br><span class="line">        p.store(fos, <span class="literal">null</span>);</span><br><span class="line">        fos.close();</span><br><span class="line">      &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Java架构</category>
-      </categories>
-      <tags>
-        <tag>Spring</tag>
       </tags>
   </entry>
   <entry>
