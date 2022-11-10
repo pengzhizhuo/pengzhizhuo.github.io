@@ -1,6 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Git入门</title>
+    <url>/2017/03/03/learn-git/</url>
+    <content><![CDATA[<h1 id="基本了解"><a href="#基本了解" class="headerlink" title="基本了解"></a>基本了解</h1><p>git命令是一些命令行工具的集合，它可以用来跟踪，记录文件的变动。比如你可以进行保存，比对，分析，合并等等。这个过程被称之为版本控制。已经有一系列的版本控制系统，比如SVN, Mercurial, Perforce, CVS, Bitkeepe等等。</p>
+<p>Git是分布式的，这意味着它并不依赖于中心服务器，任何一台机器都可以有一个本地版本的控制系统，我们称之为仓库。如果是多人协作的话，你需要还需要一个线上仓库，用来同步信息。这就是GitHub, BitBucket的工作。</p>
+<span id="more"></span>
+
+<h2 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h2><p>安装git非常直接：</p>
+<ul>
+<li><p>Linux - 打开控制台，然后通过包管理安装，在Ubuntu上命令是：</p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install git-all</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Windows - 推荐使用<a href="https://git-for-windows.github.io/">git for windows</a>，它包括了图形工具以及命令行模拟器。</p>
+</li>
+<li><p>OS X - 最简单的方式是使用homebrew安装，命令行执行</p>
+</li>
+</ul>
+<p>如果你是在是先用图形工具的话，那么推荐你使用 <a href="https://desktop.github.com/">Github desktop</a>,<a href="https://www.atlassian.com/software/sourcetree">Sourcetree</a>。但我还是推荐你使用命令行，下面的内容就都是命令行的。</p>
+<h2 id="配置Git"><a href="#配置Git" class="headerlink" title="配置Git"></a>配置Git</h2><p>安装完git,首要任务是配置我们的信息，最重要的是用户名及邮箱，打开终端，执行以下命令。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git config --global user.name <span class="string">&quot;My Name&quot;</span></span><br><span class="line">$ git config --global user.email myEmail@example.com</span><br></pre></td></tr></table></figure>
+
+<p>配置好这两项，用户就能知道谁做了什么，并且一切都更有组织性了不是吗？</p>
+<h2 id="创建一个新仓库-git-init"><a href="#创建一个新仓库-git-init" class="headerlink" title="创建一个新仓库 - git init"></a>创建一个新仓库 - git init</h2><p>git 会把所有文件以及历史记录保存在你的项目中，创建一个新的仓库，首先要去到项目路径，执行 git init。然后git会创建一个隐藏的文件夹.git，所有的信息都储存在其中。</p>
+<p>在桌面创建一个联系文件夹 git_exercise, 打开终端：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> Desktop/git_exercise/</span><br><span class="line">$ git init</span><br></pre></td></tr></table></figure>
+
+<p>OK，现在项目还什么都没有，新建一个 hello.txt 文件试试~</p>
+<h2 id="检查状态-git-status"><a href="#检查状态-git-status" class="headerlink" title="检查状态 - git status"></a>检查状态 - git status</h2><p>git status 是另一个非常重要的命令，它会告诉我们创库的当前状态：是否为最新代码，有什么更新等等<br>执行git status:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git status</span><br><span class="line"></span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">Initial commit</span><br><span class="line"></span><br><span class="line">Untracked files:</span><br><span class="line">  (use <span class="string">&quot;git add ...&quot;</span> to include <span class="keyword">in</span> what will be committed)</span><br><span class="line"></span><br><span class="line">	hello.txt</span><br></pre></td></tr></table></figure>
+
+<p>git 告诉我们，hello.txt尚未跟踪，这是因为这个文件是新的，git不知道是应该跟踪它的变动呢，还是直接忽略不管呢。为了跟踪我们的新文件，我们需要暂存它。</p>
+<h2 id="暂存-git-add"><a href="#暂存-git-add" class="headerlink" title="暂存 - git add"></a>暂存 - git add</h2><p>git 有个概念叫 暂存区，你可以把它看成一块空白帆布，包裹着所有你可能会提交的变动。它一开始为空，你可以通过 git add 命令添加内容，并使用 git commit 提交。</p>
+<p>这个例子中只有一个文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git add hello.txt</span><br></pre></td></tr></table></figure>
+
+<p>如果需要提交目录下的所有内容，可以这样：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git add A</span><br></pre></td></tr></table></figure>
+
+<p>再次使用git status查看：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git status</span><br><span class="line"></span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">Initial commit</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use <span class="string">&quot;git rm --cached ...&quot;</span> to unstage)</span><br><span class="line"></span><br><span class="line">	new file:   hello.txt</span><br></pre></td></tr></table></figure>
+
+<p>我们的文件已经提交了。状态信息还会告诉我们暂存区文件发生了什么变动，不过这里我们提交的是一个全新文件。</p>
+<h2 id="提交-git-commit"><a href="#提交-git-commit" class="headerlink" title="提交 - git commit"></a>提交 - git commit</h2><p>一次提交代表着我们的仓库到了一个交付状态，通常是完成了某一块小功能。它就像是一个快照，允许我们像使用时光机一样回到旧时光。</p>
+<p>创建提交，需要我们提交东西到暂存区（git add），然后：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git commit -m <span class="string">&quot;Initial commit.&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>这就创建了一次提交，-m “Initial commit.”表示对这次提交的描述，建议使用有意义的描述性信息。</p>
+<h1 id="远端仓库"><a href="#远端仓库" class="headerlink" title="远端仓库"></a>远端仓库</h1><p>到目前为止，我们的操作都是在本地的，它存在于.git文件中。为了能够协同开发，我们需要把代码发布到远端仓库上。</p>
+<h2 id="链接远端仓库-git-remote-add"><a href="#链接远端仓库-git-remote-add" class="headerlink" title="链接远端仓库 - git remote add"></a>链接远端仓库 - git remote add</h2><p>为了能够上传到远端仓库，我们需要先建立起链接，这篇教程中，远端仓库的地址为：<a href="https://github.com/tutorialzine/awesome-project">https://github.com/tutorialzine/awesome-project</a>,但你应该自己在Github, BitBucket上搭建仓库，自己一步一步尝试。</p>
+<p>添加测试用的远端仓库</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git remote add origin https://github.com/tutorialzine/awesome-project.git</span><br></pre></td></tr></table></figure>
+
+<p>一个项目可以同时拥有好几个远端仓库为了能够区分，通常会起不同的名字。通常主远端仓库被称为origin。</p>
+<h2 id="上传到服务器-git-push"><a href="#上传到服务器-git-push" class="headerlink" title="上传到服务器 - git push"></a>上传到服务器 - git push</h2><p>每次我们要提交代码到服务器上时，都会使用到git push。<br>git push命令会有两个参数，远端仓库的名字，以及分支的名字：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git push origin master</span><br><span class="line"></span><br><span class="line">Counting objects: 3, <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (3/3), 212 bytes | 0 bytes/s, <span class="keyword">done</span>.</span><br><span class="line">Total 3 (delta 0), reused 0 (delta 0)</span><br><span class="line">To https://github.com/tutorialzine/awesome-project.git</span><br><span class="line"> * [new branch]      master -&gt; master</span><br></pre></td></tr></table></figure>
+
+<p>取决于你使用的服务器，push过程你可能需要验证身份。如果没有出差错，现在使用浏览器去你的远端分支上看，hello.txt已经在那里等着你了。</p>
+<h2 id="克隆仓库-git-clone"><a href="#克隆仓库-git-clone" class="headerlink" title="克隆仓库 - git clone"></a>克隆仓库 - git clone</h2><p>放在Github上的开源项目，人们可以看到你的代码。可以使用 git clone进行下载到本地。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/tutorialzine/awesome-project.git</span><br></pre></td></tr></table></figure>
+
+<p>本地也会创建一个新的仓库，并自动将github上的分支设为远端分支。</p>
+<h2 id="从服务器上拉取代码-git-pull"><a href="#从服务器上拉取代码-git-pull" class="headerlink" title="从服务器上拉取代码 - git pull"></a>从服务器上拉取代码 - git pull</h2><p>如果你更新了代码到仓库上，其他人可以通过git pull命令拉取你的变动：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git pull origin master</span><br><span class="line">From https://github.com/tutorialzine/awesome-project</span><br><span class="line"> * branch            master     -&gt; FETCH_HEAD</span><br><span class="line">Already up-to-date.</span><br></pre></td></tr></table></figure>
+
+<p>因为暂时没有其他人提交，所有没有任何变动</p>
+<h1 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h1><p><img src="http://javabk.oss-cn-hangzhou.aliyuncs.com/images/learn-git-in-30-minutes-branch.jpg" alt="branchs"></p>
+<p>当你在做一个新功能的时候，最好是在一个独立的区域上开发，通常称之为分支。分支之间相互独立，并且拥有自己的历史记录。这样做的原因是：</p>
+<ul>
+<li>稳定版本的代码不会被破坏</li>
+<li>不同的功能可以由不同开发者同时开发。</li>
+<li>开发者可以专注于自己的分支，不用担心被其他人破坏了环境</li>
+<li>在不确定之前，同一个特性可以拥有几个版本，便于比较</li>
+</ul>
+<h2 id="创建新分支-git-branch"><a href="#创建新分支-git-branch" class="headerlink" title="创建新分支 - git branch"></a>创建新分支 - git branch</h2><p>每一个仓库的默认分支都叫master, 创建新分支可以这样：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git branch amazing_new_feature</span><br></pre></td></tr></table></figure>
+
+<p>创建了一个名为amazing_new_feature的新分支，它跟当前分支同一起点</p>
+<h2 id="切换分支-git-checkout"><a href="#切换分支-git-checkout" class="headerlink" title="切换分支 - git checkout"></a>切换分支 - git checkout</h2><p>单独使用git branch，可以查看分支状态：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git branch</span><br><span class="line">  amazing_new_feature</span><br><span class="line">* master</span><br></pre></td></tr></table></figure>
+<p>***** 号表示当前活跃分支为master，使用git checkout切换分支。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git checkout amazing_new_feature</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="合并分支-git-merge"><a href="#合并分支-git-merge" class="headerlink" title="合并分支 - git merge"></a>合并分支 - git merge</h2><p>我们的 amazing_new_feature 分支的任务是增加一个featuer.txt。我们来创建，添加到暂存区，提交。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git add feature.txt</span><br><span class="line">$ git commit -m <span class="string">&quot;New feature complete.&quot;</span></span><br></pre></td></tr></table></figure>
+<p>新分支任务完成了，回到master分支</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git checkout master</span><br></pre></td></tr></table></figure>
+
+<p>现在去查看文件，你会发现，之前创建的feature.txt文件不见了，因为master分支上并没有feature.txt。使用git merge 把 amazing_new_feature 分支合并到master上。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git merge amazing_new_feature</span><br></pre></td></tr></table></figure>
+<p>ok! 然后再把amazing_new_feature 分支删掉吧。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git branch -d amazing_new_feature</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h1 id="高级"><a href="#高级" class="headerlink" title="高级"></a>高级</h1><p>这篇文章的最后一节，我们来说些比较高级并且使用的技巧。</p>
+<h2 id="比对两个不同提交之间的差别"><a href="#比对两个不同提交之间的差别" class="headerlink" title="比对两个不同提交之间的差别"></a>比对两个不同提交之间的差别</h2><p>每次提交都有一个唯一id，查看所有提交和他们的id，可以使用 git log:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git <span class="built_in">log</span></span><br><span class="line"></span><br><span class="line">commit ba25c0ff30e1b2f0259157b42b9f8f5d174d80d7</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Mon May 30 17:15:28 2016 +0300</span><br><span class="line"></span><br><span class="line">    New feature complete</span><br><span class="line"></span><br><span class="line">commit b10cc1238e355c02a044ef9f9860811ff605c9b4</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Mon May 30 16:30:04 2016 +0300</span><br><span class="line"></span><br><span class="line">    Added content to hello.txt</span><br><span class="line"></span><br><span class="line">commit 09bd8cc171d7084e78e4d118a2346b7487dca059</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Sat May 28 17:52:14 2016 +0300</span><br><span class="line"></span><br><span class="line">    Initial commit</span><br></pre></td></tr></table></figure>
+
+<p>id 很长，但是你并不需要复制整个字符串，前一小部分就够了。<br>查看某一次提交更新了什么，使用 git show:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git show b10cc123</span><br><span class="line"></span><br><span class="line">commit b10cc1238e355c02a044ef9f9860811ff605c9b4</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Mon May 30 16:30:04 2016 +0300</span><br><span class="line"></span><br><span class="line">    Added content to hello.txt</span><br><span class="line"></span><br><span class="line">diff --git a/hello.txt b/hello.txt</span><br><span class="line">index e69de29..b546a21 100644</span><br><span class="line">--- a/hello.txt</span><br><span class="line">+++ b/hello.txt</span><br><span class="line">@@ -0,0 +1 @@</span><br><span class="line">+Nice weather today, isn<span class="string">&#x27;t it?</span></span><br></pre></td></tr></table></figure>
+
+<p>查看两次提交的不同，可以使用 git diff [commit-from]..[commit-to] 语法：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git diff 09bd8cc..ba25c0ff</span><br><span class="line"></span><br><span class="line">diff --git a/feature.txt b/feature.txt</span><br><span class="line">new file mode 100644</span><br><span class="line">index 0000000..e69de29</span><br><span class="line">diff --git a/hello.txt b/hello.txt</span><br><span class="line">index e69de29..b546a21 100644</span><br><span class="line">--- a/hello.txt</span><br><span class="line">+++ b/hello.txt</span><br><span class="line">@@ -0,0 +1 @@</span><br><span class="line">+Nice weather today, isn<span class="string">&#x27;t it?</span></span><br></pre></td></tr></table></figure>
+
+<p>比较首次提交和最后一次提交，我们可以看到所有的更改。当然使用git difftool命令更加方便。</p>
+<h2 id="回滚某个文件到之前的版本"><a href="#回滚某个文件到之前的版本" class="headerlink" title="回滚某个文件到之前的版本"></a>回滚某个文件到之前的版本</h2><p>git 允许我们将某个特定的文件回滚到特定的提交，使用的也是 git checkout。</p>
+<p>下面的例子，我们将hello.txt回滚到最初的状态，需要指定回滚到哪个提交，以及文件的全路径。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git checkout 09bd8cc1 hello.txt</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="回滚提交"><a href="#回滚提交" class="headerlink" title="回滚提交"></a>回滚提交</h2><p>如果你发现最新的一次提交完了加某个文件，你可以通过 git commit —amend来修复，它会把最新的提交打回暂存区，并尝试重新提交。</p>
+<p>如果是更复杂的情况，比如不是最新的提交了。那你可以使用git revert。</p>
+<p>最新的一次提交别名也叫HEAD。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git revert HEAD</span><br></pre></td></tr></table></figure>
+<p>其他提交可以使用id:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git revert HEAD</span><br></pre></td></tr></table></figure>
+<p>混滚提交时，发生冲突是非常频繁的。当文件被后面的提交修改了以后，git不能正确回滚。</p>
+<h2 id="解决合并冲突"><a href="#解决合并冲突" class="headerlink" title="解决合并冲突"></a>解决合并冲突</h2><p>冲突经常出现在合并分支或者是拉去别人的代码。有些时候git能自动处理冲突，但大部分需要我们手动处理。</p>
+<p>比如John 和 Tim 分别在各自的分支上写了两部分代码。<br>John 喜欢 for:</p>
+<p>&#x2F;&#x2F; Use a for loop to console.log contents.<br>for(var i&#x3D;0; i&lt;arr.length; i++) {<br>console.log(arr[i]);<br>}<br>Tim 喜欢 forEach:</p>
+<p>&#x2F;&#x2F; Use forEach to console.log contents.<br>arr.forEach(function(item) {<br>console.log(item);<br>});</p>
+<p>假设John 现在去拉取 Tim的代码:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git merge tim_branch</span><br><span class="line"></span><br><span class="line">Auto-merging print_array.js</span><br><span class="line">CONFLICT (content): Merge conflict <span class="keyword">in</span> print_array.js</span><br><span class="line">Automatic merge failed; fix conflicts and <span class="keyword">then</span> commit the result.</span><br></pre></td></tr></table></figure>
+<p>这时候git并不知道如何解决冲突，因为他不知道John和Tim谁写得更好。</p>
+<p>于是它就在代码中插入标记。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt; <span class="variable constant_">HEAD</span></span><br><span class="line"><span class="comment">// Use a for loop to console.log contents.</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;arr.<span class="property">length</span>; i++) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(arr[i]);</span><br><span class="line">&#125;</span><br><span class="line">=======</span><br><span class="line"><span class="comment">// Use forEach to console.log contents.</span></span><br><span class="line">arr.<span class="title function_">forEach</span>(<span class="keyword">function</span>(<span class="params">item</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(item);</span><br><span class="line">&#125;);</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;&gt;&gt; <span class="title class_">Tim</span> s commit.</span><br></pre></td></tr></table></figure>
+
+<p>&#x3D;&#x3D;&#x3D;&#x3D; 号上方是当前最新一次提交，下方是冲突的代码。我们需要解决这样的冲突，经过组委会成员讨论，一致认定，在座的各位都是垃圾！两个都不要。改成下面的代码:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// Not using for loop or forEach.</span><br><span class="line">// Use Array.toString() to console.log contents.</span><br><span class="line">console.log(arr.toString());</span><br></pre></td></tr></table></figure>
+<p>好了，再提交一下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ git add -A</span><br><span class="line">$ git commit -m &quot;Array printing conflict resolved.&quot;</span><br></pre></td></tr></table></figure>
+
+<p>如果在大型项目中，这个过程可能容易出问题。你可以使用<a href="https://git-scm.com/download/gui/linux">GUI工具</a>来帮助你。使用 git mergetool。</p>
+<h2 id="配置-gitignore"><a href="#配置-gitignore" class="headerlink" title="配置 .gitignore"></a>配置 .gitignore</h2><p>大部分项目中，会有写文件，文件夹是我们不想提交的。为了防止一不小心提交，我们需要gitignore文件：</p>
+<ol>
+<li>在项目根目录创建.gitignore文件</li>
+<li>在文件中列出不需要提交的文件名，文件夹名，每个一行</li>
+<li>.gitignore文件需要提交，就像普通文件一样</li>
+</ol>
+<p>通常会被ignore的文件有：</p>
+<ul>
+<li>log文件</li>
+<li>task runner builds</li>
+<li>node_modules等文件夹</li>
+<li>IDES生成的文件</li>
+<li>个人笔记</li>
+</ul>
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">*.log</span><br><span class="line">build/</span><br><span class="line">node_modules/</span><br><span class="line">.idea/</span><br><span class="line">my_notes.txt</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>Java架构</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL建表规范</title>
     <url>/2022/11/09/MySQL%E5%BB%BA%E8%A1%A8%E8%A7%84%E8%8C%83/</url>
     <content><![CDATA[<h2 id="MySQL规范–建表规范"><a href="#MySQL规范–建表规范" class="headerlink" title="MySQL规范–建表规范"></a>MySQL规范–建表规范</h2><p>规范的表结构能降低MySQL出现问题的概率，下面总结一些MySQL的建表规范</p>
@@ -363,170 +527,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Git入门</title>
-    <url>/2017/03/03/learn-git/</url>
-    <content><![CDATA[<h1 id="基本了解"><a href="#基本了解" class="headerlink" title="基本了解"></a>基本了解</h1><p>git命令是一些命令行工具的集合，它可以用来跟踪，记录文件的变动。比如你可以进行保存，比对，分析，合并等等。这个过程被称之为版本控制。已经有一系列的版本控制系统，比如SVN, Mercurial, Perforce, CVS, Bitkeepe等等。</p>
-<p>Git是分布式的，这意味着它并不依赖于中心服务器，任何一台机器都可以有一个本地版本的控制系统，我们称之为仓库。如果是多人协作的话，你需要还需要一个线上仓库，用来同步信息。这就是GitHub, BitBucket的工作。</p>
-<span id="more"></span>
-
-<h2 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h2><p>安装git非常直接：</p>
-<ul>
-<li><p>Linux - 打开控制台，然后通过包管理安装，在Ubuntu上命令是：</p>
-  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install git-all</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Windows - 推荐使用<a href="https://git-for-windows.github.io/">git for windows</a>，它包括了图形工具以及命令行模拟器。</p>
-</li>
-<li><p>OS X - 最简单的方式是使用homebrew安装，命令行执行</p>
-</li>
-</ul>
-<p>如果你是在是先用图形工具的话，那么推荐你使用 <a href="https://desktop.github.com/">Github desktop</a>,<a href="https://www.atlassian.com/software/sourcetree">Sourcetree</a>。但我还是推荐你使用命令行，下面的内容就都是命令行的。</p>
-<h2 id="配置Git"><a href="#配置Git" class="headerlink" title="配置Git"></a>配置Git</h2><p>安装完git,首要任务是配置我们的信息，最重要的是用户名及邮箱，打开终端，执行以下命令。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git config --global user.name <span class="string">&quot;My Name&quot;</span></span><br><span class="line">$ git config --global user.email myEmail@example.com</span><br></pre></td></tr></table></figure>
-
-<p>配置好这两项，用户就能知道谁做了什么，并且一切都更有组织性了不是吗？</p>
-<h2 id="创建一个新仓库-git-init"><a href="#创建一个新仓库-git-init" class="headerlink" title="创建一个新仓库 - git init"></a>创建一个新仓库 - git init</h2><p>git 会把所有文件以及历史记录保存在你的项目中，创建一个新的仓库，首先要去到项目路径，执行 git init。然后git会创建一个隐藏的文件夹.git，所有的信息都储存在其中。</p>
-<p>在桌面创建一个联系文件夹 git_exercise, 打开终端：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> Desktop/git_exercise/</span><br><span class="line">$ git init</span><br></pre></td></tr></table></figure>
-
-<p>OK，现在项目还什么都没有，新建一个 hello.txt 文件试试~</p>
-<h2 id="检查状态-git-status"><a href="#检查状态-git-status" class="headerlink" title="检查状态 - git status"></a>检查状态 - git status</h2><p>git status 是另一个非常重要的命令，它会告诉我们创库的当前状态：是否为最新代码，有什么更新等等<br>执行git status:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git status</span><br><span class="line"></span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">Initial commit</span><br><span class="line"></span><br><span class="line">Untracked files:</span><br><span class="line">  (use <span class="string">&quot;git add ...&quot;</span> to include <span class="keyword">in</span> what will be committed)</span><br><span class="line"></span><br><span class="line">	hello.txt</span><br></pre></td></tr></table></figure>
-
-<p>git 告诉我们，hello.txt尚未跟踪，这是因为这个文件是新的，git不知道是应该跟踪它的变动呢，还是直接忽略不管呢。为了跟踪我们的新文件，我们需要暂存它。</p>
-<h2 id="暂存-git-add"><a href="#暂存-git-add" class="headerlink" title="暂存 - git add"></a>暂存 - git add</h2><p>git 有个概念叫 暂存区，你可以把它看成一块空白帆布，包裹着所有你可能会提交的变动。它一开始为空，你可以通过 git add 命令添加内容，并使用 git commit 提交。</p>
-<p>这个例子中只有一个文件：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git add hello.txt</span><br></pre></td></tr></table></figure>
-
-<p>如果需要提交目录下的所有内容，可以这样：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git add A</span><br></pre></td></tr></table></figure>
-
-<p>再次使用git status查看：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git status</span><br><span class="line"></span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">Initial commit</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use <span class="string">&quot;git rm --cached ...&quot;</span> to unstage)</span><br><span class="line"></span><br><span class="line">	new file:   hello.txt</span><br></pre></td></tr></table></figure>
-
-<p>我们的文件已经提交了。状态信息还会告诉我们暂存区文件发生了什么变动，不过这里我们提交的是一个全新文件。</p>
-<h2 id="提交-git-commit"><a href="#提交-git-commit" class="headerlink" title="提交 - git commit"></a>提交 - git commit</h2><p>一次提交代表着我们的仓库到了一个交付状态，通常是完成了某一块小功能。它就像是一个快照，允许我们像使用时光机一样回到旧时光。</p>
-<p>创建提交，需要我们提交东西到暂存区（git add），然后：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git commit -m <span class="string">&quot;Initial commit.&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>这就创建了一次提交，-m “Initial commit.”表示对这次提交的描述，建议使用有意义的描述性信息。</p>
-<h1 id="远端仓库"><a href="#远端仓库" class="headerlink" title="远端仓库"></a>远端仓库</h1><p>到目前为止，我们的操作都是在本地的，它存在于.git文件中。为了能够协同开发，我们需要把代码发布到远端仓库上。</p>
-<h2 id="链接远端仓库-git-remote-add"><a href="#链接远端仓库-git-remote-add" class="headerlink" title="链接远端仓库 - git remote add"></a>链接远端仓库 - git remote add</h2><p>为了能够上传到远端仓库，我们需要先建立起链接，这篇教程中，远端仓库的地址为：<a href="https://github.com/tutorialzine/awesome-project">https://github.com/tutorialzine/awesome-project</a>,但你应该自己在Github, BitBucket上搭建仓库，自己一步一步尝试。</p>
-<p>添加测试用的远端仓库</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git remote add origin https://github.com/tutorialzine/awesome-project.git</span><br></pre></td></tr></table></figure>
-
-<p>一个项目可以同时拥有好几个远端仓库为了能够区分，通常会起不同的名字。通常主远端仓库被称为origin。</p>
-<h2 id="上传到服务器-git-push"><a href="#上传到服务器-git-push" class="headerlink" title="上传到服务器 - git push"></a>上传到服务器 - git push</h2><p>每次我们要提交代码到服务器上时，都会使用到git push。<br>git push命令会有两个参数，远端仓库的名字，以及分支的名字：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git push origin master</span><br><span class="line"></span><br><span class="line">Counting objects: 3, <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (3/3), 212 bytes | 0 bytes/s, <span class="keyword">done</span>.</span><br><span class="line">Total 3 (delta 0), reused 0 (delta 0)</span><br><span class="line">To https://github.com/tutorialzine/awesome-project.git</span><br><span class="line"> * [new branch]      master -&gt; master</span><br></pre></td></tr></table></figure>
-
-<p>取决于你使用的服务器，push过程你可能需要验证身份。如果没有出差错，现在使用浏览器去你的远端分支上看，hello.txt已经在那里等着你了。</p>
-<h2 id="克隆仓库-git-clone"><a href="#克隆仓库-git-clone" class="headerlink" title="克隆仓库 - git clone"></a>克隆仓库 - git clone</h2><p>放在Github上的开源项目，人们可以看到你的代码。可以使用 git clone进行下载到本地。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/tutorialzine/awesome-project.git</span><br></pre></td></tr></table></figure>
-
-<p>本地也会创建一个新的仓库，并自动将github上的分支设为远端分支。</p>
-<h2 id="从服务器上拉取代码-git-pull"><a href="#从服务器上拉取代码-git-pull" class="headerlink" title="从服务器上拉取代码 - git pull"></a>从服务器上拉取代码 - git pull</h2><p>如果你更新了代码到仓库上，其他人可以通过git pull命令拉取你的变动：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git pull origin master</span><br><span class="line">From https://github.com/tutorialzine/awesome-project</span><br><span class="line"> * branch            master     -&gt; FETCH_HEAD</span><br><span class="line">Already up-to-date.</span><br></pre></td></tr></table></figure>
-
-<p>因为暂时没有其他人提交，所有没有任何变动</p>
-<h1 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h1><p><img src="http://javabk.oss-cn-hangzhou.aliyuncs.com/images/learn-git-in-30-minutes-branch.jpg" alt="branchs"></p>
-<p>当你在做一个新功能的时候，最好是在一个独立的区域上开发，通常称之为分支。分支之间相互独立，并且拥有自己的历史记录。这样做的原因是：</p>
-<ul>
-<li>稳定版本的代码不会被破坏</li>
-<li>不同的功能可以由不同开发者同时开发。</li>
-<li>开发者可以专注于自己的分支，不用担心被其他人破坏了环境</li>
-<li>在不确定之前，同一个特性可以拥有几个版本，便于比较</li>
-</ul>
-<h2 id="创建新分支-git-branch"><a href="#创建新分支-git-branch" class="headerlink" title="创建新分支 - git branch"></a>创建新分支 - git branch</h2><p>每一个仓库的默认分支都叫master, 创建新分支可以这样：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git branch amazing_new_feature</span><br></pre></td></tr></table></figure>
-
-<p>创建了一个名为amazing_new_feature的新分支，它跟当前分支同一起点</p>
-<h2 id="切换分支-git-checkout"><a href="#切换分支-git-checkout" class="headerlink" title="切换分支 - git checkout"></a>切换分支 - git checkout</h2><p>单独使用git branch，可以查看分支状态：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git branch</span><br><span class="line">  amazing_new_feature</span><br><span class="line">* master</span><br></pre></td></tr></table></figure>
-<p>***** 号表示当前活跃分支为master，使用git checkout切换分支。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git checkout amazing_new_feature</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="合并分支-git-merge"><a href="#合并分支-git-merge" class="headerlink" title="合并分支 - git merge"></a>合并分支 - git merge</h2><p>我们的 amazing_new_feature 分支的任务是增加一个featuer.txt。我们来创建，添加到暂存区，提交。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git add feature.txt</span><br><span class="line">$ git commit -m <span class="string">&quot;New feature complete.&quot;</span></span><br></pre></td></tr></table></figure>
-<p>新分支任务完成了，回到master分支</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git checkout master</span><br></pre></td></tr></table></figure>
-
-<p>现在去查看文件，你会发现，之前创建的feature.txt文件不见了，因为master分支上并没有feature.txt。使用git merge 把 amazing_new_feature 分支合并到master上。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git merge amazing_new_feature</span><br></pre></td></tr></table></figure>
-<p>ok! 然后再把amazing_new_feature 分支删掉吧。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git branch -d amazing_new_feature</span><br></pre></td></tr></table></figure>
-
-
-
-
-<h1 id="高级"><a href="#高级" class="headerlink" title="高级"></a>高级</h1><p>这篇文章的最后一节，我们来说些比较高级并且使用的技巧。</p>
-<h2 id="比对两个不同提交之间的差别"><a href="#比对两个不同提交之间的差别" class="headerlink" title="比对两个不同提交之间的差别"></a>比对两个不同提交之间的差别</h2><p>每次提交都有一个唯一id，查看所有提交和他们的id，可以使用 git log:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git <span class="built_in">log</span></span><br><span class="line"></span><br><span class="line">commit ba25c0ff30e1b2f0259157b42b9f8f5d174d80d7</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Mon May 30 17:15:28 2016 +0300</span><br><span class="line"></span><br><span class="line">    New feature complete</span><br><span class="line"></span><br><span class="line">commit b10cc1238e355c02a044ef9f9860811ff605c9b4</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Mon May 30 16:30:04 2016 +0300</span><br><span class="line"></span><br><span class="line">    Added content to hello.txt</span><br><span class="line"></span><br><span class="line">commit 09bd8cc171d7084e78e4d118a2346b7487dca059</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Sat May 28 17:52:14 2016 +0300</span><br><span class="line"></span><br><span class="line">    Initial commit</span><br></pre></td></tr></table></figure>
-
-<p>id 很长，但是你并不需要复制整个字符串，前一小部分就够了。<br>查看某一次提交更新了什么，使用 git show:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git show b10cc123</span><br><span class="line"></span><br><span class="line">commit b10cc1238e355c02a044ef9f9860811ff605c9b4</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Mon May 30 16:30:04 2016 +0300</span><br><span class="line"></span><br><span class="line">    Added content to hello.txt</span><br><span class="line"></span><br><span class="line">diff --git a/hello.txt b/hello.txt</span><br><span class="line">index e69de29..b546a21 100644</span><br><span class="line">--- a/hello.txt</span><br><span class="line">+++ b/hello.txt</span><br><span class="line">@@ -0,0 +1 @@</span><br><span class="line">+Nice weather today, isn<span class="string">&#x27;t it?</span></span><br></pre></td></tr></table></figure>
-
-<p>查看两次提交的不同，可以使用 git diff [commit-from]..[commit-to] 语法：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git diff 09bd8cc..ba25c0ff</span><br><span class="line"></span><br><span class="line">diff --git a/feature.txt b/feature.txt</span><br><span class="line">new file mode 100644</span><br><span class="line">index 0000000..e69de29</span><br><span class="line">diff --git a/hello.txt b/hello.txt</span><br><span class="line">index e69de29..b546a21 100644</span><br><span class="line">--- a/hello.txt</span><br><span class="line">+++ b/hello.txt</span><br><span class="line">@@ -0,0 +1 @@</span><br><span class="line">+Nice weather today, isn<span class="string">&#x27;t it?</span></span><br></pre></td></tr></table></figure>
-
-<p>比较首次提交和最后一次提交，我们可以看到所有的更改。当然使用git difftool命令更加方便。</p>
-<h2 id="回滚某个文件到之前的版本"><a href="#回滚某个文件到之前的版本" class="headerlink" title="回滚某个文件到之前的版本"></a>回滚某个文件到之前的版本</h2><p>git 允许我们将某个特定的文件回滚到特定的提交，使用的也是 git checkout。</p>
-<p>下面的例子，我们将hello.txt回滚到最初的状态，需要指定回滚到哪个提交，以及文件的全路径。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git checkout 09bd8cc1 hello.txt</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="回滚提交"><a href="#回滚提交" class="headerlink" title="回滚提交"></a>回滚提交</h2><p>如果你发现最新的一次提交完了加某个文件，你可以通过 git commit —amend来修复，它会把最新的提交打回暂存区，并尝试重新提交。</p>
-<p>如果是更复杂的情况，比如不是最新的提交了。那你可以使用git revert。</p>
-<p>最新的一次提交别名也叫HEAD。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git revert HEAD</span><br></pre></td></tr></table></figure>
-<p>其他提交可以使用id:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git revert HEAD</span><br></pre></td></tr></table></figure>
-<p>混滚提交时，发生冲突是非常频繁的。当文件被后面的提交修改了以后，git不能正确回滚。</p>
-<h2 id="解决合并冲突"><a href="#解决合并冲突" class="headerlink" title="解决合并冲突"></a>解决合并冲突</h2><p>冲突经常出现在合并分支或者是拉去别人的代码。有些时候git能自动处理冲突，但大部分需要我们手动处理。</p>
-<p>比如John 和 Tim 分别在各自的分支上写了两部分代码。<br>John 喜欢 for:</p>
-<p>&#x2F;&#x2F; Use a for loop to console.log contents.<br>for(var i&#x3D;0; i&lt;arr.length; i++) {<br>console.log(arr[i]);<br>}<br>Tim 喜欢 forEach:</p>
-<p>&#x2F;&#x2F; Use forEach to console.log contents.<br>arr.forEach(function(item) {<br>console.log(item);<br>});</p>
-<p>假设John 现在去拉取 Tim的代码:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git merge tim_branch</span><br><span class="line"></span><br><span class="line">Auto-merging print_array.js</span><br><span class="line">CONFLICT (content): Merge conflict <span class="keyword">in</span> print_array.js</span><br><span class="line">Automatic merge failed; fix conflicts and <span class="keyword">then</span> commit the result.</span><br></pre></td></tr></table></figure>
-<p>这时候git并不知道如何解决冲突，因为他不知道John和Tim谁写得更好。</p>
-<p>于是它就在代码中插入标记。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt; <span class="variable constant_">HEAD</span></span><br><span class="line"><span class="comment">// Use a for loop to console.log contents.</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;arr.<span class="property">length</span>; i++) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(arr[i]);</span><br><span class="line">&#125;</span><br><span class="line">=======</span><br><span class="line"><span class="comment">// Use forEach to console.log contents.</span></span><br><span class="line">arr.<span class="title function_">forEach</span>(<span class="keyword">function</span>(<span class="params">item</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(item);</span><br><span class="line">&#125;);</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;&gt;&gt; <span class="title class_">Tim</span> s commit.</span><br></pre></td></tr></table></figure>
-
-<p>&#x3D;&#x3D;&#x3D;&#x3D; 号上方是当前最新一次提交，下方是冲突的代码。我们需要解决这样的冲突，经过组委会成员讨论，一致认定，在座的各位都是垃圾！两个都不要。改成下面的代码:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// Not using for loop or forEach.</span><br><span class="line">// Use Array.toString() to console.log contents.</span><br><span class="line">console.log(arr.toString());</span><br></pre></td></tr></table></figure>
-<p>好了，再提交一下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ git add -A</span><br><span class="line">$ git commit -m &quot;Array printing conflict resolved.&quot;</span><br></pre></td></tr></table></figure>
-
-<p>如果在大型项目中，这个过程可能容易出问题。你可以使用<a href="https://git-scm.com/download/gui/linux">GUI工具</a>来帮助你。使用 git mergetool。</p>
-<h2 id="配置-gitignore"><a href="#配置-gitignore" class="headerlink" title="配置 .gitignore"></a>配置 .gitignore</h2><p>大部分项目中，会有写文件，文件夹是我们不想提交的。为了防止一不小心提交，我们需要gitignore文件：</p>
-<ol>
-<li>在项目根目录创建.gitignore文件</li>
-<li>在文件中列出不需要提交的文件名，文件夹名，每个一行</li>
-<li>.gitignore文件需要提交，就像普通文件一样</li>
-</ol>
-<p>通常会被ignore的文件有：</p>
-<ul>
-<li>log文件</li>
-<li>task runner builds</li>
-<li>node_modules等文件夹</li>
-<li>IDES生成的文件</li>
-<li>个人笔记</li>
-</ul>
-<p>例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">*.log</span><br><span class="line">build/</span><br><span class="line">node_modules/</span><br><span class="line">.idea/</span><br><span class="line">my_notes.txt</span><br></pre></td></tr></table></figure>
-
-
-
-]]></content>
-      <categories>
-        <category>Java架构</category>
-      </categories>
-      <tags>
-        <tag>Git</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>常用的磁盘分区形式</title>
     <url>/2020/05/07/linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%BD%A2%E5%BC%8F/</url>
     <content><![CDATA[<p>常用的磁盘分区形式如表1所示，并且针对Linux操作系统，不同的磁盘分区形式需要选择不同的分区工具。</p>
@@ -589,18 +589,6 @@
       </tags>
   </entry>
   <entry>
-    <title>利用Spring的Resource类读写中文Properties</title>
-    <url>/2017/05/09/spring-resource-properties/</url>
-    <content><![CDATA[<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>Spring对Properties的读取进行了完善而全面的封装，对于写则仍需配合FileOutputStream进行。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.oolong.common.util;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.PathMatchingResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.ResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserVar</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">configFile</span> <span class="operator">=</span> <span class="string">&quot;classpath*:param.properties&quot;</span>;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> org.springframework.core.io.Resource resourceWritable;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Properties p;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 注意事项:</span></span><br><span class="line"><span class="comment">   * 1、properties放在source目录下</span></span><br><span class="line"><span class="comment">   * 2、param.properties至少有一对键值对</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">static</span> &#123;</span><br><span class="line">    p = <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">    org.springframework.core.io.Resource[] resources = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="type">ResourcePatternResolver</span> <span class="variable">resolver</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PathMatchingResourcePatternResolver</span>();</span><br><span class="line">      resources = resolver.getResources(configFile);</span><br><span class="line">      <span class="keyword">if</span> (resources != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (org.springframework.core.io.Resource r : resources) &#123;</span><br><span class="line">          <span class="keyword">if</span> (r != <span class="literal">null</span>) &#123;</span><br><span class="line">            p.load(r.getInputStream());</span><br><span class="line">            resourceWritable = r;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e1) &#123;</span><br><span class="line">      e1.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">get</span><span class="params">(String key)</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">v</span> <span class="operator">=</span> (String) p.get(key);</span><br><span class="line">    <span class="keyword">if</span> (v != <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">String</span>(v.getBytes(<span class="string">&quot;ISO-8859-1&quot;</span>), <span class="string">&quot;GBK&quot;</span>);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(String key,String value)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">null</span> != resourceWritable) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">OutputStream</span> <span class="variable">fos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(resourceWritable.getFile());</span><br><span class="line">        <span class="type">Properties</span> <span class="variable">p</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">        p.load(resourceWritable.getInputStream());</span><br><span class="line">        value = <span class="keyword">new</span> <span class="title class_">String</span>(value.getBytes(<span class="string">&quot;GBK&quot;</span>),<span class="string">&quot;ISO-8859-1&quot;</span>);</span><br><span class="line">        p.setProperty(key, value);</span><br><span class="line">        p.store(fos, <span class="literal">null</span>);</span><br><span class="line">        fos.close();</span><br><span class="line">      &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Java架构</category>
-      </categories>
-      <tags>
-        <tag>Spring</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>MySQL数据库自动备份脚本</title>
     <url>/2018/05/02/mysql-backup-shell/</url>
     <content><![CDATA[<h1 id="编写数据库备份脚本-mysqlfullbackup-sh"><a href="#编写数据库备份脚本-mysqlfullbackup-sh" class="headerlink" title="编写数据库备份脚本(mysqlfullbackup.sh)"></a>编写数据库备份脚本(mysqlfullbackup.sh)</h1><p>#数据库备份脚本</p>
@@ -634,6 +622,311 @@
       </categories>
       <tags>
         <tag>MySQL</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>利用Spring的Resource类读写中文Properties</title>
+    <url>/2017/05/09/spring-resource-properties/</url>
+    <content><![CDATA[<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>Spring对Properties的读取进行了完善而全面的封装，对于写则仍需配合FileOutputStream进行。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.oolong.common.util;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.PathMatchingResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.ResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserVar</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">configFile</span> <span class="operator">=</span> <span class="string">&quot;classpath*:param.properties&quot;</span>;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> org.springframework.core.io.Resource resourceWritable;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Properties p;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 注意事项:</span></span><br><span class="line"><span class="comment">   * 1、properties放在source目录下</span></span><br><span class="line"><span class="comment">   * 2、param.properties至少有一对键值对</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">static</span> &#123;</span><br><span class="line">    p = <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">    org.springframework.core.io.Resource[] resources = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="type">ResourcePatternResolver</span> <span class="variable">resolver</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PathMatchingResourcePatternResolver</span>();</span><br><span class="line">      resources = resolver.getResources(configFile);</span><br><span class="line">      <span class="keyword">if</span> (resources != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (org.springframework.core.io.Resource r : resources) &#123;</span><br><span class="line">          <span class="keyword">if</span> (r != <span class="literal">null</span>) &#123;</span><br><span class="line">            p.load(r.getInputStream());</span><br><span class="line">            resourceWritable = r;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e1) &#123;</span><br><span class="line">      e1.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">get</span><span class="params">(String key)</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">v</span> <span class="operator">=</span> (String) p.get(key);</span><br><span class="line">    <span class="keyword">if</span> (v != <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">String</span>(v.getBytes(<span class="string">&quot;ISO-8859-1&quot;</span>), <span class="string">&quot;GBK&quot;</span>);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(String key,String value)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">null</span> != resourceWritable) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">OutputStream</span> <span class="variable">fos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(resourceWritable.getFile());</span><br><span class="line">        <span class="type">Properties</span> <span class="variable">p</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">        p.load(resourceWritable.getInputStream());</span><br><span class="line">        value = <span class="keyword">new</span> <span class="title class_">String</span>(value.getBytes(<span class="string">&quot;GBK&quot;</span>),<span class="string">&quot;ISO-8859-1&quot;</span>);</span><br><span class="line">        p.setProperty(key, value);</span><br><span class="line">        p.store(fos, <span class="literal">null</span>);</span><br><span class="line">        fos.close();</span><br><span class="line">      &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Java架构</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>tomcat8安装配置优化</title>
+    <url>/2017/06/02/tomcat-install-and-settings/</url>
+    <content><![CDATA[<h2 id="Tomcat-8-安装"><a href="#Tomcat-8-安装" class="headerlink" title="Tomcat 8 安装"></a>Tomcat 8 安装</h2><ul>
+<li>Tomcat 8 安装<ul>
+<li>官网：<a href="http://tomcat.apache.org/">http://tomcat.apache.org/</a></li>
+<li>Tomcat 8 官网下载：<a href="http://tomcat.apache.org/download-80.cgi">http://tomcat.apache.org/download-80.cgi</a></li>
+<li>此时（20170602） Tomcat 8 最新版本为：<code>apache-tomcat-8.5.15.tar.gz</code></li>
+<li>Tomcat 8 下载：<code>wget http://mirror.bit.edu.cn/apache/tomcat/tomcat-8/v8.5.15/bin/apache-tomcat-8.5.15.tar.gz</code></li>
+<li>压缩包解压：<code>tar -zxvf apache-tomcat-8.5.15.tar.gz</code></li>
+<li>移到解压出来文件夹到 &#x2F;usr&#x2F;local 下：<code>mv apache-tomcat-8.5.15/ /usr/local/</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="Tomcat-8-配置"><a href="#Tomcat-8-配置" class="headerlink" title="Tomcat 8 配置"></a>Tomcat 8 配置</h2><ul>
+<li>设置 Tomcat 相关变量：<ul>
+<li><code>vim /usr/local/tomcat8/bin/catalina.sh</code></li>
+<li>在配置文件的可编辑内容最上面（98 行开始），加上如下内容（具体参数根据你服务器情况自行修改）：  <figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">JAVA_HOME</span>=/usr/local/jdk1.<span class="number">8.0</span>_72</span><br><span class="line">   <span class="attr">CATALINA_HOME</span>=/usr/local/tomcat8</span><br><span class="line">   <span class="attr">CATALINA_OPTS</span>=<span class="string">&quot;-Dfile.encoding=UTF-8 -server -Xms2048m -Xmx2048m -Xmn1024m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</span></span><br><span class="line">   <span class="attr">CATALINA_PID</span>=<span class="variable">$CATALINA_HOME</span>/catalina.pid</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>如果使用 <code>shutdown.sh</code> 还无法停止 tomcat，可以修改其配置：<code>vim /usr/local/tomcat8/bin/shutdown.sh</code><ul>
+<li>把最尾巴这一行：<code>exec &quot;$PRGDIR&quot;/&quot;$EXECUTABLE&quot; stop &quot;$@&quot;</code></li>
+<li>改为：<code>exec &quot;$PRGDIR&quot;/&quot;$EXECUTABLE&quot; stop 10 -force</code></li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="Tomcat-8-安全配置"><a href="#Tomcat-8-安全配置" class="headerlink" title="Tomcat 8 安全配置"></a>Tomcat 8 安全配置</h2><p>默认tomcat是root身份运行的，这样不安全，不要使用root用户启动tomcat。</p>
+<p>Java程序与C程序不同，nginx,httpd 使用root用户启动守护80端口，子进程&#x2F;线程会通过setuid(),setgid()两个函数切换到普通用户。即父进程所有者是root用户，子进程与多线程所有者是一个非root用户，这个用户没有shell，无法通过ssh与控制台登陆系统，Java 的JVM 是与系统无关的，是建立在OS之上的，你使用什么用户启动Tomcat，那么Tomcat 就会继承该所有者的权限。</p>
+<p>为了防止 Tomcat 被植入 web shell 程序后，可以修改项目文件。因此我们要将 Tomcat 和项目的属主做分离，这样子，即便被搞，他也无法创建和编辑项目文件。<br>设置普通用户，用来启动tomcat</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># groupadd tomcat</span></span><br><span class="line">[root@localhost ~]<span class="comment"># useradd -g tomcat tomcat</span></span><br><span class="line">[root@localhost ~]<span class="comment"># passwd tomcat</span></span><br><span class="line">[root@localhost ~]<span class="comment"># chown tomcat.tomcat -R /usr/local/tomcat8</span></span><br><span class="line">[root@localhost ~]<span class="comment"># su - tomcat /usr/local/tomcat8/bin/startup.sh</span></span><br><span class="line">[root@localhost ~]<span class="comment"># echo &#x27;su - tomcat -c &quot;tomcat /usr/local/tomcat8/bin/startup.sh&quot;&#x27; &gt;&gt; /etc/rc.local  #开机启动</span></span><br><span class="line"></span><br><span class="line">```    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## Tomcat 8 优化</span></span><br><span class="line"></span><br><span class="line">- Tomcat 6/7/8 的优化参数有点不一样，最好按下面的方式看一下官网这个文档是否还保留着这个参数</span><br><span class="line">- 启动tomcat，访问该地址，下面要讲解的一些配置信息，在该文档下都有说明的：</span><br><span class="line">	- 文档：&lt;http://127.0.0.1:8080/docs/config&gt;</span><br><span class="line">	- 你也可以直接看网络版本：</span><br><span class="line">		- Tomcat 6 文档：&lt;https://tomcat.apache.org/tomcat-6.0-doc/config&gt;</span><br><span class="line">		- Tomcat 7 文档：&lt;https://tomcat.apache.org/tomcat-7.0-doc/config/&gt;</span><br><span class="line">		- Tomcat 8 文档：&lt;https://tomcat.apache.org/tomcat-8.0-doc/config/&gt;</span><br><span class="line">- 如果你需要查看 Tomcat 的运行状态可以配置tomcat管理员账户，然后登陆 Tomcat 后台进行查看</span><br><span class="line">- 编辑 /opt/tomcat7/bin/conf/tomcat-users.xml 文件，在里面添加下面信息：</span><br><span class="line">``` xml</span><br><span class="line">&lt;role rolename=<span class="string">&quot;manager&quot;</span>/&gt;</span><br><span class="line">&lt;role rolename=<span class="string">&quot;manager-gui&quot;</span>/&gt;</span><br><span class="line">&lt;role rolename=<span class="string">&quot;admin&quot;</span>/&gt;</span><br><span class="line">&lt;role rolename=<span class="string">&quot;admin-gui&quot;</span>/&gt;</span><br><span class="line">&lt;user username=<span class="string">&quot;tomcat&quot;</span> password=<span class="string">&quot;tomcat&quot;</span> roles=<span class="string">&quot;admin-gui,admin,manager-gui,manager&quot;</span>/&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>编辑配置文件：<code>vim /usr/local/tomcat8/conf/server.xml</code><ul>
+<li>打开默认被注释的连接池配置：<ul>
+<li>默认值：  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">&lt;Executor name=&quot;tomcatThreadPool&quot; namePrefix=&quot;catalina-exec-&quot;</span></span><br><span class="line"><span class="comment">    maxThreads=&quot;150&quot; minSpareThreads=&quot;4&quot;/&gt;</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>修改为：  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Executor</span></span></span><br><span class="line"><span class="tag">        <span class="attr">name</span>=<span class="string">&quot;tomcatThreadPool&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">namePrefix</span>=<span class="string">&quot;catalina-exec-&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">maxThreads</span>=<span class="string">&quot;500&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">minSpareThreads</span>=<span class="string">&quot;30&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">maxIdleTime</span>=<span class="string">&quot;60000&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">prestartminSpareThreads</span> = <span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">maxQueueSize</span> = <span class="string">&quot;100&quot;</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>重点参数解释：<ul>
+<li>maxThreads，最大并发数，默认设置 200，一般建议在 500 ~ 800，根据硬件设施和业务来判断</li>
+<li>minSpareThreads，Tomcat 初始化时创建的线程数，默认设置 25</li>
+<li>prestartminSpareThreads，在 Tomcat 初始化的时候就初始化 minSpareThreads 的参数值，如果不等于 true，minSpareThreads 的值就没啥效果了</li>
+<li>maxQueueSize，最大的等待队列数，超过则拒绝请求</li>
+<li>maxIdleTime，如果当前线程大于初始化线程，那空闲线程存活的时间，单位毫秒，默认60000&#x3D;60秒&#x3D;1分钟。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>修改默认的链接参数配置：<ul>
+<li><p>默认值：</p>
+  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Connector</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">port</span>=<span class="string">&quot;8080&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">protocol</span>=<span class="string">&quot;HTTP/1.1&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">connectionTimeout</span>=<span class="string">&quot;20000&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">redirectPort</span>=<span class="string">&quot;8443&quot;</span> </span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>修改为：</p>
+  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Connector</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">executor</span>=<span class="string">&quot;tomcatThreadPool&quot;</span></span></span><br><span class="line"><span class="tag">   <span class="attr">port</span>=<span class="string">&quot;8080&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">protocol</span>=<span class="string">&quot;org.apache.coyote.http11.Http11Nio2Protocol&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">connectionTimeout</span>=<span class="string">&quot;20000&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">maxConnections</span>=<span class="string">&quot;10000&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">redirectPort</span>=<span class="string">&quot;8443&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">enableLookups</span>=<span class="string">&quot;false&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">acceptCount</span>=<span class="string">&quot;100&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">maxPostSize</span>=<span class="string">&quot;10485760&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">maxHttpHeaderSize</span>=<span class="string">&quot;8192&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">compression</span>=<span class="string">&quot;on&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">disableUploadTimeout</span>=<span class="string">&quot;true&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">compressionMinSize</span>=<span class="string">&quot;2048&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">acceptorThreadCount</span>=<span class="string">&quot;2&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">compressableMimeType</span>=<span class="string">&quot;text/html,text/xml,text/plain,text/css,text/javascript,application/javascript&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">URIEncoding</span>=<span class="string">&quot;utf-8&quot;</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>重点参数解释：</p>
+<ul>
+<li>protocol，Tomcat 8 设置 nio2 更好：org.apache.coyote.http11.Http11Nio2Protocol（如果这个用不了，就用下面那个）</li>
+<li>protocol，Tomcat 6、7 设置 nio 更好：org.apache.coyote.http11.Http11NioProtocol</li>
+</ul>
+<blockquote>
+<p>BIO：一个线程处理一个请求。缺点：并发量高时，线程数较多，浪费资源。Tomcat7或以- 下，在Linux系统中默认使用这种方式。<br>NIO：利用Java的异步IO处理，可以通过少量的线程处理大量的请求。Tomcat8在Linux系统中默认使用这种方式。<br>APR：即Apache Portable Runtime，从操作系统层面解决io阻塞问题。Tomcat7或Tomcat8在Win7或以上的系统中启动默认使用这种方式。Linux如果安装了apr和native，Tomcat直接启动就支持apr。（安装方法：<a href="http://www.cnblogs.com/nb-blog/p/5278502.html%EF%BC%89">http://www.cnblogs.com/nb-blog/p/5278502.html）</a></p>
+</blockquote>
+<ul>
+<li>enableLookups，禁用DNS查询</li>
+<li>acceptCount，指定当所有可以使用的处理请求的线程数都被使用时，可以放到处理队列中的请求数，超过这个数的请求将不予处理，默认设置 100</li>
+<li>maxPostSize，以 FORM URL 参数方式的 POST 提交方式，限制提交最大的大小，默认是 2097152(2兆)，它使用的单位是字节。10485760 为 10M。如果要禁用限制，则可以设置为 -1。</li>
+<li>acceptorThreadCount，用于接收连接的线程的数量，默认值是1。一般这个指需要改动的时候是因为该服务器是一个多核CPU，如果是多核 CPU 一般配置为 2.</li>
+<li>maxHttpHeaderSize，http请求头信息的最大程度，超过此长度的部分不予处理。一般8K。</li>
+<li>compression：传输时是压缩。</li>
+<li>compressionMinSize：压缩的大小 </li>
+<li>noCompressionUserAgents：不启用压缩的浏览器<blockquote>
+<p>提示：压缩会增加Tomcat负担，最好采用Nginx + Tomcat 或者 Apache + Tomcat 方式，压缩交由Nginx&#x2F;Apache 去做。</p>
+</blockquote>
+<p>  Tomcat 的压缩是在客户端请求服务器对应资源后，从服务器端将资源文件压缩，再输出到客户端，由客户端的浏览器负责解压缩并浏览。相对于普通的 浏览过程 HTML、CSS、Javascript和Text，它可以节省40% 左右的流量。更为重要的是，它可以对动态生成的，包括CGI、PHP、JSP、ASP、Servlet,SHTML等输出的网页也能进行压缩，压缩效率也很高。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>禁用 AJP（如果你服务器没有使用 Apache） <ul>
+<li>把下面这一行注释掉，默认 Tomcat 是开启的。  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- &lt;Connector port=&quot;8009&quot; protocol=&quot;AJP/1.3&quot; redirectPort=&quot;8443&quot; /&gt; --&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="JVM-优化"><a href="#JVM-优化" class="headerlink" title="JVM 优化"></a>JVM 优化</h2><ul>
+<li>模型资料来源：<a href="http://xmuzyq.iteye.com/blog/599750">http://xmuzyq.iteye.com/blog/599750</a></li>
+<li>配比资料：<a href="http://www.jianshu.com/p/d45e12241af4">http://www.jianshu.com/p/d45e12241af4</a></li>
+<li>Java 的内存模型分为：<ul>
+<li>Young，年轻代（易被 GC）。Young 区被划分为三部分，Eden 区和两个大小严格相同的 Survivor 区，其中 Survivor 区间中，某一时刻只有其中一个是被使用的，另外一个留做垃圾收集时复制对象用，在 Young 区间变满的时候，minor GC 就会将存活的对象移到空闲的Survivor 区间中，根据 JVM 的策略，在经过几次垃圾收集后，任然存活于 Survivor 的对象将被移动到 Tenured  区间。</li>
+<li>Tenured，终身代。Tenured 区主要保存生命周期长的对象，一般是一些老的对象，当一些对象在 Young 复制转移一定的次数以后，对象就会被转移到 Tenured 区，一般如果系统中用了 application 级别的缓存，缓存中的对象往往会被转移到这一区间。</li>
+<li>Perm，永久代。主要保存 class,method,filed 对象，这部门的空间一般不会溢出，除非一次性加载了很多的类，不过在涉及到热部署的应用服务器的时候，有时候会遇到 java.lang.OutOfMemoryError : PermGen space 的错误，造成这个错误的很大原因就有可能是每次都重新部署，但是重新部署后，类的 class 没有被卸载掉，这样就造成了大量的 class 对象保存在了 perm 中，这种情况下，一般重新启动应用服务器可以解决问题。</li>
+</ul>
+</li>
+<li>Linux 修改 &#x2F;usr&#x2F;program&#x2F;tomcat7&#x2F;bin&#x2F;catalina.sh 文件，把下面信息添加到文件第一行。<ul>
+<li>如果服务器只运行一个 Tomcat<ul>
+<li>机子内存如果是 4G：<ul>
+<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms2048m -Xmx2048m -Xmn1024m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
+</ul>
+</li>
+<li>机子内存如果是 8G：<ul>
+<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms4096m -Xmx4096m -Xmn2048m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
+</ul>
+</li>
+<li>机子内存如果是 16G：<ul>
+<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms8192m -Xmx8192m -Xmn4096m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
+</ul>
+</li>
+<li>机子内存如果是 32G：<ul>
+<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms16384m -Xmx16384m -Xmn8192m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>如果是 8G 开发机<ul>
+<li><code>-Xms2048m -Xmx2048m -XX:NewSize=512m -XX:MaxNewSize=1024m -XX:PermSize=256m -XX:MaxPermSize=512m</code></li>
+</ul>
+</li>
+<li>如果是 16G 开发机<ul>
+<li><code>-Xms4096m -Xmx4096m -XX:NewSize=1024m -XX:MaxNewSize=2048m -XX:PermSize=256m -XX:MaxPermSize=512m</code></li>
+</ul>
+</li>
+<li>参数说明：  <figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line">-Dfile.encoding：默认文件编码</span><br><span class="line">-server：表示这是应用于服务器的配置，<span class="attribute">JVM</span> 内部会有特殊处理的</span><br><span class="line">-Xmx1024m：设置JVM最大可用内存为1024MB</span><br><span class="line">-Xms1024m：设置JVM最小内存为<span class="number">1024m</span>。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存。</span><br><span class="line">-Xmn1024m：设置JVM新生代大小（JDK1.<span class="number">4</span>之后版本）。一般-Xmn的大小是-Xms的<span class="number">1</span>/<span class="number">2</span>左右，不要设置的过大或过小，过大导致老年代变小，频繁Full GC，过小导致minor GC频繁。如果不设置-Xmn，可以采用-XX:NewRatio=<span class="number">2</span>来设置，也是一样的效果</span><br><span class="line">-XX:NewSize：设置新生代大小</span><br><span class="line">-XX:MaxNewSize：设置最大的新生代大小</span><br><span class="line">-XX:PermSize：设置永久代大小</span><br><span class="line">-XX:MaxPermSize：设置最大永久代大小</span><br><span class="line">-XX:NewRatio=<span class="number">4</span>：设置年轻代（包括 Eden 和两个 Survivor 区）与终身代的比值（除去永久代）。设置为 <span class="number">4</span>，则年轻代与终身代所占比值为 <span class="number">1</span>：<span class="number">4</span>，年轻代占整个堆栈的 <span class="number">1</span>/<span class="number">5</span></span><br><span class="line">-XX:MaxTenuringThreshold=<span class="number">10</span>：设置垃圾最大年龄，默认为：<span class="number">15</span>。如果设置为 <span class="number">0</span> 的话，则年轻代对象不经过 Survivor 区，直接进入年老代。对于年老代比较多的应用，可以提高效率。如果将此值设置为一个较大值，则年轻代对象会在 Survivor 区进行多次复制，这样可以增加对象再年轻代的存活时间，增加在年轻代即被回收的概论。需要注意的是，设置了 -XX:MaxTenuringThreshold，并不代表着，对象一定在年轻代存活<span class="number">15</span>次才被晋升进入老年代，它只是一个最大值，事实上，存在一个动态计算机制，计算每次晋入老年代的阈值，取阈值和MaxTenuringThreshold中较小的一个为准。</span><br><span class="line">-XX:+DisableExplicitGC：这个将会忽略手动调用 GC 的代码使得 System.gc() 的调用就会变成一个空调用，完全不会触发任何 GC</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>Windows 修改 &#x2F;tomcat8&#x2F;bin&#x2F;catalina.bat 文件，找到这一行：<code>echo Using CATALINA_BASE:   &quot;%CATALINA_BASE%&quot;</code>，然后在其上面添加如下内容，此方法只对解压版的 Tomcat 有效果，对于安装版本的需要点击安装后任务栏上的那个 Tomcat 图标，打开配置中有一个 <code>Java</code> Tab 的进行编辑。<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">set</span> JAVA_OPTS=%JAVA_OPTS% -Dfile.encoding=<span class="string">&quot;UTF-8&quot;</span> -Dsun.jnu.encoding=<span class="string">&quot;UTF8&quot;</span> -Ddefault.client.encoding=<span class="string">&quot;UTF-8&quot;</span> -Duser.language=Zh</span><br><span class="line">set JAVA_OPTS=%JAVA_OPTS% -server -Xms4096m -Xmx4096m -Xmn2048m -XX:PermSize=<span class="number">256m</span> -XX:MaxPermSize=<span class="number">512m</span> -XX:SurvivorRatio=<span class="number">10</span> -XX:MaxTenuringThreshold=<span class="number">15</span> -XX:NewRatio=<span class="number">2</span> -XX:+DisableExplicitGC</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Tomcat-8-的-Log-分割"><a href="#Tomcat-8-的-Log-分割" class="headerlink" title="Tomcat 8 的 Log 分割"></a>Tomcat 8 的 Log 分割</h2><ul>
+<li>修改前提：本人为 Tomcat8.5，安装目录为：&#x2F;usr&#x2F;local&#x2F;tomcat8</li>
+<li>网络上的官网地址现在打不开：<a href="http://cronolog.org/download/index.html">http://cronolog.org/download/index.html</a></li>
+<li>阿里云的 CentOS 有 epel 源所以可以直接下载：<code>yum install cronolog</code>，当前版本为：1.6.2-10.el6</li>
+<li>安装完后，查看下安装后的目录位置：<code>which cronolog</code>，我这边得到的结果是：<code>/usr/sbin/cronolog</code>，记下这个结果，后面有用到。</li>
+<li>修改 catalina.sh 中的内容：<code>vim /usr/local/tomcat8/bin/catalina.sh</code></li>
+<li>找到这段代码（预计在 416 行前后）：</li>
+</ul>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">shift</span><br><span class="line">touch &quot;$CATALINA_OUT&quot;</span><br><span class="line">if <span class="section">[ &quot;$1&quot; = &quot;-security&quot; ]</span> <span class="comment">; then</span></span><br><span class="line">if <span class="section">[ $have_tty -eq 1 ]</span><span class="comment">; then</span></span><br><span class="line">  echo &quot;Using Security Manager&quot;</span><br><span class="line">fi</span><br><span class="line">shift</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  -Djava.security.manager \</span><br><span class="line">  <span class="attr">-Djava.security.policy</span>==<span class="string">&quot;\&quot;$CATALINA_BASE/conf/catalina.policy\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start \</span><br><span class="line">  &gt;&gt; &quot;$CATALINA_OUT&quot; 2&gt;&amp;1 &quot;&amp;&quot;</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start \</span><br><span class="line">  &gt;&gt; &quot;$CATALINA_OUT&quot; 2&gt;&amp;1 &quot;&amp;&quot;</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将上面代码改为如下，其中请注意这个关键字：<code>/usr/sbin/cronolog</code>，这个是我上面提到的安装路径，你如果跟我不一样，需要自己修改该相关。</li>
+</ul>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">shift</span><br><span class="line"><span class="comment"># touch &quot;$CATALINA_OUT&quot;</span></span><br><span class="line">if <span class="section">[ &quot;$1&quot; = &quot;-security&quot; ]</span> <span class="comment">; then</span></span><br><span class="line">if <span class="section">[ $have_tty -eq 1 ]</span><span class="comment">; then</span></span><br><span class="line">  echo &quot;Using Security Manager&quot;</span><br><span class="line">fi</span><br><span class="line">shift</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  -Djava.security.manager \</span><br><span class="line">  <span class="attr">-Djava.security.policy</span>==<span class="string">&quot;\&quot;$CATALINA_BASE/conf/catalina.policy\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start 2&gt;&amp;1 | /usr/sbin/cronolog &quot;$CATALINA_BASE&quot;/logs/catalina.%Y-%m-%d.out &gt;&gt; /dev/null &amp;</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start 2&gt;&amp;1 | /usr/sbin/cronolog &quot;$CATALINA_BASE&quot;/logs/catalina.%Y-%m-%d.out &gt;&gt; /dev/null &amp;</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Tomcat-远程监控"><a href="#Tomcat-远程监控" class="headerlink" title="Tomcat 远程监控"></a>Tomcat 远程监控</h2><p>首先检查远程服务器hostname -i<br>192.168.1.190</p>
+<p>1.编辑tomcat&#x2F;bin&#x2F;catalina.sh<br>vi catalina.sh</p>
+<p>搜索 Execute The Requested Command</p>
+<p>在这一行上面加入一下配置</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">JAVA_OPTS</span>=<span class="string">&#x27;-Xms1024m -Xmx1024m -XX:PermSize=256M -XX:MaxNewSize=512m -XX:MaxPermSize=512m -Djava.rmi.server.hostname=192.168.1.190 -Dcom.sun.management.jmxremote.port=8444 -Dcom.sun.management.jmxremote.ssl=false-Dcom.sun.management.jmxremote.authenticate=false&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>2.编辑jmxremote.access和jmxremote.password</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/java/jdk1.6.0_18/jre/lib/management</span><br><span class="line"><span class="built_in">mv</span> jmxremote.password.template jmxremote.password</span><br><span class="line"><span class="built_in">chmod</span> 600 jmxremote.access jmxremote.password</span><br><span class="line">vi jmxremote.password</span><br></pre></td></tr></table></figure>
+
+<p>jmxremote.access 一般保持原始内容不变即可。<br>对于jmxremote.password，将 其中的：<br>monitorRole 123<br>controlRole 123<br>井号注释取消掉。其中monitorRole为只拥有只读权限的角色，controlRole有更高权限：读写等等。</p>
+]]></content>
+      <categories>
+        <category>Java架构</category>
+      </categories>
+      <tags>
+        <tag>tomcat</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>运维安全的四个层次</title>
+    <url>/2020/05/07/%E8%BF%90%E7%BB%B4%E5%AE%89%E5%85%A8%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%B1%82%E6%AC%A1/</url>
+    <content><![CDATA[<h1 id="运维安全的四个层次"><a href="#运维安全的四个层次" class="headerlink" title="运维安全的四个层次"></a>运维安全的四个层次</h1><h2 id="网络安全"><a href="#网络安全" class="headerlink" title="网络安全"></a>网络安全</h2><h3 id="网络设备的安全"><a href="#网络设备的安全" class="headerlink" title="网络设备的安全"></a>网络设备的安全</h3><ul>
+<li>思科、华为等网络设备定期升级，修复bug和曝出的漏洞</li>
+<li>公网防火墙，核心交换机等核心网络设备的管理</li>
+</ul>
+<h3 id="外网安全策略"><a href="#外网安全策略" class="headerlink" title="外网安全策略"></a>外网安全策略</h3><ul>
+<li>IDC，防火墙策略，严把上行端口开放</li>
+<li>公网上下行流量监控</li>
+<li>对DDos攻击提高警惕，提前准备应急预案<ul>
+<li>临时提高流量，硬抗</li>
+<li>启动流量清洗，将攻击流量引入黑洞，有可能误杀正常用户</li>
+</ul>
+</li>
+</ul>
+<h3 id="专线安全策略"><a href="#专线安全策略" class="headerlink" title="专线安全策略"></a>专线安全策略</h3><ul>
+<li>对涉及金融、支付等项目设立专线</li>
+</ul>
+<h3 id="VPN安全策略"><a href="#VPN安全策略" class="headerlink" title="VPN安全策略"></a>VPN安全策略</h3><ul>
+<li>IPsec VPN：site to site</li>
+<li>OpenVPN： peer to site</li>
+<li>摒弃PPTP等不含加密算法的vpn服务</li>
+<li>端口全禁止，需要通信的申请审批后，再由管理员开放</li>
+</ul>
+<h2 id="数据安全"><a href="#数据安全" class="headerlink" title="数据安全"></a>数据安全</h2><h3 id="数据库用户权限"><a href="#数据库用户权限" class="headerlink" title="数据库用户权限"></a>数据库用户权限</h3><ul>
+<li>管理员权限限定，不允许远程root</li>
+<li>定期更换管理员密码</li>
+<li>应用权限最小化，专人管理</li>
+<li>手动查询权限可审计</li>
+</ul>
+<h3 id="数据库审计设备"><a href="#数据库审计设备" class="headerlink" title="数据库审计设备"></a>数据库审计设备</h3><ul>
+<li>数据库主库不能开一般查询日志（为了性能）</li>
+<li>交换机上镜像流量，接入审计设备，实现实时审计</li>
+<li>不要设计串行在系统里，形成单点和瓶颈</li>
+</ul>
+<h3 id="数据库脱敏"><a href="#数据库脱敏" class="headerlink" title="数据库脱敏"></a>数据库脱敏</h3><ul>
+<li>姓名、身份证、手机号、银行卡号等敏感信息应脱敏处理</li>
+<li>对程序脱敏协同系统架构部共同出规范</li>
+<li>对手动查询权限脱敏，按列授权，录屏</li>
+</ul>
+<h3 id="备份策略"><a href="#备份策略" class="headerlink" title="备份策略"></a>备份策略</h3><ul>
+<li>每周全备，每天增备</li>
+<li>备份文件要每天利用内网流量低谷时间，推送到远程主机，有条件的应跨机房备份</li>
+<li>一定要规划定期恢复测试，保证备份的可用性</li>
+</ul>
+<h2 id="应用安全"><a href="#应用安全" class="headerlink" title="应用安全"></a>应用安全</h2><h3 id="操作系统安全"><a href="#操作系统安全" class="headerlink" title="操作系统安全"></a>操作系统安全</h3><ul>
+<li>系统基础优化（内核优化，优化工具）</li>
+<li>日期，时区同步</li>
+<li>root密码复杂度足够高，需要在操作系统里做定时过期策略</li>
+<li>每三个月使用脚本更新服务器的root密码和iDrac密码，并将更换后的密码加密打包发送给指定管理员邮箱，同时提交gitlab</li>
+<li>对系统关键文件进行md5监控，例如&#x2F;etc&#x2F;passwd，~&#x2F;.ssh&#x2F;authorized_keys文件等，如有变更，触发报警</li>
+<li>定期查毒，漏扫，定期安排更新操作系统</li>
+<li>&#x2F;etc&#x2F;ssh&#x2F;sshd_config里配置：<ul>
+<li>PasswordAuthentication no</li>
+<li>PermitRootLogin without-password</li>
+</ul>
+</li>
+<li>使用saltstack等批量管理软件进行特权命令执行和备份脚本执行（避开ssh协议）</li>
+</ul>
+<h3 id="应用系统安全"><a href="#应用系统安全" class="headerlink" title="应用系统安全"></a>应用系统安全</h3><h4 id="WEB应用防火墙（WAF）"><a href="#WEB应用防火墙（WAF）" class="headerlink" title="WEB应用防火墙（WAF）"></a>WEB应用防火墙（WAF）</h4><ul>
+<li>防SQL注入</li>
+<li>防CC攻击</li>
+<li>防XSS跨站脚本</li>
+</ul>
+<h4 id="应用系统漏洞"><a href="#应用系统漏洞" class="headerlink" title="应用系统漏洞"></a>应用系统漏洞</h4><ul>
+<li>关注0day漏洞新闻</li>
+<li>及时整改并上线投产</li>
+<li>组织技术力量测试，复现</li>
+</ul>
+<h4 id="日志收集和分析"><a href="#日志收集和分析" class="headerlink" title="日志收集和分析"></a>日志收集和分析</h4><ul>
+<li>完善日志收集方案，集中转储</li>
+<li>通过应用系统日志分析，进行安全预警</li>
+</ul>
+<h4 id="DNS劫持"><a href="#DNS劫持" class="headerlink" title="DNS劫持"></a>DNS劫持</h4><ul>
+<li>全站https，购买泛域名证书</li>
+<li>有条件的可以自己维护公网DNS，上dnssec数字签名</li>
+<li>采购基调、听云等第三方拨测服务，分布式监控网站质量</li>
+<li>向ISP投诉，工信部举报</li>
+</ul>
+<h4 id="Basic-Auth"><a href="#Basic-Auth" class="headerlink" title="Basic Auth"></a>Basic Auth</h4><ul>
+<li>在nginx上做，非常简单</li>
+<li>对防脚本攻击有奇效</li>
+</ul>
+<h3 id="企业邮箱服务器安全"><a href="#企业邮箱服务器安全" class="headerlink" title="企业邮箱服务器安全"></a>企业邮箱服务器安全</h3><h4 id="推荐使用微软的Exchange"><a href="#推荐使用微软的Exchange" class="headerlink" title="推荐使用微软的Exchange"></a>推荐使用微软的Exchange</h4><p>功能强大，维护相对简单</p>
+<h4 id="投产反垃圾邮件网关"><a href="#投产反垃圾邮件网关" class="headerlink" title="投产反垃圾邮件网关"></a>投产反垃圾邮件网关</h4><p>投产梭子鱼反垃圾邮件网关，防伪造发信人</p>
+<h4 id="群发审核管控"><a href="#群发审核管控" class="headerlink" title="群发审核管控"></a>群发审核管控</h4><h4 id="用好邮件组"><a href="#用好邮件组" class="headerlink" title="用好邮件组"></a>用好邮件组</h4><h4 id="接入AD域控"><a href="#接入AD域控" class="headerlink" title="接入AD域控"></a>接入AD域控</h4><h3 id="域名安全管理"><a href="#域名安全管理" class="headerlink" title="域名安全管理"></a>域名安全管理</h3><h4 id="做好ICP备案"><a href="#做好ICP备案" class="headerlink" title="做好ICP备案"></a>做好ICP备案</h4><ul>
+<li>域名证书</li>
+<li>域名实名认证（公司模板）</li>
+<li>接入商处蓝色幕布拍照</li>
+<li>法人身份证、管理员身份证</li>
+<li>网站真实性核验单</li>
+</ul>
+<h4 id="公网解析"><a href="#公网解析" class="headerlink" title="公网解析"></a>公网解析</h4><ul>
+<li>专人管理，邮件申请，审批</li>
+<li>将业务解析至不同公网IP出口，双活机房</li>
+<li>智能解析，解析至不同线路</li>
+<li>如有条件，可购买公网解析套餐服务，安全服务等</li>
+</ul>
+<h2 id="内网安全"><a href="#内网安全" class="headerlink" title="内网安全"></a>内网安全</h2><p>80%以上的企业IT安全问题出自内网安全</p>
+<h3 id="堡垒机"><a href="#堡垒机" class="headerlink" title="堡垒机"></a>堡垒机</h3><ul>
+<li>一定要强制使用堡垒机登录服务器</li>
+<li>ssh私钥通行短语机制，避免密钥失窃</li>
+<li>定期审计堡垒机操作日志</li>
+<li>如果有必要，可以上2FA（双因子验证）</li>
+</ul>
+<h3 id="AD域控"><a href="#AD域控" class="headerlink" title="AD域控"></a>AD域控</h3><p>有条件一定要接入windows域控，要求密码复杂度和定期过期</p>
+<ul>
+<li>邮箱</li>
+<li>wifi</li>
+<li>vpn账号密码</li>
+<li>内网系统账号</li>
+<li>业务系统账号</li>
+<li>网络设备等</li>
+</ul>
+<h3 id="办公网安全"><a href="#办公网安全" class="headerlink" title="办公网安全"></a>办公网安全</h3><ul>
+<li>专业的HelpDesk团队</li>
+<li>企业级杀毒软件</li>
+<li>办公电脑接入域控</li>
+<li>上网行为管理</li>
+<li>流量监控，mac地址绑定</li>
+<li>有条件的可以在办公环境上一个小型的业务机房</li>
+<li>wifi管控，单做guest接入点，不能访问业务核心网络</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Linux运维</category>
+      </categories>
+      <tags>
         <tag>Linux</tag>
       </tags>
   </entry>
@@ -842,299 +1135,6 @@
       </categories>
       <tags>
         <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>运维安全的四个层次</title>
-    <url>/2020/05/07/%E8%BF%90%E7%BB%B4%E5%AE%89%E5%85%A8%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%B1%82%E6%AC%A1/</url>
-    <content><![CDATA[<h1 id="运维安全的四个层次"><a href="#运维安全的四个层次" class="headerlink" title="运维安全的四个层次"></a>运维安全的四个层次</h1><h2 id="网络安全"><a href="#网络安全" class="headerlink" title="网络安全"></a>网络安全</h2><h3 id="网络设备的安全"><a href="#网络设备的安全" class="headerlink" title="网络设备的安全"></a>网络设备的安全</h3><ul>
-<li>思科、华为等网络设备定期升级，修复bug和曝出的漏洞</li>
-<li>公网防火墙，核心交换机等核心网络设备的管理</li>
-</ul>
-<h3 id="外网安全策略"><a href="#外网安全策略" class="headerlink" title="外网安全策略"></a>外网安全策略</h3><ul>
-<li>IDC，防火墙策略，严把上行端口开放</li>
-<li>公网上下行流量监控</li>
-<li>对DDos攻击提高警惕，提前准备应急预案<ul>
-<li>临时提高流量，硬抗</li>
-<li>启动流量清洗，将攻击流量引入黑洞，有可能误杀正常用户</li>
-</ul>
-</li>
-</ul>
-<h3 id="专线安全策略"><a href="#专线安全策略" class="headerlink" title="专线安全策略"></a>专线安全策略</h3><ul>
-<li>对涉及金融、支付等项目设立专线</li>
-</ul>
-<h3 id="VPN安全策略"><a href="#VPN安全策略" class="headerlink" title="VPN安全策略"></a>VPN安全策略</h3><ul>
-<li>IPsec VPN：site to site</li>
-<li>OpenVPN： peer to site</li>
-<li>摒弃PPTP等不含加密算法的vpn服务</li>
-<li>端口全禁止，需要通信的申请审批后，再由管理员开放</li>
-</ul>
-<h2 id="数据安全"><a href="#数据安全" class="headerlink" title="数据安全"></a>数据安全</h2><h3 id="数据库用户权限"><a href="#数据库用户权限" class="headerlink" title="数据库用户权限"></a>数据库用户权限</h3><ul>
-<li>管理员权限限定，不允许远程root</li>
-<li>定期更换管理员密码</li>
-<li>应用权限最小化，专人管理</li>
-<li>手动查询权限可审计</li>
-</ul>
-<h3 id="数据库审计设备"><a href="#数据库审计设备" class="headerlink" title="数据库审计设备"></a>数据库审计设备</h3><ul>
-<li>数据库主库不能开一般查询日志（为了性能）</li>
-<li>交换机上镜像流量，接入审计设备，实现实时审计</li>
-<li>不要设计串行在系统里，形成单点和瓶颈</li>
-</ul>
-<h3 id="数据库脱敏"><a href="#数据库脱敏" class="headerlink" title="数据库脱敏"></a>数据库脱敏</h3><ul>
-<li>姓名、身份证、手机号、银行卡号等敏感信息应脱敏处理</li>
-<li>对程序脱敏协同系统架构部共同出规范</li>
-<li>对手动查询权限脱敏，按列授权，录屏</li>
-</ul>
-<h3 id="备份策略"><a href="#备份策略" class="headerlink" title="备份策略"></a>备份策略</h3><ul>
-<li>每周全备，每天增备</li>
-<li>备份文件要每天利用内网流量低谷时间，推送到远程主机，有条件的应跨机房备份</li>
-<li>一定要规划定期恢复测试，保证备份的可用性</li>
-</ul>
-<h2 id="应用安全"><a href="#应用安全" class="headerlink" title="应用安全"></a>应用安全</h2><h3 id="操作系统安全"><a href="#操作系统安全" class="headerlink" title="操作系统安全"></a>操作系统安全</h3><ul>
-<li>系统基础优化（内核优化，优化工具）</li>
-<li>日期，时区同步</li>
-<li>root密码复杂度足够高，需要在操作系统里做定时过期策略</li>
-<li>每三个月使用脚本更新服务器的root密码和iDrac密码，并将更换后的密码加密打包发送给指定管理员邮箱，同时提交gitlab</li>
-<li>对系统关键文件进行md5监控，例如&#x2F;etc&#x2F;passwd，~&#x2F;.ssh&#x2F;authorized_keys文件等，如有变更，触发报警</li>
-<li>定期查毒，漏扫，定期安排更新操作系统</li>
-<li>&#x2F;etc&#x2F;ssh&#x2F;sshd_config里配置：<ul>
-<li>PasswordAuthentication no</li>
-<li>PermitRootLogin without-password</li>
-</ul>
-</li>
-<li>使用saltstack等批量管理软件进行特权命令执行和备份脚本执行（避开ssh协议）</li>
-</ul>
-<h3 id="应用系统安全"><a href="#应用系统安全" class="headerlink" title="应用系统安全"></a>应用系统安全</h3><h4 id="WEB应用防火墙（WAF）"><a href="#WEB应用防火墙（WAF）" class="headerlink" title="WEB应用防火墙（WAF）"></a>WEB应用防火墙（WAF）</h4><ul>
-<li>防SQL注入</li>
-<li>防CC攻击</li>
-<li>防XSS跨站脚本</li>
-</ul>
-<h4 id="应用系统漏洞"><a href="#应用系统漏洞" class="headerlink" title="应用系统漏洞"></a>应用系统漏洞</h4><ul>
-<li>关注0day漏洞新闻</li>
-<li>及时整改并上线投产</li>
-<li>组织技术力量测试，复现</li>
-</ul>
-<h4 id="日志收集和分析"><a href="#日志收集和分析" class="headerlink" title="日志收集和分析"></a>日志收集和分析</h4><ul>
-<li>完善日志收集方案，集中转储</li>
-<li>通过应用系统日志分析，进行安全预警</li>
-</ul>
-<h4 id="DNS劫持"><a href="#DNS劫持" class="headerlink" title="DNS劫持"></a>DNS劫持</h4><ul>
-<li>全站https，购买泛域名证书</li>
-<li>有条件的可以自己维护公网DNS，上dnssec数字签名</li>
-<li>采购基调、听云等第三方拨测服务，分布式监控网站质量</li>
-<li>向ISP投诉，工信部举报</li>
-</ul>
-<h4 id="Basic-Auth"><a href="#Basic-Auth" class="headerlink" title="Basic Auth"></a>Basic Auth</h4><ul>
-<li>在nginx上做，非常简单</li>
-<li>对防脚本攻击有奇效</li>
-</ul>
-<h3 id="企业邮箱服务器安全"><a href="#企业邮箱服务器安全" class="headerlink" title="企业邮箱服务器安全"></a>企业邮箱服务器安全</h3><h4 id="推荐使用微软的Exchange"><a href="#推荐使用微软的Exchange" class="headerlink" title="推荐使用微软的Exchange"></a>推荐使用微软的Exchange</h4><p>功能强大，维护相对简单</p>
-<h4 id="投产反垃圾邮件网关"><a href="#投产反垃圾邮件网关" class="headerlink" title="投产反垃圾邮件网关"></a>投产反垃圾邮件网关</h4><p>投产梭子鱼反垃圾邮件网关，防伪造发信人</p>
-<h4 id="群发审核管控"><a href="#群发审核管控" class="headerlink" title="群发审核管控"></a>群发审核管控</h4><h4 id="用好邮件组"><a href="#用好邮件组" class="headerlink" title="用好邮件组"></a>用好邮件组</h4><h4 id="接入AD域控"><a href="#接入AD域控" class="headerlink" title="接入AD域控"></a>接入AD域控</h4><h3 id="域名安全管理"><a href="#域名安全管理" class="headerlink" title="域名安全管理"></a>域名安全管理</h3><h4 id="做好ICP备案"><a href="#做好ICP备案" class="headerlink" title="做好ICP备案"></a>做好ICP备案</h4><ul>
-<li>域名证书</li>
-<li>域名实名认证（公司模板）</li>
-<li>接入商处蓝色幕布拍照</li>
-<li>法人身份证、管理员身份证</li>
-<li>网站真实性核验单</li>
-</ul>
-<h4 id="公网解析"><a href="#公网解析" class="headerlink" title="公网解析"></a>公网解析</h4><ul>
-<li>专人管理，邮件申请，审批</li>
-<li>将业务解析至不同公网IP出口，双活机房</li>
-<li>智能解析，解析至不同线路</li>
-<li>如有条件，可购买公网解析套餐服务，安全服务等</li>
-</ul>
-<h2 id="内网安全"><a href="#内网安全" class="headerlink" title="内网安全"></a>内网安全</h2><p>80%以上的企业IT安全问题出自内网安全</p>
-<h3 id="堡垒机"><a href="#堡垒机" class="headerlink" title="堡垒机"></a>堡垒机</h3><ul>
-<li>一定要强制使用堡垒机登录服务器</li>
-<li>ssh私钥通行短语机制，避免密钥失窃</li>
-<li>定期审计堡垒机操作日志</li>
-<li>如果有必要，可以上2FA（双因子验证）</li>
-</ul>
-<h3 id="AD域控"><a href="#AD域控" class="headerlink" title="AD域控"></a>AD域控</h3><p>有条件一定要接入windows域控，要求密码复杂度和定期过期</p>
-<ul>
-<li>邮箱</li>
-<li>wifi</li>
-<li>vpn账号密码</li>
-<li>内网系统账号</li>
-<li>业务系统账号</li>
-<li>网络设备等</li>
-</ul>
-<h3 id="办公网安全"><a href="#办公网安全" class="headerlink" title="办公网安全"></a>办公网安全</h3><ul>
-<li>专业的HelpDesk团队</li>
-<li>企业级杀毒软件</li>
-<li>办公电脑接入域控</li>
-<li>上网行为管理</li>
-<li>流量监控，mac地址绑定</li>
-<li>有条件的可以在办公环境上一个小型的业务机房</li>
-<li>wifi管控，单做guest接入点，不能访问业务核心网络</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Linux运维</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>tomcat8安装配置优化</title>
-    <url>/2017/06/02/tomcat-install-and-settings/</url>
-    <content><![CDATA[<h2 id="Tomcat-8-安装"><a href="#Tomcat-8-安装" class="headerlink" title="Tomcat 8 安装"></a>Tomcat 8 安装</h2><ul>
-<li>Tomcat 8 安装<ul>
-<li>官网：<a href="http://tomcat.apache.org/">http://tomcat.apache.org/</a></li>
-<li>Tomcat 8 官网下载：<a href="http://tomcat.apache.org/download-80.cgi">http://tomcat.apache.org/download-80.cgi</a></li>
-<li>此时（20170602） Tomcat 8 最新版本为：<code>apache-tomcat-8.5.15.tar.gz</code></li>
-<li>Tomcat 8 下载：<code>wget http://mirror.bit.edu.cn/apache/tomcat/tomcat-8/v8.5.15/bin/apache-tomcat-8.5.15.tar.gz</code></li>
-<li>压缩包解压：<code>tar -zxvf apache-tomcat-8.5.15.tar.gz</code></li>
-<li>移到解压出来文件夹到 &#x2F;usr&#x2F;local 下：<code>mv apache-tomcat-8.5.15/ /usr/local/</code></li>
-</ul>
-</li>
-</ul>
-<h2 id="Tomcat-8-配置"><a href="#Tomcat-8-配置" class="headerlink" title="Tomcat 8 配置"></a>Tomcat 8 配置</h2><ul>
-<li>设置 Tomcat 相关变量：<ul>
-<li><code>vim /usr/local/tomcat8/bin/catalina.sh</code></li>
-<li>在配置文件的可编辑内容最上面（98 行开始），加上如下内容（具体参数根据你服务器情况自行修改）：  <figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">JAVA_HOME</span>=/usr/local/jdk1.<span class="number">8.0</span>_72</span><br><span class="line">   <span class="attr">CATALINA_HOME</span>=/usr/local/tomcat8</span><br><span class="line">   <span class="attr">CATALINA_OPTS</span>=<span class="string">&quot;-Dfile.encoding=UTF-8 -server -Xms2048m -Xmx2048m -Xmn1024m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</span></span><br><span class="line">   <span class="attr">CATALINA_PID</span>=<span class="variable">$CATALINA_HOME</span>/catalina.pid</span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-<li>如果使用 <code>shutdown.sh</code> 还无法停止 tomcat，可以修改其配置：<code>vim /usr/local/tomcat8/bin/shutdown.sh</code><ul>
-<li>把最尾巴这一行：<code>exec &quot;$PRGDIR&quot;/&quot;$EXECUTABLE&quot; stop &quot;$@&quot;</code></li>
-<li>改为：<code>exec &quot;$PRGDIR&quot;/&quot;$EXECUTABLE&quot; stop 10 -force</code></li>
-</ul>
-</li>
-</ul>
-<span id="more"></span>
-
-<h2 id="Tomcat-8-安全配置"><a href="#Tomcat-8-安全配置" class="headerlink" title="Tomcat 8 安全配置"></a>Tomcat 8 安全配置</h2><p>默认tomcat是root身份运行的，这样不安全，不要使用root用户启动tomcat。</p>
-<p>Java程序与C程序不同，nginx,httpd 使用root用户启动守护80端口，子进程&#x2F;线程会通过setuid(),setgid()两个函数切换到普通用户。即父进程所有者是root用户，子进程与多线程所有者是一个非root用户，这个用户没有shell，无法通过ssh与控制台登陆系统，Java 的JVM 是与系统无关的，是建立在OS之上的，你使用什么用户启动Tomcat，那么Tomcat 就会继承该所有者的权限。</p>
-<p>为了防止 Tomcat 被植入 web shell 程序后，可以修改项目文件。因此我们要将 Tomcat 和项目的属主做分离，这样子，即便被搞，他也无法创建和编辑项目文件。<br>设置普通用户，用来启动tomcat</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># groupadd tomcat</span></span><br><span class="line">[root@localhost ~]<span class="comment"># useradd -g tomcat tomcat</span></span><br><span class="line">[root@localhost ~]<span class="comment"># passwd tomcat</span></span><br><span class="line">[root@localhost ~]<span class="comment"># chown tomcat.tomcat -R /usr/local/tomcat8</span></span><br><span class="line">[root@localhost ~]<span class="comment"># su - tomcat /usr/local/tomcat8/bin/startup.sh</span></span><br><span class="line">[root@localhost ~]<span class="comment"># echo &#x27;su - tomcat -c &quot;tomcat /usr/local/tomcat8/bin/startup.sh&quot;&#x27; &gt;&gt; /etc/rc.local  #开机启动</span></span><br><span class="line"></span><br><span class="line">```    </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## Tomcat 8 优化</span></span><br><span class="line"></span><br><span class="line">- Tomcat 6/7/8 的优化参数有点不一样，最好按下面的方式看一下官网这个文档是否还保留着这个参数</span><br><span class="line">- 启动tomcat，访问该地址，下面要讲解的一些配置信息，在该文档下都有说明的：</span><br><span class="line">	- 文档：&lt;http://127.0.0.1:8080/docs/config&gt;</span><br><span class="line">	- 你也可以直接看网络版本：</span><br><span class="line">		- Tomcat 6 文档：&lt;https://tomcat.apache.org/tomcat-6.0-doc/config&gt;</span><br><span class="line">		- Tomcat 7 文档：&lt;https://tomcat.apache.org/tomcat-7.0-doc/config/&gt;</span><br><span class="line">		- Tomcat 8 文档：&lt;https://tomcat.apache.org/tomcat-8.0-doc/config/&gt;</span><br><span class="line">- 如果你需要查看 Tomcat 的运行状态可以配置tomcat管理员账户，然后登陆 Tomcat 后台进行查看</span><br><span class="line">- 编辑 /opt/tomcat7/bin/conf/tomcat-users.xml 文件，在里面添加下面信息：</span><br><span class="line">``` xml</span><br><span class="line">&lt;role rolename=<span class="string">&quot;manager&quot;</span>/&gt;</span><br><span class="line">&lt;role rolename=<span class="string">&quot;manager-gui&quot;</span>/&gt;</span><br><span class="line">&lt;role rolename=<span class="string">&quot;admin&quot;</span>/&gt;</span><br><span class="line">&lt;role rolename=<span class="string">&quot;admin-gui&quot;</span>/&gt;</span><br><span class="line">&lt;user username=<span class="string">&quot;tomcat&quot;</span> password=<span class="string">&quot;tomcat&quot;</span> roles=<span class="string">&quot;admin-gui,admin,manager-gui,manager&quot;</span>/&gt;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>编辑配置文件：<code>vim /usr/local/tomcat8/conf/server.xml</code><ul>
-<li>打开默认被注释的连接池配置：<ul>
-<li>默认值：  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">&lt;Executor name=&quot;tomcatThreadPool&quot; namePrefix=&quot;catalina-exec-&quot;</span></span><br><span class="line"><span class="comment">    maxThreads=&quot;150&quot; minSpareThreads=&quot;4&quot;/&gt;</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li>修改为：  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Executor</span></span></span><br><span class="line"><span class="tag">        <span class="attr">name</span>=<span class="string">&quot;tomcatThreadPool&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">namePrefix</span>=<span class="string">&quot;catalina-exec-&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">maxThreads</span>=<span class="string">&quot;500&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">minSpareThreads</span>=<span class="string">&quot;30&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">maxIdleTime</span>=<span class="string">&quot;60000&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">prestartminSpareThreads</span> = <span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">maxQueueSize</span> = <span class="string">&quot;100&quot;</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li>重点参数解释：<ul>
-<li>maxThreads，最大并发数，默认设置 200，一般建议在 500 ~ 800，根据硬件设施和业务来判断</li>
-<li>minSpareThreads，Tomcat 初始化时创建的线程数，默认设置 25</li>
-<li>prestartminSpareThreads，在 Tomcat 初始化的时候就初始化 minSpareThreads 的参数值，如果不等于 true，minSpareThreads 的值就没啥效果了</li>
-<li>maxQueueSize，最大的等待队列数，超过则拒绝请求</li>
-<li>maxIdleTime，如果当前线程大于初始化线程，那空闲线程存活的时间，单位毫秒，默认60000&#x3D;60秒&#x3D;1分钟。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>修改默认的链接参数配置：<ul>
-<li><p>默认值：</p>
-  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Connector</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">port</span>=<span class="string">&quot;8080&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">protocol</span>=<span class="string">&quot;HTTP/1.1&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">connectionTimeout</span>=<span class="string">&quot;20000&quot;</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">redirectPort</span>=<span class="string">&quot;8443&quot;</span> </span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>修改为：</p>
-  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Connector</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">executor</span>=<span class="string">&quot;tomcatThreadPool&quot;</span></span></span><br><span class="line"><span class="tag">   <span class="attr">port</span>=<span class="string">&quot;8080&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">protocol</span>=<span class="string">&quot;org.apache.coyote.http11.Http11Nio2Protocol&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">connectionTimeout</span>=<span class="string">&quot;20000&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">maxConnections</span>=<span class="string">&quot;10000&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">redirectPort</span>=<span class="string">&quot;8443&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">enableLookups</span>=<span class="string">&quot;false&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">acceptCount</span>=<span class="string">&quot;100&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">maxPostSize</span>=<span class="string">&quot;10485760&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">maxHttpHeaderSize</span>=<span class="string">&quot;8192&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">compression</span>=<span class="string">&quot;on&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">disableUploadTimeout</span>=<span class="string">&quot;true&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">compressionMinSize</span>=<span class="string">&quot;2048&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">acceptorThreadCount</span>=<span class="string">&quot;2&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">compressableMimeType</span>=<span class="string">&quot;text/html,text/xml,text/plain,text/css,text/javascript,application/javascript&quot;</span> </span></span><br><span class="line"><span class="tag">   <span class="attr">URIEncoding</span>=<span class="string">&quot;utf-8&quot;</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>重点参数解释：</p>
-<ul>
-<li>protocol，Tomcat 8 设置 nio2 更好：org.apache.coyote.http11.Http11Nio2Protocol（如果这个用不了，就用下面那个）</li>
-<li>protocol，Tomcat 6、7 设置 nio 更好：org.apache.coyote.http11.Http11NioProtocol</li>
-</ul>
-<blockquote>
-<p>BIO：一个线程处理一个请求。缺点：并发量高时，线程数较多，浪费资源。Tomcat7或以- 下，在Linux系统中默认使用这种方式。<br>NIO：利用Java的异步IO处理，可以通过少量的线程处理大量的请求。Tomcat8在Linux系统中默认使用这种方式。<br>APR：即Apache Portable Runtime，从操作系统层面解决io阻塞问题。Tomcat7或Tomcat8在Win7或以上的系统中启动默认使用这种方式。Linux如果安装了apr和native，Tomcat直接启动就支持apr。（安装方法：<a href="http://www.cnblogs.com/nb-blog/p/5278502.html%EF%BC%89">http://www.cnblogs.com/nb-blog/p/5278502.html）</a></p>
-</blockquote>
-<ul>
-<li>enableLookups，禁用DNS查询</li>
-<li>acceptCount，指定当所有可以使用的处理请求的线程数都被使用时，可以放到处理队列中的请求数，超过这个数的请求将不予处理，默认设置 100</li>
-<li>maxPostSize，以 FORM URL 参数方式的 POST 提交方式，限制提交最大的大小，默认是 2097152(2兆)，它使用的单位是字节。10485760 为 10M。如果要禁用限制，则可以设置为 -1。</li>
-<li>acceptorThreadCount，用于接收连接的线程的数量，默认值是1。一般这个指需要改动的时候是因为该服务器是一个多核CPU，如果是多核 CPU 一般配置为 2.</li>
-<li>maxHttpHeaderSize，http请求头信息的最大程度，超过此长度的部分不予处理。一般8K。</li>
-<li>compression：传输时是压缩。</li>
-<li>compressionMinSize：压缩的大小 </li>
-<li>noCompressionUserAgents：不启用压缩的浏览器<blockquote>
-<p>提示：压缩会增加Tomcat负担，最好采用Nginx + Tomcat 或者 Apache + Tomcat 方式，压缩交由Nginx&#x2F;Apache 去做。</p>
-</blockquote>
-<p>  Tomcat 的压缩是在客户端请求服务器对应资源后，从服务器端将资源文件压缩，再输出到客户端，由客户端的浏览器负责解压缩并浏览。相对于普通的 浏览过程 HTML、CSS、Javascript和Text，它可以节省40% 左右的流量。更为重要的是，它可以对动态生成的，包括CGI、PHP、JSP、ASP、Servlet,SHTML等输出的网页也能进行压缩，压缩效率也很高。</p>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>禁用 AJP（如果你服务器没有使用 Apache） <ul>
-<li>把下面这一行注释掉，默认 Tomcat 是开启的。  <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- &lt;Connector port=&quot;8009&quot; protocol=&quot;AJP/1.3&quot; redirectPort=&quot;8443&quot; /&gt; --&gt;</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="JVM-优化"><a href="#JVM-优化" class="headerlink" title="JVM 优化"></a>JVM 优化</h2><ul>
-<li>模型资料来源：<a href="http://xmuzyq.iteye.com/blog/599750">http://xmuzyq.iteye.com/blog/599750</a></li>
-<li>配比资料：<a href="http://www.jianshu.com/p/d45e12241af4">http://www.jianshu.com/p/d45e12241af4</a></li>
-<li>Java 的内存模型分为：<ul>
-<li>Young，年轻代（易被 GC）。Young 区被划分为三部分，Eden 区和两个大小严格相同的 Survivor 区，其中 Survivor 区间中，某一时刻只有其中一个是被使用的，另外一个留做垃圾收集时复制对象用，在 Young 区间变满的时候，minor GC 就会将存活的对象移到空闲的Survivor 区间中，根据 JVM 的策略，在经过几次垃圾收集后，任然存活于 Survivor 的对象将被移动到 Tenured  区间。</li>
-<li>Tenured，终身代。Tenured 区主要保存生命周期长的对象，一般是一些老的对象，当一些对象在 Young 复制转移一定的次数以后，对象就会被转移到 Tenured 区，一般如果系统中用了 application 级别的缓存，缓存中的对象往往会被转移到这一区间。</li>
-<li>Perm，永久代。主要保存 class,method,filed 对象，这部门的空间一般不会溢出，除非一次性加载了很多的类，不过在涉及到热部署的应用服务器的时候，有时候会遇到 java.lang.OutOfMemoryError : PermGen space 的错误，造成这个错误的很大原因就有可能是每次都重新部署，但是重新部署后，类的 class 没有被卸载掉，这样就造成了大量的 class 对象保存在了 perm 中，这种情况下，一般重新启动应用服务器可以解决问题。</li>
-</ul>
-</li>
-<li>Linux 修改 &#x2F;usr&#x2F;program&#x2F;tomcat7&#x2F;bin&#x2F;catalina.sh 文件，把下面信息添加到文件第一行。<ul>
-<li>如果服务器只运行一个 Tomcat<ul>
-<li>机子内存如果是 4G：<ul>
-<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms2048m -Xmx2048m -Xmn1024m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
-</ul>
-</li>
-<li>机子内存如果是 8G：<ul>
-<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms4096m -Xmx4096m -Xmn2048m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
-</ul>
-</li>
-<li>机子内存如果是 16G：<ul>
-<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms8192m -Xmx8192m -Xmn4096m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
-</ul>
-</li>
-<li>机子内存如果是 32G：<ul>
-<li><code>CATALINA_OPTS=&quot;-Dfile.encoding=UTF-8 -server -Xms16384m -Xmx16384m -Xmn8192m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:SurvivorRatio=10 -XX:MaxTenuringThreshold=15 -XX:NewRatio=2 -XX:+DisableExplicitGC&quot;</code></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>如果是 8G 开发机<ul>
-<li><code>-Xms2048m -Xmx2048m -XX:NewSize=512m -XX:MaxNewSize=1024m -XX:PermSize=256m -XX:MaxPermSize=512m</code></li>
-</ul>
-</li>
-<li>如果是 16G 开发机<ul>
-<li><code>-Xms4096m -Xmx4096m -XX:NewSize=1024m -XX:MaxNewSize=2048m -XX:PermSize=256m -XX:MaxPermSize=512m</code></li>
-</ul>
-</li>
-<li>参数说明：  <figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line">-Dfile.encoding：默认文件编码</span><br><span class="line">-server：表示这是应用于服务器的配置，<span class="attribute">JVM</span> 内部会有特殊处理的</span><br><span class="line">-Xmx1024m：设置JVM最大可用内存为1024MB</span><br><span class="line">-Xms1024m：设置JVM最小内存为<span class="number">1024m</span>。此值可以设置与-Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存。</span><br><span class="line">-Xmn1024m：设置JVM新生代大小（JDK1.<span class="number">4</span>之后版本）。一般-Xmn的大小是-Xms的<span class="number">1</span>/<span class="number">2</span>左右，不要设置的过大或过小，过大导致老年代变小，频繁Full GC，过小导致minor GC频繁。如果不设置-Xmn，可以采用-XX:NewRatio=<span class="number">2</span>来设置，也是一样的效果</span><br><span class="line">-XX:NewSize：设置新生代大小</span><br><span class="line">-XX:MaxNewSize：设置最大的新生代大小</span><br><span class="line">-XX:PermSize：设置永久代大小</span><br><span class="line">-XX:MaxPermSize：设置最大永久代大小</span><br><span class="line">-XX:NewRatio=<span class="number">4</span>：设置年轻代（包括 Eden 和两个 Survivor 区）与终身代的比值（除去永久代）。设置为 <span class="number">4</span>，则年轻代与终身代所占比值为 <span class="number">1</span>：<span class="number">4</span>，年轻代占整个堆栈的 <span class="number">1</span>/<span class="number">5</span></span><br><span class="line">-XX:MaxTenuringThreshold=<span class="number">10</span>：设置垃圾最大年龄，默认为：<span class="number">15</span>。如果设置为 <span class="number">0</span> 的话，则年轻代对象不经过 Survivor 区，直接进入年老代。对于年老代比较多的应用，可以提高效率。如果将此值设置为一个较大值，则年轻代对象会在 Survivor 区进行多次复制，这样可以增加对象再年轻代的存活时间，增加在年轻代即被回收的概论。需要注意的是，设置了 -XX:MaxTenuringThreshold，并不代表着，对象一定在年轻代存活<span class="number">15</span>次才被晋升进入老年代，它只是一个最大值，事实上，存在一个动态计算机制，计算每次晋入老年代的阈值，取阈值和MaxTenuringThreshold中较小的一个为准。</span><br><span class="line">-XX:+DisableExplicitGC：这个将会忽略手动调用 GC 的代码使得 System.gc() 的调用就会变成一个空调用，完全不会触发任何 GC</span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-<li>Windows 修改 &#x2F;tomcat8&#x2F;bin&#x2F;catalina.bat 文件，找到这一行：<code>echo Using CATALINA_BASE:   &quot;%CATALINA_BASE%&quot;</code>，然后在其上面添加如下内容，此方法只对解压版的 Tomcat 有效果，对于安装版本的需要点击安装后任务栏上的那个 Tomcat 图标，打开配置中有一个 <code>Java</code> Tab 的进行编辑。<figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="attribute">set</span> JAVA_OPTS=%JAVA_OPTS% -Dfile.encoding=<span class="string">&quot;UTF-8&quot;</span> -Dsun.jnu.encoding=<span class="string">&quot;UTF8&quot;</span> -Ddefault.client.encoding=<span class="string">&quot;UTF-8&quot;</span> -Duser.language=Zh</span><br><span class="line">set JAVA_OPTS=%JAVA_OPTS% -server -Xms4096m -Xmx4096m -Xmn2048m -XX:PermSize=<span class="number">256m</span> -XX:MaxPermSize=<span class="number">512m</span> -XX:SurvivorRatio=<span class="number">10</span> -XX:MaxTenuringThreshold=<span class="number">15</span> -XX:NewRatio=<span class="number">2</span> -XX:+DisableExplicitGC</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="Tomcat-8-的-Log-分割"><a href="#Tomcat-8-的-Log-分割" class="headerlink" title="Tomcat 8 的 Log 分割"></a>Tomcat 8 的 Log 分割</h2><ul>
-<li>修改前提：本人为 Tomcat8.5，安装目录为：&#x2F;usr&#x2F;local&#x2F;tomcat8</li>
-<li>网络上的官网地址现在打不开：<a href="http://cronolog.org/download/index.html">http://cronolog.org/download/index.html</a></li>
-<li>阿里云的 CentOS 有 epel 源所以可以直接下载：<code>yum install cronolog</code>，当前版本为：1.6.2-10.el6</li>
-<li>安装完后，查看下安装后的目录位置：<code>which cronolog</code>，我这边得到的结果是：<code>/usr/sbin/cronolog</code>，记下这个结果，后面有用到。</li>
-<li>修改 catalina.sh 中的内容：<code>vim /usr/local/tomcat8/bin/catalina.sh</code></li>
-<li>找到这段代码（预计在 416 行前后）：</li>
-</ul>
-<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">shift</span><br><span class="line">touch &quot;$CATALINA_OUT&quot;</span><br><span class="line">if <span class="section">[ &quot;$1&quot; = &quot;-security&quot; ]</span> <span class="comment">; then</span></span><br><span class="line">if <span class="section">[ $have_tty -eq 1 ]</span><span class="comment">; then</span></span><br><span class="line">  echo &quot;Using Security Manager&quot;</span><br><span class="line">fi</span><br><span class="line">shift</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  -Djava.security.manager \</span><br><span class="line">  <span class="attr">-Djava.security.policy</span>==<span class="string">&quot;\&quot;$CATALINA_BASE/conf/catalina.policy\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start \</span><br><span class="line">  &gt;&gt; &quot;$CATALINA_OUT&quot; 2&gt;&amp;1 &quot;&amp;&quot;</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start \</span><br><span class="line">  &gt;&gt; &quot;$CATALINA_OUT&quot; 2&gt;&amp;1 &quot;&amp;&quot;</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>将上面代码改为如下，其中请注意这个关键字：<code>/usr/sbin/cronolog</code>，这个是我上面提到的安装路径，你如果跟我不一样，需要自己修改该相关。</li>
-</ul>
-<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">shift</span><br><span class="line"><span class="comment"># touch &quot;$CATALINA_OUT&quot;</span></span><br><span class="line">if <span class="section">[ &quot;$1&quot; = &quot;-security&quot; ]</span> <span class="comment">; then</span></span><br><span class="line">if <span class="section">[ $have_tty -eq 1 ]</span><span class="comment">; then</span></span><br><span class="line">  echo &quot;Using Security Manager&quot;</span><br><span class="line">fi</span><br><span class="line">shift</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  -Djava.security.manager \</span><br><span class="line">  <span class="attr">-Djava.security.policy</span>==<span class="string">&quot;\&quot;$CATALINA_BASE/conf/catalina.policy\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start 2&gt;&amp;1 | /usr/sbin/cronolog &quot;$CATALINA_BASE&quot;/logs/catalina.%Y-%m-%d.out &gt;&gt; /dev/null &amp;</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line">eval $_NOHUP &quot;\&quot;$_RUNJAVA\&quot;&quot; &quot;\&quot;$LOGGING_CONFIG\&quot;&quot; $LOGGING_MANAGER $JAVA_OPTS $CATALINA_OPTS \</span><br><span class="line">  -classpath &quot;\&quot;$CLASSPATH\&quot;&quot; \</span><br><span class="line">  <span class="attr">-Dcatalina.base</span>=<span class="string">&quot;\&quot;$CATALINA_BASE\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Dcatalina.home</span>=<span class="string">&quot;\&quot;$CATALINA_HOME\&quot;&quot;</span> \</span><br><span class="line">  <span class="attr">-Djava.io.tmpdir</span>=<span class="string">&quot;\&quot;$CATALINA_TMPDIR\&quot;&quot;</span> \</span><br><span class="line">  org.apache.catalina.startup.Bootstrap &quot;$@&quot; start 2&gt;&amp;1 | /usr/sbin/cronolog &quot;$CATALINA_BASE&quot;/logs/catalina.%Y-%m-%d.out &gt;&gt; /dev/null &amp;</span><br><span class="line"></span><br><span class="line">fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Tomcat-远程监控"><a href="#Tomcat-远程监控" class="headerlink" title="Tomcat 远程监控"></a>Tomcat 远程监控</h2><p>首先检查远程服务器hostname -i<br>192.168.1.190</p>
-<p>1.编辑tomcat&#x2F;bin&#x2F;catalina.sh<br>vi catalina.sh</p>
-<p>搜索 Execute The Requested Command</p>
-<p>在这一行上面加入一下配置</p>
-<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">JAVA_OPTS</span>=<span class="string">&#x27;-Xms1024m -Xmx1024m -XX:PermSize=256M -XX:MaxNewSize=512m -XX:MaxPermSize=512m -Djava.rmi.server.hostname=192.168.1.190 -Dcom.sun.management.jmxremote.port=8444 -Dcom.sun.management.jmxremote.ssl=false-Dcom.sun.management.jmxremote.authenticate=false&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>2.编辑jmxremote.access和jmxremote.password</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/java/jdk1.6.0_18/jre/lib/management</span><br><span class="line"><span class="built_in">mv</span> jmxremote.password.template jmxremote.password</span><br><span class="line"><span class="built_in">chmod</span> 600 jmxremote.access jmxremote.password</span><br><span class="line">vi jmxremote.password</span><br></pre></td></tr></table></figure>
-
-<p>jmxremote.access 一般保持原始内容不变即可。<br>对于jmxremote.password，将 其中的：<br>monitorRole 123<br>controlRole 123<br>井号注释取消掉。其中monitorRole为只拥有只读权限的角色，controlRole有更高权限：读写等等。</p>
-]]></content>
-      <categories>
-        <category>Java架构</category>
-      </categories>
-      <tags>
-        <tag>tomcat</tag>
       </tags>
   </entry>
 </search>
