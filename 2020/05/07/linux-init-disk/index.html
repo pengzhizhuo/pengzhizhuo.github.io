@@ -27,9 +27,9 @@
 <meta property="og:description" content="初始化Linux数据盘（fdisk）操作场景本文以云服务器的操作系统为“CentOS 7.7 64位”为例，采用fdisk分区工具为数据盘设置分区。 MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，因此当您初始化容量大于2 TB的磁盘时，分区形式请采用GPT。对于Linux操作系统而言，当磁盘分区形式选用GPT时，fdisk分区工具将无法使用，需要采用parted工具。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-05-07T09:00:00.000Z">
-<meta property="article:modified_time" content="2020-05-07T09:08:18.464Z">
+<meta property="article:modified_time" content="2022-11-10T12:36:07.874Z">
 <meta property="article:author" content="DylanPeng">
-<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Linux fdisk">
 <meta name="twitter:card" content="summary">
 
 
@@ -168,12 +168,12 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -245,9 +245,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2020-05-07 17:00:00 / 修改时间：17:08:18" itemprop="dateCreated datePublished" datetime="2020-05-07T17:00:00+08:00">2020-05-07</time>
+      <time title="创建时间：2020-05-07 17:00:00" itemprop="dateCreated datePublished" datetime="2020-05-07T17:00:00+08:00">2020-05-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-10 20:36:07" itemprop="dateModified" datetime="2022-11-10T20:36:07+08:00">2022-11-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -255,7 +261,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Linux%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">Linux运维</span></a>
+          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
         </span>
     </span>
 
@@ -377,13 +383,13 @@
 回显类似如下信息：
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# mkfs -t xfs /dev/sdb1</span><br><span class="line">meta-data=/dev/sdb1              isize=512    agcount=4, agsize=65535936 blks</span><br><span class="line">         =                       sectsz=512   attr=2, projid32bit=1</span><br><span class="line">         =                       crc=1        finobt=0, sparse=0</span><br><span class="line">data     =                       bsize=4096   blocks=262143744, imaxpct=25</span><br><span class="line">         =                       sunit=0      swidth=0 blks</span><br><span class="line">naming   =version 2              bsize=4096   ascii-ci=0 ftype=1</span><br><span class="line">log      =internal log           bsize=4096   blocks=127999, version=2</span><br><span class="line">         =                       sectsz=512   sunit=0 blks, lazy-count=1</span><br><span class="line">realtime =none                   extsz=4096   blocks=0, rtextents=0</span><br></pre></td></tr></table></figure>
-
-
-
-格式化需要等待一段时间，请观察系统运行状态，不要退出。
+</code></pre>
+<p>​    </p>
+<pre><code>格式化需要等待一段时间，请观察系统运行状态，不要退出。
 
 不同文件系统支持的分区大小不同，请根据您的业务需求选择合适的文件系统。
 </code></pre>
+<p>​    </p>
 <ol start="12">
 <li><p>执行以下命令，新建挂载目录。</p>
 <p><strong>mkdir</strong> <em>挂载目录</em></p>
@@ -399,6 +405,7 @@
 
 **mount /dev/sdb1 /opt**
 </code></pre>
+<p>​    </p>
 <ol start="14">
 <li>执行以下命令，查看挂载结果。</li>
 </ol>
@@ -408,17 +415,16 @@
 回显类似如下信息：
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# df -HT</span><br><span class="line">Filesystem                Type      Size  Used Avail Use% Mounted on</span><br><span class="line">devtmpfs                  devtmpfs   17G     0   17G   0% /dev</span><br><span class="line">tmpfs                     tmpfs      17G     0   17G   0% /dev/shm</span><br><span class="line">tmpfs                     tmpfs      17G   55M   17G   1% /run</span><br><span class="line">tmpfs                     tmpfs      17G     0   17G   0% /sys/fs/cgroup</span><br><span class="line">/dev/mapper/rootvg-lvroot xfs        28G  4.7G   24G  17% /</span><br><span class="line">/dev/sda1                 xfs       1.1G  178M  886M  17% /boot</span><br><span class="line">/dev/sdb1                 xfs       1.1T   34M  1.1T   1% /opt</span><br><span class="line">/dev/mapper/rootvg-lvhome xfs       1.1G   34M  1.1G   4% /home</span><br><span class="line">/dev/mapper/rootvg-lvvar  xfs        11G  320M   11G   3% /var</span><br><span class="line">tmpfs                     tmpfs     3.4G   13k  3.4G   1% /run/user/42</span><br><span class="line">tmpfs                     tmpfs     3.4G     0  3.4G   0% /run/user/1000</span><br></pre></td></tr></table></figure>
-
-
-
-表示新建分区**“/dev/sdb1”**已挂载至“/opt”。
-
-
-
-说明：
+</code></pre>
+<p>​    </p>
+<pre><code>表示新建分区**“/dev/sdb1”**已挂载至“/opt”。
+</code></pre>
+<p>​    </p>
+<pre><code>说明：
 
 服务器重启后，挂载会失效。您可以修改“/etc/fstab”文件，将新建磁盘分区设置为开机自动挂载
 </code></pre>
+<p>​    </p>
 <h4 id="设置开机自动挂载磁盘分区"><a href="#设置开机自动挂载磁盘分区" class="headerlink" title="设置开机自动挂载磁盘分区"></a>设置开机自动挂载磁盘分区</h4><p>设置云服务器系统启动时自动挂载磁盘分区，不能采用在“&#x2F;etc&#x2F;fstab”直接指定设备名（比如&#x2F;dev&#x2F;sdb1）的方法，因为设备的顺序编码在关闭或者开启服务器过程中可能发生改变，例如&#x2F;dev&#x2F;sdb1可能会变成&#x2F;dev&#x2F;sdb2。推荐使用UUID来配置自动挂载磁盘分区。</p>
 <p>说明：</p>
 <p>UUID（universally unique identifier）是Linux系统为磁盘分区提供的唯一的标识字符串。</p>
@@ -502,7 +508,7 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/Linux-fdisk/" rel="tag"># Linux fdisk</a>
           </div>
 
         

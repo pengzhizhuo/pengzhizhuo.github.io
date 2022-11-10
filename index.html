@@ -162,12 +162,12 @@
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -210,6 +210,179 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://javabk.com/2022/11/10/Docker%E7%AE%80%E4%BB%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DylanPeng">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JAVABK">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | JAVABK">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/11/10/Docker%E7%AE%80%E4%BB%8B/" class="post-title-link" itemprop="url">Docker简介</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-11-10 17:43:08 / 修改时间：20:15:51" itemprop="dateCreated datePublished" datetime="2022-11-10T17:43:08+08:00">2022-11-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Linux/Docker/" itemprop="url" rel="index"><span itemprop="name">Docker</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="Docker核心技术基础"><a href="#Docker核心技术基础" class="headerlink" title="Docker核心技术基础"></a>Docker核心技术基础</h1><h2 id="docker简介"><a href="#docker简介" class="headerlink" title="docker简介"></a>docker简介</h2><h3 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h3><ul>
+<li>Linux命令</li>
+<li>git</li>
+<li>Docker相关开发语言和技术<ul>
+<li>Swarm</li>
+<li>Compose</li>
+<li>Mesos</li>
+<li>Machine</li>
+<li>k8s</li>
+<li>CI&#x2F;CD Jenkins整合</li>
+</ul>
+</li>
+</ul>
+<h3 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h3><ul>
+<li><p>问题：为什么会有Docker出现</p>
+<ul>
+<li>开发和运维环境的差异导致部署失败</li>
+</ul>
+</li>
+<li><p>出于高并发以及快速响应的需要，系统新功能需要快速上线(秒级)</p>
+<ul>
+<li><strong>软件可以带环境安装</strong></li>
+<li>安装的时候，把原始环境一模一样地复制过来<br>  开发人员利用Docker可以消除协作编码时“在我的机器上可以正常工作”的问题</li>
+</ul>
+</li>
+<li><p>Docker理念</p>
+<ul>
+<li>打破代码即应用的理念，变成镜像即应用</li>
+</ul>
+</li>
+<li><p>一次构建，处处运行</p>
+</li>
+<li><p>一句话</p>
+<ul>
+<li>是解决了运行环境和配置问题的软件容器，是方便做持续集成并有助于整体发布的容器虚拟化技术</li>
+</ul>
+</li>
+</ul>
+<h3 id="能干嘛"><a href="#能干嘛" class="headerlink" title="能干嘛"></a>能干嘛</h3><ul>
+<li><p>之前的虚拟机技术</p>
+<ul>
+<li>虚拟机是带环境安装的一种解决方案</li>
+<li>它可以在一种操作系统里面运行另一种操作系统，应用程序对此毫无感知。虚拟机看上去跟真实系统完全一样，对于底层系统来说，虚拟机就是一个普通文件，不需要就可以删除。<br>这类虚拟机完美地运行了另一套系统，能够使应用程序、操作系统和硬件三者之间的逻辑不变</li>
+<li>缺点：<ul>
+<li>资源占用多</li>
+<li>冗余步骤多</li>
+<li>启动慢</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>容器虚拟化技术</p>
+<ul>
+<li><p>Linux发展了另一种虚拟化技术，LXC</p>
+</li>
+<li><p>Linux容器不是模拟一个完整地操作系统，而是对进程进行隔离<br>容器和虚拟机不同，不需要捆绑一个完整的操作系统，只需要软件工作所需要的库资源和设置</p>
+</li>
+<li><p><strong>重点就是容器是共用操作系统内核的，不进行硬件虚拟</strong></p>
+</li>
+<li><p><strong>每个容器是相互隔离的，每个容器都有自己的文件系统，容器之间进程不会相互影响，能够区分计算资源</strong></p>
+</li>
+</ul>
+</li>
+<li><p>开发&#x2F;运维(DevOps)</p>
+<ul>
+<li>开发自运维</li>
+<li>一次构建，随处运行<br>一次构建是指开发工程师做一次构建<br>无需运维工程师再做构建<br>随处运行是指对于这个构建的交付物，可以随处运行<ul>
+<li>更快捷的应用交付和部署</li>
+<li>更便捷的升级和扩缩容</li>
+<li>更简单的系统运维</li>
+<li>更高效的计算资源利用</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>企业级</p>
+</li>
+</ul>
+<h3 id="去哪下"><a href="#去哪下" class="headerlink" title="去哪下"></a>去哪下</h3><ul>
+<li><p>官网</p>
+<ul>
+<li>docker官网：<a target="_blank" rel="noopener" href="http://www.docker.com/">http://www.docker.com</a></li>
+<li>docker中文网站：<a target="_blank" rel="noopener" href="https://www.docker-cn.com/">https://www.docker-cn.com</a></li>
+</ul>
+</li>
+<li><p>仓库</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://hub.dokcer.com/">https://hub.dokcer.com</a></li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://javabk.com/2022/11/09/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -238,9 +411,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2022-11-09 01:40:27 / 修改时间：01:55:10" itemprop="dateCreated datePublished" datetime="2022-11-09T01:40:27+08:00">2022-11-09</time>
+      <time title="创建时间：2022-11-09 01:40:27" itemprop="dateCreated datePublished" datetime="2022-11-09T01:40:27+08:00">2022-11-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-10 20:41:23" itemprop="dateModified" datetime="2022-11-10T20:41:23+08:00">2022-11-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -406,9 +585,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2022-11-09 00:45:18 / 修改时间：17:44:22" itemprop="dateCreated datePublished" datetime="2022-11-09T00:45:18+08:00">2022-11-09</time>
+      <time title="创建时间：2022-11-09 00:45:18" itemprop="dateCreated datePublished" datetime="2022-11-09T00:45:18+08:00">2022-11-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-10 20:40:55" itemprop="dateModified" datetime="2022-11-10T20:40:55+08:00">2022-11-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -498,9 +683,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2020-05-10 20:30:00 / 修改时间：20:29:49" itemprop="dateCreated datePublished" datetime="2020-05-10T20:30:00+08:00">2020-05-10</time>
+      <time title="创建时间：2020-05-10 20:30:00" itemprop="dateCreated datePublished" datetime="2020-05-10T20:30:00+08:00">2020-05-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-10 20:43:47" itemprop="dateModified" datetime="2022-11-10T20:43:47+08:00">2022-11-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -508,7 +699,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Linux%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">Linux运维</span></a>
+          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
         </span>
     </span>
 
@@ -772,9 +963,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2020-05-07 17:10:00 / 修改时间：17:19:41" itemprop="dateCreated datePublished" datetime="2020-05-07T17:10:00+08:00">2020-05-07</time>
+      <time title="创建时间：2020-05-07 17:10:00" itemprop="dateCreated datePublished" datetime="2020-05-07T17:10:00+08:00">2020-05-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-10 20:44:39" itemprop="dateModified" datetime="2022-11-10T20:44:39+08:00">2022-11-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -782,7 +979,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Linux%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">Linux运维</span></a>
+          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
         </span>
     </span>
 
@@ -971,9 +1168,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2020-05-07 17:00:00 / 修改时间：17:08:18" itemprop="dateCreated datePublished" datetime="2020-05-07T17:00:00+08:00">2020-05-07</time>
+      <time title="创建时间：2020-05-07 17:00:00" itemprop="dateCreated datePublished" datetime="2020-05-07T17:00:00+08:00">2020-05-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-10 20:36:07" itemprop="dateModified" datetime="2022-11-10T20:36:07+08:00">2022-11-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -981,7 +1184,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Linux%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">Linux运维</span></a>
+          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
         </span>
     </span>
 
@@ -1103,13 +1306,13 @@
 回显类似如下信息：
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# mkfs -t xfs /dev/sdb1</span><br><span class="line">meta-data=/dev/sdb1              isize=512    agcount=4, agsize=65535936 blks</span><br><span class="line">         =                       sectsz=512   attr=2, projid32bit=1</span><br><span class="line">         =                       crc=1        finobt=0, sparse=0</span><br><span class="line">data     =                       bsize=4096   blocks=262143744, imaxpct=25</span><br><span class="line">         =                       sunit=0      swidth=0 blks</span><br><span class="line">naming   =version 2              bsize=4096   ascii-ci=0 ftype=1</span><br><span class="line">log      =internal log           bsize=4096   blocks=127999, version=2</span><br><span class="line">         =                       sectsz=512   sunit=0 blks, lazy-count=1</span><br><span class="line">realtime =none                   extsz=4096   blocks=0, rtextents=0</span><br></pre></td></tr></table></figure>
-
-
-
-格式化需要等待一段时间，请观察系统运行状态，不要退出。
+</code></pre>
+<p>​    </p>
+<pre><code>格式化需要等待一段时间，请观察系统运行状态，不要退出。
 
 不同文件系统支持的分区大小不同，请根据您的业务需求选择合适的文件系统。
 </code></pre>
+<p>​    </p>
 <ol start="12">
 <li><p>执行以下命令，新建挂载目录。</p>
 <p><strong>mkdir</strong> <em>挂载目录</em></p>
@@ -1125,6 +1328,7 @@
 
 **mount /dev/sdb1 /opt**
 </code></pre>
+<p>​    </p>
 <ol start="14">
 <li>执行以下命令，查看挂载结果。</li>
 </ol>
@@ -1134,17 +1338,16 @@
 回显类似如下信息：
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# df -HT</span><br><span class="line">Filesystem                Type      Size  Used Avail Use% Mounted on</span><br><span class="line">devtmpfs                  devtmpfs   17G     0   17G   0% /dev</span><br><span class="line">tmpfs                     tmpfs      17G     0   17G   0% /dev/shm</span><br><span class="line">tmpfs                     tmpfs      17G   55M   17G   1% /run</span><br><span class="line">tmpfs                     tmpfs      17G     0   17G   0% /sys/fs/cgroup</span><br><span class="line">/dev/mapper/rootvg-lvroot xfs        28G  4.7G   24G  17% /</span><br><span class="line">/dev/sda1                 xfs       1.1G  178M  886M  17% /boot</span><br><span class="line">/dev/sdb1                 xfs       1.1T   34M  1.1T   1% /opt</span><br><span class="line">/dev/mapper/rootvg-lvhome xfs       1.1G   34M  1.1G   4% /home</span><br><span class="line">/dev/mapper/rootvg-lvvar  xfs        11G  320M   11G   3% /var</span><br><span class="line">tmpfs                     tmpfs     3.4G   13k  3.4G   1% /run/user/42</span><br><span class="line">tmpfs                     tmpfs     3.4G     0  3.4G   0% /run/user/1000</span><br></pre></td></tr></table></figure>
-
-
-
-表示新建分区**“/dev/sdb1”**已挂载至“/opt”。
-
-
-
-说明：
+</code></pre>
+<p>​    </p>
+<pre><code>表示新建分区**“/dev/sdb1”**已挂载至“/opt”。
+</code></pre>
+<p>​    </p>
+<pre><code>说明：
 
 服务器重启后，挂载会失效。您可以修改“/etc/fstab”文件，将新建磁盘分区设置为开机自动挂载
 </code></pre>
+<p>​    </p>
 <h4 id="设置开机自动挂载磁盘分区"><a href="#设置开机自动挂载磁盘分区" class="headerlink" title="设置开机自动挂载磁盘分区"></a>设置开机自动挂载磁盘分区</h4><p>设置云服务器系统启动时自动挂载磁盘分区，不能采用在“&#x2F;etc&#x2F;fstab”直接指定设备名（比如&#x2F;dev&#x2F;sdb1）的方法，因为设备的顺序编码在关闭或者开启服务器过程中可能发生改变，例如&#x2F;dev&#x2F;sdb1可能会变成&#x2F;dev&#x2F;sdb2。推荐使用UUID来配置自动挂载磁盘分区。</p>
 <p>说明：</p>
 <p>UUID（universally unique identifier）是Linux系统为磁盘分区提供的唯一的标识字符串。</p>
@@ -1273,9 +1476,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2020-05-07 16:30:00 / 修改时间：17:08:59" itemprop="dateCreated datePublished" datetime="2020-05-07T16:30:00+08:00">2020-05-07</time>
+      <time title="创建时间：2020-05-07 16:30:00" itemprop="dateCreated datePublished" datetime="2020-05-07T16:30:00+08:00">2020-05-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-10 20:38:29" itemprop="dateModified" datetime="2022-11-10T20:38:29+08:00">2022-11-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1283,7 +1492,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Linux%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">Linux运维</span></a>
+          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
         </span>
     </span>
 
@@ -1375,9 +1584,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2018-05-04 18:29:54 / 修改时间：18:56:52" itemprop="dateCreated datePublished" datetime="2018-05-04T18:29:54+08:00">2018-05-04</time>
+      <time title="创建时间：2018-05-04 18:29:54" itemprop="dateCreated datePublished" datetime="2018-05-04T18:29:54+08:00">2018-05-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-10 20:39:19" itemprop="dateModified" datetime="2022-11-10T20:39:19+08:00">2022-11-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1385,7 +1600,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Linux%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">Linux运维</span></a>
+          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
         </span>
     </span>
 
@@ -1414,115 +1629,6 @@
 
 
 <h1 id="增加释放的空间到root"><a href="#增加释放的空间到root" class="headerlink" title="增加释放的空间到root"></a>增加释放的空间到root</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># lvextend -L +120G /dev/mapper/vg_linuxcentos-lv_root   </span></span><br><span class="line">  Size of logical volume vg_linuxcentos/lv_root changed from 50.00 GiB (12800 extents) to 170.00 GiB (43520 extents).</span><br><span class="line">  Logical volume lv_root successfully resized.</span><br><span class="line">  </span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># resize2fs -p /dev/mapper/vg_linuxcentos-lv_root </span></span><br><span class="line">resize2fs 1.41.12 (17-May-2010)</span><br><span class="line">Filesystem at /dev/mapper/vg_linuxcentos-lv_root is mounted on /; on-line resizing required</span><br><span class="line">old desc_blocks = 4, new_desc_blocks = 11</span><br><span class="line">Performing an on-line resize of /dev/mapper/vg_linuxcentos-lv_root to 44564480 (4k) blocks.</span><br><span class="line">The filesystem on /dev/mapper/vg_linuxcentos-lv_root is now 44564480 blocks long.</span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                      168G  3.5G  156G   3% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                       20G   44M   19G   1% /home</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://javabk.com/2018/05/02/mysql-backup-shell/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DylanPeng">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="JAVABK">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | JAVABK">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/05/02/mysql-backup-shell/" class="post-title-link" itemprop="url">MySQL数据库自动备份脚本</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-05-02 13:49:10" itemprop="dateCreated datePublished" datetime="2018-05-02T13:49:10+08:00">2018-05-02</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2018-05-10 12:02:43" itemprop="dateModified" datetime="2018-05-10T12:02:43+08:00">2018-05-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Linux%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">Linux运维</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="编写数据库备份脚本-mysqlfullbackup-sh"><a href="#编写数据库备份脚本-mysqlfullbackup-sh" class="headerlink" title="编写数据库备份脚本(mysqlfullbackup.sh)"></a>编写数据库备份脚本(mysqlfullbackup.sh)</h1><p>#数据库备份脚本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="comment">###############################</span></span><br><span class="line"><span class="comment"># 此脚本用来全量备份</span></span><br><span class="line"><span class="comment"># 此文件名：mysqlfullbackup.sh</span></span><br><span class="line"><span class="comment">#  vim /etc/crontab </span></span><br><span class="line"><span class="comment"># 定时任务,计划在每天晚上23点55分进行数据备份(加 &amp; 为后台执行)</span></span><br><span class="line"><span class="comment"># 55 23 * * * root /backup/mysql/full_backup/mysqlfullbackup.sh &amp;</span></span><br><span class="line"><span class="comment"># # /etc/rc.d/init.d/crond restart</span></span><br><span class="line"><span class="comment">###############################</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#备份数据库(多数据库，用逗号隔开)</span></span><br><span class="line">mysql_databases=<span class="string">&quot;test&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#设置用户名和密码</span></span><br><span class="line">mysql_user=<span class="string">&quot;root&quot;</span></span><br><span class="line">mysql_password=<span class="string">&quot;123456&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#mysql安装全路径</span></span><br><span class="line">mysql_dir=/usr/local/mysql-5.6.38</span><br><span class="line"></span><br><span class="line"><span class="comment">#设置备份基本路径</span></span><br><span class="line">backup_dir=/backup/mysql</span><br><span class="line"></span><br><span class="line"><span class="comment">#创建备份文件夹</span></span><br><span class="line">[ -d <span class="variable">$&#123;backup_dir&#125;</span> ] || <span class="built_in">mkdir</span> -p <span class="variable">$&#123;backup_dir&#125;</span></span><br><span class="line"></span><br><span class="line">full_backup_dir=<span class="variable">$backup_dir</span>/full_backup</span><br><span class="line"></span><br><span class="line"><span class="comment">#备份的时间</span></span><br><span class="line">today=$(<span class="built_in">date</span> +<span class="string">&quot;%Y%m%d_%H%M%S&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#备份日志文件</span></span><br><span class="line">log_file=full_backup.log</span><br><span class="line"></span><br><span class="line"><span class="comment">#只保留最近10天的备份（其他删除）</span></span><br><span class="line">time=$(<span class="built_in">date</span> -d <span class="string">&quot;10 day ago&quot;</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#开始备份,记录备份开始时间 并压缩备份文件</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span><span class="variable">$mysql_databases</span><span class="string">&#x27; - &#x27;</span><span class="string">&quot;备份开始\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#判断目标目录是否已经存在</span></span><br><span class="line"><span class="keyword">if</span> [ ! -d <span class="variable">$full_backup_dir</span> ]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">mkdir</span> -p <span class="variable">$full_backup_dir</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span><span class="variable">$mysql_databases</span><span class="string">&#x27; - &#x27;</span><span class="string">&quot;备份并压缩备份文件\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#备份并压缩备份文件</span></span><br><span class="line"><span class="variable">$mysql_dir</span>/bin/mysqldump -u<span class="variable">$mysql_user</span> -p<span class="variable">$mysql_password</span>  --databases <span class="variable">$mysql_databases</span> | gzip &gt; <span class="variable">$full_backup_dir</span>/<span class="variable">$mysql_databases</span>.<span class="variable">$today</span>.sql.gz</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[ $? -eq 0 ] &amp;&amp; <span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span>All DB<span class="string">&#x27; - &#x27;</span><span class="string">&quot;备份并压缩备份文件 OK!!!\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#找出10天前备份的文件，然后删除</span></span><br><span class="line"><span class="comment">#echo -e &#x27;[&#x27;$(date +&quot;%Y-%m-%d %H:%M:%S&quot;)&#x27;] - &#x27;$mysql_databases&#x27; - &#x27;&quot;删除10天前的备份\n&quot; &gt;&gt; #$backup_dir/$log_file</span></span><br><span class="line"><span class="comment">#for file in `find -not -type d -mtime +10`</span></span><br><span class="line"><span class="comment">#do</span></span><br><span class="line"><span class="comment">#    mv $file /tmp/</span></span><br><span class="line"><span class="comment">#done</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#基于ssh key认证，mysqldump的远程mysql备份方案</span></span><br><span class="line">copytoremote=1</span><br><span class="line">remoteuser=<span class="string">&quot;root&quot;</span></span><br><span class="line">remoteip=<span class="string">&quot;xx.xx.xxx.xx&quot;</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$copytoremote</span> = 1 ]; <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">if</span> [ -z <span class="variable">$remoteuser</span> ];<span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">&quot;remote user not set,Copy to remote Failed ...\n&quot;</span> &gt;&gt; <span class="variable">$log_file</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line">    <span class="keyword">elif</span> [ -z <span class="variable">$remoteip</span> ];<span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">&quot;remote ip not set,Copy to remote Failed ...\n&quot;</span> &gt;&gt; <span class="variable">$log_file</span></span><br><span class="line">        <span class="built_in">exit</span> 2</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span><span class="variable">$mysql_databases</span><span class="string">&#x27; - &#x27;</span><span class="string">&quot;开始使用SSH备份数据文件到远程服务器\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line">        scp <span class="variable">$mysql_databases</span>.<span class="variable">$today</span><span class="string">&quot;.sql.gz&quot;</span> <span class="variable">$remoteuser</span>@<span class="variable">$remoteip</span>:<span class="variable">$full_backup_dir</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&#x27;[&#x27;</span>$(<span class="built_in">date</span> +<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)<span class="string">&#x27;] - &#x27;</span><span class="variable">$mysql_databases</span><span class="string">&#x27; - &#x27;</span><span class="string">&quot;备份完成\n&quot;</span> &gt;&gt; <span class="variable">$backup_dir</span>/<span class="variable">$log_file</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="给脚本添加执行权限"><a href="#给脚本添加执行权限" class="headerlink" title="给脚本添加执行权限"></a>给脚本添加执行权限</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x /backup/mysql/full_backup/mysqlfullbackup.sh</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="定时任务设置"><a href="#定时任务设置" class="headerlink" title="定时任务设置"></a>定时任务设置</h1><p>修改&#x2F;etc&#x2F;crontab   #添加计划任务</p>
-<p> 定时任务,计划在每天晚上23点55分进行数据备份(加 &amp; 为后台执行)</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/crontab </span><br><span class="line"></span><br><span class="line"><span class="comment">#在最后一行添加以下内容</span></span><br><span class="line">55 23 * * * root /backup/mysql/full_backup/mysqlfullbackup.sh &amp;</span><br><span class="line"></span><br><span class="line"><span class="comment">#重启定时任务</span></span><br><span class="line">/etc/rc.d/init.d/crond restart</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="设置免密SSH拷贝备份到远程服务器"><a href="#设置免密SSH拷贝备份到远程服务器" class="headerlink" title="设置免密SSH拷贝备份到远程服务器"></a>设置免密SSH拷贝备份到远程服务器</h1><p>设置远程无密码拷贝</p>
-<p>数据库服务器上执行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br><span class="line"><span class="comment">#输出，连续回车</span></span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file <span class="keyword">in</span> <span class="built_in">which</span> to save the key (/root/.ssh/id_rsa): </span><br><span class="line">Enter passphrase (empty <span class="keyword">for</span> no passphrase): </span><br><span class="line">Enter same passphrase again: </span><br><span class="line">Your identification has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> /root/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">60:4d:8e:08:6d:cf:a4:5c:7f:b8:2a:29:62:ce:cf:a4 root@iZ2ze7vlqunx6jumrds0v4Z</span><br><span class="line">The key<span class="string">&#x27;s randomart image is:</span></span><br><span class="line"><span class="string">+--[ RSA 2048]----+</span></span><br><span class="line"><span class="string">|  ..    .        |</span></span><br><span class="line"><span class="string">|   .o.o=         |</span></span><br><span class="line"><span class="string">|   o.*+.o.       |</span></span><br><span class="line"><span class="string">|    o.o.o .      |</span></span><br><span class="line"><span class="string">|        So       |</span></span><br><span class="line"><span class="string">|        .        |</span></span><br><span class="line"><span class="string">|   . . .         |</span></span><br><span class="line"><span class="string">|o.= o .          |</span></span><br><span class="line"><span class="string">|oE.+ .           |</span></span><br><span class="line"><span class="string">+-----------------+</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
-
-<p>会在用户目录~&#x2F;.ssh&#x2F;产生两个文件，id_rsa，id_rsa.pub</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@iZ2ze7vlqunx6jumrds0v4Z .ssh]<span class="comment"># ls</span></span><br><span class="line">id_rsa  id_rsa.pub  </span><br></pre></td></tr></table></figure>
-
-<p>将id_rsa.pub文件拷贝到远程主机的root用户主目录下的.ssh目录下,并且改名为authorized_keys</p>
-<p>这样数据库服务器上使用scp命令复制文件到远程主机上将不提示输入密码了，直接自动复制了</p>
-<p>说明：当远程主机的SSH远程端口修改后，SCP指令要加上端口号：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -p 端口号 <span class="variable">$mysql_databases</span>.<span class="variable">$today</span><span class="string">&quot;.sql.gz&quot;</span> <span class="variable">$remoteuser</span>@<span class="variable">$remoteip</span>:<span class="variable">$full_backup_dir</span></span><br></pre></td></tr></table></figure>
 
 
       
@@ -1586,7 +1692,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2018-04-28 00:18:01" itemprop="dateModified" datetime="2018-04-28T00:18:01+08:00">2018-04-28</time>
+      <time title="修改时间：2022-11-10 20:42:33" itemprop="dateModified" datetime="2022-11-10T20:42:33+08:00">2022-11-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1594,7 +1700,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">Java架构</span></a>
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
         </span>
     </span>
 
@@ -1700,7 +1806,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2018-04-28 00:17:43" itemprop="dateModified" datetime="2018-04-28T00:17:43+08:00">2018-04-28</time>
+      <time title="修改时间：2022-11-10 20:41:55" itemprop="dateModified" datetime="2022-11-10T20:41:55+08:00">2022-11-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1708,7 +1814,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">Java架构</span></a>
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
         </span>
     </span>
 
