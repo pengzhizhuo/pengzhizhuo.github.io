@@ -1,31 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>MySQL建表规范</title>
-    <url>/2022/11/09/MySQL%E5%BB%BA%E8%A1%A8%E8%A7%84%E8%8C%83/</url>
-    <content><![CDATA[<h2 id="MySQL规范–建表规范"><a href="#MySQL规范–建表规范" class="headerlink" title="MySQL规范–建表规范"></a>MySQL规范–建表规范</h2><p>规范的表结构能降低MySQL出现问题的概率，下面总结一些MySQL的建表规范</p>
-<h3 id="1、库名、表名、字段名全部采用小写格式。"><a href="#1、库名、表名、字段名全部采用小写格式。" class="headerlink" title="1、库名、表名、字段名全部采用小写格式。"></a>1、库名、表名、字段名全部采用小写格式。</h3><p>这是防止出现大小写不一致导致找不到对应表的情况。</p>
-<h3 id="2、避免使用MySQL的保留字。"><a href="#2、避免使用MySQL的保留字。" class="headerlink" title="2、避免使用MySQL的保留字。"></a>2、避免使用MySQL的保留字。</h3><p>使用mysql时一定要注意，尽量不要使用它的保留字作为表名或者列名，否则会出现莫名其妙的错误。如果之前用了，在sql语句中就用&#96;&#96;包括起来。</p>
-<h3 id="3、表名、列名建议不要超过30个字符。"><a href="#3、表名、列名建议不要超过30个字符。" class="headerlink" title="3、表名、列名建议不要超过30个字符。"></a>3、表名、列名建议不要超过30个字符。</h3><h3 id="4、临时库表、备份库表的命名"><a href="#4、临时库表、备份库表的命名" class="headerlink" title="4、临时库表、备份库表的命名"></a>4、临时库表、备份库表的命名</h3><p>临时库表必须以tmp加上日期为后缀，比如user_info_tmp_20221109。<br>备份库表必须以bak加上日期为后缀，比如user_info_bak_20221109。</p>
-<h3 id="5、索引命名"><a href="#5、索引命名" class="headerlink" title="5、索引命名"></a>5、索引命名</h3><p>非唯一索引建议按照”idx字段名”进行命名。<br>唯一索引建议按照 “uniq_字段名”进行命名。</p>
-<h3 id="6、主键的建议"><a href="#6、主键的建议" class="headerlink" title="6、主键的建议"></a>6、主键的建议</h3><p>表必须有主键。<br>不使用有业务意义的的列作为主键，以免收到业务变化的影响。<br>不使用更新频繁的列作为主键。<br>不使用UUID、MD5等作为主键，因为它们可能会导致数据过于离散。<br>建议使用非空的唯一键作为主键，并配置自增或者发号器。</p>
-<h3 id="7、建议使用-InnoDB"><a href="#7、建议使用-InnoDB" class="headerlink" title="7、建议使用 InnoDB"></a>7、建议使用 InnoDB</h3><p>InnoDB 具有支持事务、行锁设计、在高并发场景下性能更好等特性。因此在绝大多数业务场景下，InnoDB 都是唯一选择。</p>
-<h3 id="8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci"><a href="#8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci" class="headerlink" title="8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci"></a>8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci</h3><p>utf8mb4 为万国码，无乱码风险；与 utf8 编码相比，utf8mb4 支持 Emoji 表情。</p>
-<h3 id="9、所有表、字段都需要增加-comment-来描述此表、字段的含义"><a href="#9、所有表、字段都需要增加-comment-来描述此表、字段的含义" class="headerlink" title="9、所有表、字段都需要增加 comment 来描述此表、字段的含义"></a>9、所有表、字段都需要增加 comment 来描述此表、字段的含义</h3><h3 id="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"><a href="#10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段" class="headerlink" title="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"></a>10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段</h3><h3 id="11、用尽量少的存储空间来存储一个字段的数据"><a href="#11、用尽量少的存储空间来存储一个字段的数据" class="headerlink" title="11、用尽量少的存储空间来存储一个字段的数据"></a>11、用尽量少的存储空间来存储一个字段的数据</h3><p>能用 int 的就不用 char 或 varchar<br>能用 tinyint 的就不用 int<br>使用 unsigned 存储非负数值</p>
-<h3 id="12、尽可能不使用-text-和-blob-类型"><a href="#12、尽可能不使用-text-和-blob-类型" class="headerlink" title="12、尽可能不使用 text 和 blob 类型"></a>12、尽可能不使用 text 和 blob 类型</h3><p>使用 text 或 blob 类型，会浪费更多的磁盘空间和内存空间。如无法避免使用 text 或 blob 类型，则建议独立出一张表，使用主键或其他唯一的字段来对应，以避免影响原有表的查询效率。</p>
-<h3 id="13、禁止在数据库中存储明文密码"><a href="#13、禁止在数据库中存储明文密码" class="headerlink" title="13、禁止在数据库中存储明文密码"></a>13、禁止在数据库中存储明文密码</h3><p>数据安全第一，防止密码泄露</p>
-<h3 id="14、索引设计"><a href="#14、索引设计" class="headerlink" title="14、索引设计"></a>14、索引设计</h3><p>在设计索引时，建议考虑以下因素：<br>经常作为条件、排序、join关联的字段，建议加上索引。<br>单表索引数不建议过多，因为索引也会占用空间。<br>如果可以使用覆盖索引，或者几个字段经常同时作为条件，则可以考虑使用联合索引。<br>不在低基数的列上创建索引，如性别字段。</p>
-<h3 id="15、不建议使用外键"><a href="#15、不建议使用外键" class="headerlink" title="15、不建议使用外键"></a>15、不建议使用外键</h3><p>在有外键的情况下，update 操作和 delete 操作都会涉及相关联的表，不仅会影响 SQL 的性能，还会大大增加死锁出现的概率</p>
-<h3 id="16、线上业务禁止使用存储过程、视图、触发器、Event-等"><a href="#16、线上业务禁止使用存储过程、视图、触发器、Event-等" class="headerlink" title="16、线上业务禁止使用存储过程、视图、触发器、Event 等"></a>16、线上业务禁止使用存储过程、视图、触发器、Event 等</h3><p>在高并发的情况下，这些功能很可能会影响数据库的性能，如果有类似的需求，则建议把这些逻辑放到服务层实现</p>
-<h3 id="17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定"><a href="#17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定" class="headerlink" title="17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定"></a>17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定</h3>]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>MySQL规范</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Docker简介</title>
     <url>/2022/11/10/Docker%E7%AE%80%E4%BB%8B/</url>
     <content><![CDATA[<h1 id="Docker核心技术基础"><a href="#Docker核心技术基础" class="headerlink" title="Docker核心技术基础"></a>Docker核心技术基础</h1><h2 id="docker简介"><a href="#docker简介" class="headerlink" title="docker简介"></a>docker简介</h2><h3 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h3><ul>
@@ -122,10 +97,300 @@
 ]]></content>
       <categories>
         <category>Linux</category>
-        <category>Docker</category>
       </categories>
       <tags>
         <tag>Docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL数据库开发设计规范</title>
+    <url>/2022/11/09/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>本规范由四部分组成：表结构设计、索引设计、高可用设计、分布式架构设计。</p>
+<p>四大规范，每个规范10条准则。</p>
+<h1 id="表结构设计规范"><a href="#表结构设计规范" class="headerlink" title="表结构设计规范"></a>表结构设计规范</h1><ol>
+<li><p>INT 类型<strong>不使用</strong> unsigned     无符号属性，容易引入额外的计算问题。</p>
+</li>
+<li><p>自增用 8 字节 BIG INT，<strong>不要使用</strong> 4 字节 INT，且自增在 MySQL     8.0 版本前有回溯问题，请考虑是否业务有影响。</p>
+</li>
+<li><p>字符集使用 UTF8MB4 字符编码，<strong>不推荐</strong> GBK、UTF-8 等其他字符集。</p>
+</li>
+<li><p>日期类型用 DATETIME     类型，需要精确到毫秒用 DATETIME(6)，<strong>不要使用</strong> INT、TIMESTAMP。</p>
+</li>
+<li><p>类型 JSON     可用于存储非结构化数据，典型场景为用户标签，<strong>不要</strong>将 JSON 用于频繁更新的字段场景。</p>
+</li>
+<li><p>每张表<strong>一定</strong>要有一个主键，这样至少满足一范式的要求，<strong>核心业务表</strong>用全局唯一字段（雪花算法、有序UUID）做主键，<strong>不要</strong>使用自增做主键。</p>
+</li>
+<li><p>对于日志类的流水表、报警表、日志表，可以使用压缩设计，提升存储效率。MySQL     5.7 版本开始推荐使用透明页压缩，<strong>不要</strong>使用传统的 KEY_BLOCK_SIZE 的页压缩。</p>
+</li>
+<li><p>类别设计，用 ENUM+CHECK 约束，<strong>不要</strong>使用 INT 类型的设计。</p>
+</li>
+<li><p>敏感字段需加密，如账户密码、信用卡号等存储使用：动态盐     + 非固定加密算法（MD5&#x2F;AES256等） + 多轮加密，<strong>不要</strong>简单使用 MD5 算法加密，容易被暴力破解。</p>
+</li>
+<li><p>MySQL 可以通过 KV     的方式访问表中的数据，若业务只是简单的 SET、GET 请求，可考虑将其转化为 Memcached 的 KV 访问方式，减少 SQL     解析的开销，性能可以有至少 50% 的提升。</p>
+</li>
+</ol>
+<h1 id="索引设计规范"><a href="#索引设计规范" class="headerlink" title="索引设计规范"></a>索引设计规范</h1><ol>
+<li><p><strong>不要陷入</strong>设置单表行数、列数限制的固有印象，其他关系型数据库没有行数、列数限制，MySQL     也没有，大表的缺点不是性能，而是后续的 DDL 管理问题，随着 MySQL 8.0 快速加列功能的上线，大表 DDL 问题基本已解决。</p>
+</li>
+<li><p>MySQL 是索引组织表，表中的数据以 B+ 树索引结构，根据主键逻辑排序，由于 B+ 树索引的特点是树的高度为     3~4 层，所以从数十亿的记录中，通过主键查询一条记录只需要 3、4 次 I&#x2F;O，当前到 SSD 存储设备设置每秒至少能完成 10000 次的     I&#x2F;O 查询，<strong>不要</strong>担心通过索引查询一条或几条记录的性能，每秒百万次查询并不难。</p>
+</li>
+<li><p>MySQL     是索引组织表，二级索引只存储（键值、主键值），因此需要再通过一次主键索引查询得到记录，这种方式成为回表。在核心业务中，<strong>使用</strong>索引覆盖技术，提升索引查询性能，对于回表记录数比较大的场景，甚至可以有 10 倍的性能提升；</p>
+</li>
+<li><p>对类似 WHERE a &#x3D; ? ORDER     BY b 这样的查询，<strong>一定</strong>要创建（a、b）组合索引，这样可以避免一次额外排序，提升查询性能。</p>
+</li>
+<li><p>MySQL 优化器是     CBO（Cost-based Optimizer），所有查询基于成本而不是规则，若发现 SQL 执行计划发生变化，<strong>不要怀疑     MySQL 出错，请先分析数据特点、索引创建是否合理，是否可以通过直方图校准数据</strong>。</p>
+</li>
+<li><p>MySQL JOIN 支持     NLJ（Nested Loop Join）和 NHJ（Nested Hash Join）两种方式。对于 OLTP 业务，放心大胆使用 JOIN，但<strong>一定</strong>要做好索引的设计和索引覆盖的考虑（不考虑分布式数据库场景）；对于     OLAP 业务，MySQL 8.0 版本开始，支持 Hash Join，对于大数据量的关联，性能提升非常多，<strong>可以</strong>在不超过 10T 的数仓场景中考虑使用，超过     10T数据量，请<strong>一定</strong>使用大数据产品，如 Hive、Spark、麒麟等产品。</p>
+</li>
+<li><p>MySQL 5.7     版本开始子查询优化已经做得不错，但是编写的子查询<strong>不能</strong>是关联子查询，上线前<strong>一定</strong>需要确认，若发现关联子查询，请改写子查询为     JOIN 或其他方式。</p>
+</li>
+<li><p><strong>不要</strong>因为数据量大，使用分区表，MySQL 是索引组织表，数据量再大，定位记录也只需要3、4 次     I&#x2F;O。可以考虑分区表<strong>唯一</strong>的应用场景是：需要定期清理历史流水类数据，但如果业务可以按月、按天做分表，那么当前     MySQL 8.0 版本，分区表也不推荐使用。</p>
+</li>
+<li><p>业务上线或新版本发布前，DBA <strong>一定</strong>要进行所有 SQL     Review，确保 SQL 走索引，否则不予上线，或由业务以邮件等正式方式，通知 DBA 该 SQL 不会引起线上事故，业务方承担后续责任。</p>
+</li>
+<li><p>DBA <strong>每天</strong>要对数据库进行巡检，及早发现慢查询或潜在数据库风险，将任何潜在问题<strong>尽早</strong>抛出，否则后续自己承担相关责任。</p>
+</li>
+</ol>
+<h1 id="高可用设计规范"><a href="#高可用设计规范" class="headerlink" title="高可用设计规范"></a>高可用设计规范</h1><ol>
+<li><p>MySQL 高可用的基石是利用二进制日志的复制技术，核心业务<strong>一定</strong>要使用无损半同步方式，但凡不使用无损半同步的高可用架构，请业务方业务以邮件等正式方式回复，数据丢失等后续问题自己承担相关责任。</p>
+</li>
+<li><p>MySQL 5.7 版本开始，<strong>一定</strong>要使用基于 WRITESET     的从机回放，避免主从延迟。</p>
+</li>
+<li><p>当前 MySQL     发生主从延迟的可能性主要是存在大事务，比如定期计算收益等操作，这类大事务，<strong>一定</strong>要通知业务方将大事务拆成小事务，否则不予上线；若要上线，请业务方以邮件等方式回复，自己承担后续主从延迟带来的后续一系列问题。</p>
+</li>
+<li><p>MySQL 8.0 版本开始<strong>推荐</strong>金融业务使用 MGR(MySQL Group     Replication），通过 Paxos 协议保证数据一致性，并自己完成选主的逻辑，也可以使用多主模式，数据不冲突的情况下，可以大幅提升写入性能。</p>
+</li>
+<li><p>对于核心业务，<strong>必须</strong>遵循互不信任原则，数据一致性不单单依赖     MySQL 复制本身，DBA 这里需要通过逻辑的方式，对主从数据进行核对，业务这里也需要一套业务层的逻辑进行“对账”。</p>
+</li>
+<li><p>核心业务，<strong>务必</strong>使用一地三中心，两地三中心的跨机房复制架构，这样发生机房级故障，可以切换到另一个机房，保证业务可用性。</p>
+</li>
+<li><p>同城容灾架构<strong>一定</strong>要评估切换到另一个机房后业务访问的性能，多次跨机房访问     DB，虽然每次只多了 2~3ms，但也存在业务雪崩问题，推荐 DB 切换机房，上层业务跟着一起联动切换。</p>
+</li>
+<li><p>对于有跨城容灾需求的业务，<strong>可以</strong>考虑使用三地五中心架构，但是由于 30ms     延迟，业务需要进行评估，对于核心业务，<strong>务必</strong>使用业务层的跨城机制，将数据层的多次网络耗时合并为一次，这样能大大提升业务的性能。</p>
+</li>
+<li><p>业界的 MHA、Ochestrator     等高可用套件都是基于 ssh 访问 MySQL，稳定性、安全性不高，<strong>不推荐</strong>大厂使用；自己开发一个数据库管理平台，通过     agent 的模式管理高可用和 MySQL 数据库的日常操作更为安全、有效。</p>
+</li>
+<li><p><strong>一定</strong>做好数据备份架构的设计，全备 + 增量备份 +     延迟备机（可选），做到可以基于任何一点恢复和回滚，同时，遵循互不信任原则，备份文件一定要进行检查，确保需要时一定能够进行恢复。</p>
+</li>
+</ol>
+<h1 id="分布式架构设计规范"><a href="#分布式架构设计规范" class="headerlink" title="分布式架构设计规范"></a>分布式架构设计规范</h1><ol>
+<li><p>分布式数据库的本质就是根据某几个列的规则，将数据水平打散，存在不同的实例中。数据拆分的列称为分区键（Shard     Key），分区键<strong>一定</strong>是业务大部分访问（超过 80%）的表都会使用的列。若选不出合适的分区键，那就<strong>一定不要</strong>进行分布式数据库架构的设计；互联网业务绝大部分分区键的选择是用户维度。</p>
+</li>
+<li><p>分区算法<strong>绝大部分</strong>场景使用     Hash算法，这样数据的存储和访问可以平均到下面多个实例，真正的做到可扩展性，Range 算法通常无法解决热点问题，会是灾难，但 Range     算法可以在单实例中使用，作为二级拆分数据的规则。</p>
+</li>
+<li><p>分布式数据库分片时，一开始就设计为<strong>不少于</strong> 1000     个分片的规则，不用担心分片过多的问题，管理 1 个分片和 1000 个分片的成本是一样的，但为后续的扩容做好了充足的准备。</p>
+</li>
+<li><p>分布式数据库扩缩容就是通过部分过滤的复制技术，按库或按表进行数据同步，分库分表设计<strong>推荐</strong>库名、表都不同，做到全局唯一，方便后续拆分。</p>
+</li>
+<li><p>分布式数据库索引设计中，非分区键的唯一索引<strong>一定</strong>带入分区键信息，这样业务查询时可以直接定位到数据所在分片，提升查询效率。</p>
+</li>
+<li><p>分布式数据库索引设计中，数据库层的唯一约束只在单个实例中保证，若要保证全局唯一，<strong>一定</strong>要使用全局唯一的索引设计。</p>
+</li>
+<li><p>直接使用 JOIN 请确认<strong>一定</strong>可以单元化在一个分片中完成，如果涉及跨分片的     JOIN，请通知业务修改成多条 SQL 的访问方式，只访问指定分片而不是所有分片。</p>
+</li>
+<li><p>分布式数据库可以进行业务层的分库分表访问，和通过数据库中间件的访问，对于业务耗时敏感的业务，<strong>推荐</strong>业务层直接根据路由规则访问数据，否则使用数据库中间件，简单易用。</p>
+</li>
+<li><p>对于耗时敏感的核心业务，<strong>推荐</strong>使用最终一致的业务层柔性事务，数据库层的     2PC 分布式事务耗时较大，性能较为一般，但是 2PC 使用简单，能满足大部分业务的使用。</p>
+</li>
+<li><p><strong>一定</strong>要利用好分布式数据库架构的特点，设计多活架构，每个机房都可以有写入流量，提升资源使用率和业务连续性，请 DBA     和业务方一起做好全链路的架构设计。</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL规范</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL建表规范</title>
+    <url>/2022/11/09/MySQL%E5%BB%BA%E8%A1%A8%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<h2 id="MySQL规范–建表规范"><a href="#MySQL规范–建表规范" class="headerlink" title="MySQL规范–建表规范"></a>MySQL规范–建表规范</h2><p>规范的表结构能降低MySQL出现问题的概率，下面总结一些MySQL的建表规范</p>
+<h3 id="1、库名、表名、字段名全部采用小写格式。"><a href="#1、库名、表名、字段名全部采用小写格式。" class="headerlink" title="1、库名、表名、字段名全部采用小写格式。"></a>1、库名、表名、字段名全部采用小写格式。</h3><p>这是防止出现大小写不一致导致找不到对应表的情况。</p>
+<h3 id="2、避免使用MySQL的保留字。"><a href="#2、避免使用MySQL的保留字。" class="headerlink" title="2、避免使用MySQL的保留字。"></a>2、避免使用MySQL的保留字。</h3><p>使用mysql时一定要注意，尽量不要使用它的保留字作为表名或者列名，否则会出现莫名其妙的错误。如果之前用了，在sql语句中就用&#96;&#96;包括起来。</p>
+<h3 id="3、表名、列名建议不要超过30个字符。"><a href="#3、表名、列名建议不要超过30个字符。" class="headerlink" title="3、表名、列名建议不要超过30个字符。"></a>3、表名、列名建议不要超过30个字符。</h3><h3 id="4、临时库表、备份库表的命名"><a href="#4、临时库表、备份库表的命名" class="headerlink" title="4、临时库表、备份库表的命名"></a>4、临时库表、备份库表的命名</h3><p>临时库表必须以tmp加上日期为后缀，比如user_info_tmp_20221109。<br>备份库表必须以bak加上日期为后缀，比如user_info_bak_20221109。</p>
+<h3 id="5、索引命名"><a href="#5、索引命名" class="headerlink" title="5、索引命名"></a>5、索引命名</h3><p>非唯一索引建议按照”idx字段名”进行命名。<br>唯一索引建议按照 “uniq_字段名”进行命名。</p>
+<h3 id="6、主键的建议"><a href="#6、主键的建议" class="headerlink" title="6、主键的建议"></a>6、主键的建议</h3><p>表必须有主键。<br>不使用有业务意义的的列作为主键，以免收到业务变化的影响。<br>不使用更新频繁的列作为主键。<br>不使用UUID、MD5等作为主键，因为它们可能会导致数据过于离散。<br>建议使用非空的唯一键作为主键，并配置自增或者发号器。</p>
+<h3 id="7、建议使用-InnoDB"><a href="#7、建议使用-InnoDB" class="headerlink" title="7、建议使用 InnoDB"></a>7、建议使用 InnoDB</h3><p>InnoDB 具有支持事务、行锁设计、在高并发场景下性能更好等特性。因此在绝大多数业务场景下，InnoDB 都是唯一选择。</p>
+<h3 id="8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci"><a href="#8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci" class="headerlink" title="8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci"></a>8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci</h3><p>utf8mb4 为万国码，无乱码风险；与 utf8 编码相比，utf8mb4 支持 Emoji 表情。</p>
+<h3 id="9、所有表、字段都需要增加-comment-来描述此表、字段的含义"><a href="#9、所有表、字段都需要增加-comment-来描述此表、字段的含义" class="headerlink" title="9、所有表、字段都需要增加 comment 来描述此表、字段的含义"></a>9、所有表、字段都需要增加 comment 来描述此表、字段的含义</h3><h3 id="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"><a href="#10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段" class="headerlink" title="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"></a>10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段</h3><h3 id="11、用尽量少的存储空间来存储一个字段的数据"><a href="#11、用尽量少的存储空间来存储一个字段的数据" class="headerlink" title="11、用尽量少的存储空间来存储一个字段的数据"></a>11、用尽量少的存储空间来存储一个字段的数据</h3><p>能用 int 的就不用 char 或 varchar<br>能用 tinyint 的就不用 int<br>使用 unsigned 存储非负数值</p>
+<h3 id="12、尽可能不使用-text-和-blob-类型"><a href="#12、尽可能不使用-text-和-blob-类型" class="headerlink" title="12、尽可能不使用 text 和 blob 类型"></a>12、尽可能不使用 text 和 blob 类型</h3><p>使用 text 或 blob 类型，会浪费更多的磁盘空间和内存空间。如无法避免使用 text 或 blob 类型，则建议独立出一张表，使用主键或其他唯一的字段来对应，以避免影响原有表的查询效率。</p>
+<h3 id="13、禁止在数据库中存储明文密码"><a href="#13、禁止在数据库中存储明文密码" class="headerlink" title="13、禁止在数据库中存储明文密码"></a>13、禁止在数据库中存储明文密码</h3><p>数据安全第一，防止密码泄露</p>
+<h3 id="14、索引设计"><a href="#14、索引设计" class="headerlink" title="14、索引设计"></a>14、索引设计</h3><p>在设计索引时，建议考虑以下因素：<br>经常作为条件、排序、join关联的字段，建议加上索引。<br>单表索引数不建议过多，因为索引也会占用空间。<br>如果可以使用覆盖索引，或者几个字段经常同时作为条件，则可以考虑使用联合索引。<br>不在低基数的列上创建索引，如性别字段。</p>
+<h3 id="15、不建议使用外键"><a href="#15、不建议使用外键" class="headerlink" title="15、不建议使用外键"></a>15、不建议使用外键</h3><p>在有外键的情况下，update 操作和 delete 操作都会涉及相关联的表，不仅会影响 SQL 的性能，还会大大增加死锁出现的概率</p>
+<h3 id="16、线上业务禁止使用存储过程、视图、触发器、Event-等"><a href="#16、线上业务禁止使用存储过程、视图、触发器、Event-等" class="headerlink" title="16、线上业务禁止使用存储过程、视图、触发器、Event 等"></a>16、线上业务禁止使用存储过程、视图、触发器、Event 等</h3><p>在高并发的情况下，这些功能很可能会影响数据库的性能，如果有类似的需求，则建议把这些逻辑放到服务层实现</p>
+<h3 id="17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定"><a href="#17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定" class="headerlink" title="17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定"></a>17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定</h3>]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL规范</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Git入门</title>
+    <url>/2017/03/03/learn-git/</url>
+    <content><![CDATA[<h1 id="基本了解"><a href="#基本了解" class="headerlink" title="基本了解"></a>基本了解</h1><p>git命令是一些命令行工具的集合，它可以用来跟踪，记录文件的变动。比如你可以进行保存，比对，分析，合并等等。这个过程被称之为版本控制。已经有一系列的版本控制系统，比如SVN, Mercurial, Perforce, CVS, Bitkeepe等等。</p>
+<p>Git是分布式的，这意味着它并不依赖于中心服务器，任何一台机器都可以有一个本地版本的控制系统，我们称之为仓库。如果是多人协作的话，你需要还需要一个线上仓库，用来同步信息。这就是GitHub, BitBucket的工作。</p>
+<span id="more"></span>
+
+<h2 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h2><p>安装git非常直接：</p>
+<ul>
+<li><p>Linux - 打开控制台，然后通过包管理安装，在Ubuntu上命令是：</p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install git-all</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Windows - 推荐使用<a href="https://git-for-windows.github.io/">git for windows</a>，它包括了图形工具以及命令行模拟器。</p>
+</li>
+<li><p>OS X - 最简单的方式是使用homebrew安装，命令行执行</p>
+</li>
+</ul>
+<p>如果你是在是先用图形工具的话，那么推荐你使用 <a href="https://desktop.github.com/">Github desktop</a>,<a href="https://www.atlassian.com/software/sourcetree">Sourcetree</a>。但我还是推荐你使用命令行，下面的内容就都是命令行的。</p>
+<h2 id="配置Git"><a href="#配置Git" class="headerlink" title="配置Git"></a>配置Git</h2><p>安装完git,首要任务是配置我们的信息，最重要的是用户名及邮箱，打开终端，执行以下命令。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git config --global user.name <span class="string">&quot;My Name&quot;</span></span><br><span class="line">$ git config --global user.email myEmail@example.com</span><br></pre></td></tr></table></figure>
+
+<p>配置好这两项，用户就能知道谁做了什么，并且一切都更有组织性了不是吗？</p>
+<h2 id="创建一个新仓库-git-init"><a href="#创建一个新仓库-git-init" class="headerlink" title="创建一个新仓库 - git init"></a>创建一个新仓库 - git init</h2><p>git 会把所有文件以及历史记录保存在你的项目中，创建一个新的仓库，首先要去到项目路径，执行 git init。然后git会创建一个隐藏的文件夹.git，所有的信息都储存在其中。</p>
+<p>在桌面创建一个联系文件夹 git_exercise, 打开终端：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> Desktop/git_exercise/</span><br><span class="line">$ git init</span><br></pre></td></tr></table></figure>
+
+<p>OK，现在项目还什么都没有，新建一个 hello.txt 文件试试~</p>
+<h2 id="检查状态-git-status"><a href="#检查状态-git-status" class="headerlink" title="检查状态 - git status"></a>检查状态 - git status</h2><p>git status 是另一个非常重要的命令，它会告诉我们创库的当前状态：是否为最新代码，有什么更新等等<br>执行git status:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git status</span><br><span class="line"></span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">Initial commit</span><br><span class="line"></span><br><span class="line">Untracked files:</span><br><span class="line">  (use <span class="string">&quot;git add ...&quot;</span> to include <span class="keyword">in</span> what will be committed)</span><br><span class="line"></span><br><span class="line">	hello.txt</span><br></pre></td></tr></table></figure>
+
+<p>git 告诉我们，hello.txt尚未跟踪，这是因为这个文件是新的，git不知道是应该跟踪它的变动呢，还是直接忽略不管呢。为了跟踪我们的新文件，我们需要暂存它。</p>
+<h2 id="暂存-git-add"><a href="#暂存-git-add" class="headerlink" title="暂存 - git add"></a>暂存 - git add</h2><p>git 有个概念叫 暂存区，你可以把它看成一块空白帆布，包裹着所有你可能会提交的变动。它一开始为空，你可以通过 git add 命令添加内容，并使用 git commit 提交。</p>
+<p>这个例子中只有一个文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git add hello.txt</span><br></pre></td></tr></table></figure>
+
+<p>如果需要提交目录下的所有内容，可以这样：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git add A</span><br></pre></td></tr></table></figure>
+
+<p>再次使用git status查看：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git status</span><br><span class="line"></span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">Initial commit</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use <span class="string">&quot;git rm --cached ...&quot;</span> to unstage)</span><br><span class="line"></span><br><span class="line">	new file:   hello.txt</span><br></pre></td></tr></table></figure>
+
+<p>我们的文件已经提交了。状态信息还会告诉我们暂存区文件发生了什么变动，不过这里我们提交的是一个全新文件。</p>
+<h2 id="提交-git-commit"><a href="#提交-git-commit" class="headerlink" title="提交 - git commit"></a>提交 - git commit</h2><p>一次提交代表着我们的仓库到了一个交付状态，通常是完成了某一块小功能。它就像是一个快照，允许我们像使用时光机一样回到旧时光。</p>
+<p>创建提交，需要我们提交东西到暂存区（git add），然后：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git commit -m <span class="string">&quot;Initial commit.&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>这就创建了一次提交，-m “Initial commit.”表示对这次提交的描述，建议使用有意义的描述性信息。</p>
+<h1 id="远端仓库"><a href="#远端仓库" class="headerlink" title="远端仓库"></a>远端仓库</h1><p>到目前为止，我们的操作都是在本地的，它存在于.git文件中。为了能够协同开发，我们需要把代码发布到远端仓库上。</p>
+<h2 id="链接远端仓库-git-remote-add"><a href="#链接远端仓库-git-remote-add" class="headerlink" title="链接远端仓库 - git remote add"></a>链接远端仓库 - git remote add</h2><p>为了能够上传到远端仓库，我们需要先建立起链接，这篇教程中，远端仓库的地址为：<a href="https://github.com/tutorialzine/awesome-project">https://github.com/tutorialzine/awesome-project</a>,但你应该自己在Github, BitBucket上搭建仓库，自己一步一步尝试。</p>
+<p>添加测试用的远端仓库</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git remote add origin https://github.com/tutorialzine/awesome-project.git</span><br></pre></td></tr></table></figure>
+
+<p>一个项目可以同时拥有好几个远端仓库为了能够区分，通常会起不同的名字。通常主远端仓库被称为origin。</p>
+<h2 id="上传到服务器-git-push"><a href="#上传到服务器-git-push" class="headerlink" title="上传到服务器 - git push"></a>上传到服务器 - git push</h2><p>每次我们要提交代码到服务器上时，都会使用到git push。<br>git push命令会有两个参数，远端仓库的名字，以及分支的名字：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git push origin master</span><br><span class="line"></span><br><span class="line">Counting objects: 3, <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (3/3), 212 bytes | 0 bytes/s, <span class="keyword">done</span>.</span><br><span class="line">Total 3 (delta 0), reused 0 (delta 0)</span><br><span class="line">To https://github.com/tutorialzine/awesome-project.git</span><br><span class="line"> * [new branch]      master -&gt; master</span><br></pre></td></tr></table></figure>
+
+<p>取决于你使用的服务器，push过程你可能需要验证身份。如果没有出差错，现在使用浏览器去你的远端分支上看，hello.txt已经在那里等着你了。</p>
+<h2 id="克隆仓库-git-clone"><a href="#克隆仓库-git-clone" class="headerlink" title="克隆仓库 - git clone"></a>克隆仓库 - git clone</h2><p>放在Github上的开源项目，人们可以看到你的代码。可以使用 git clone进行下载到本地。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/tutorialzine/awesome-project.git</span><br></pre></td></tr></table></figure>
+
+<p>本地也会创建一个新的仓库，并自动将github上的分支设为远端分支。</p>
+<h2 id="从服务器上拉取代码-git-pull"><a href="#从服务器上拉取代码-git-pull" class="headerlink" title="从服务器上拉取代码 - git pull"></a>从服务器上拉取代码 - git pull</h2><p>如果你更新了代码到仓库上，其他人可以通过git pull命令拉取你的变动：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git pull origin master</span><br><span class="line">From https://github.com/tutorialzine/awesome-project</span><br><span class="line"> * branch            master     -&gt; FETCH_HEAD</span><br><span class="line">Already up-to-date.</span><br></pre></td></tr></table></figure>
+
+<p>因为暂时没有其他人提交，所有没有任何变动</p>
+<h1 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h1><p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/learn-git-in-30-minutes-branch.jpg"></p>
+<p>当你在做一个新功能的时候，最好是在一个独立的区域上开发，通常称之为分支。分支之间相互独立，并且拥有自己的历史记录。这样做的原因是：</p>
+<ul>
+<li>稳定版本的代码不会被破坏</li>
+<li>不同的功能可以由不同开发者同时开发。</li>
+<li>开发者可以专注于自己的分支，不用担心被其他人破坏了环境</li>
+<li>在不确定之前，同一个特性可以拥有几个版本，便于比较</li>
+</ul>
+<h2 id="创建新分支-git-branch"><a href="#创建新分支-git-branch" class="headerlink" title="创建新分支 - git branch"></a>创建新分支 - git branch</h2><p>每一个仓库的默认分支都叫master, 创建新分支可以这样：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git branch amazing_new_feature</span><br></pre></td></tr></table></figure>
+
+<p>创建了一个名为amazing_new_feature的新分支，它跟当前分支同一起点</p>
+<h2 id="切换分支-git-checkout"><a href="#切换分支-git-checkout" class="headerlink" title="切换分支 - git checkout"></a>切换分支 - git checkout</h2><p>单独使用git branch，可以查看分支状态：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git branch</span><br><span class="line">  amazing_new_feature</span><br><span class="line">* master</span><br></pre></td></tr></table></figure>
+
+<p>***** 号表示当前活跃分支为master，使用git checkout切换分支。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git checkout amazing_new_feature</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="合并分支-git-merge"><a href="#合并分支-git-merge" class="headerlink" title="合并分支 - git merge"></a>合并分支 - git merge</h2><p>我们的 amazing_new_feature 分支的任务是增加一个featuer.txt。我们来创建，添加到暂存区，提交。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git add feature.txt</span><br><span class="line">$ git commit -m <span class="string">&quot;New feature complete.&quot;</span></span><br></pre></td></tr></table></figure>
+<p>新分支任务完成了，回到master分支</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git checkout master</span><br></pre></td></tr></table></figure>
+
+<p>现在去查看文件，你会发现，之前创建的feature.txt文件不见了，因为master分支上并没有feature.txt。使用git merge 把 amazing_new_feature 分支合并到master上。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git merge amazing_new_feature</span><br></pre></td></tr></table></figure>
+<p>ok! 然后再把amazing_new_feature 分支删掉吧。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git branch -d amazing_new_feature</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h1 id="高级"><a href="#高级" class="headerlink" title="高级"></a>高级</h1><p>这篇文章的最后一节，我们来说些比较高级并且使用的技巧。</p>
+<h2 id="比对两个不同提交之间的差别"><a href="#比对两个不同提交之间的差别" class="headerlink" title="比对两个不同提交之间的差别"></a>比对两个不同提交之间的差别</h2><p>每次提交都有一个唯一id，查看所有提交和他们的id，可以使用 git log:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git <span class="built_in">log</span></span><br><span class="line"></span><br><span class="line">commit ba25c0ff30e1b2f0259157b42b9f8f5d174d80d7</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Mon May 30 17:15:28 2016 +0300</span><br><span class="line"></span><br><span class="line">    New feature complete</span><br><span class="line"></span><br><span class="line">commit b10cc1238e355c02a044ef9f9860811ff605c9b4</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Mon May 30 16:30:04 2016 +0300</span><br><span class="line"></span><br><span class="line">    Added content to hello.txt</span><br><span class="line"></span><br><span class="line">commit 09bd8cc171d7084e78e4d118a2346b7487dca059</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Sat May 28 17:52:14 2016 +0300</span><br><span class="line"></span><br><span class="line">    Initial commit</span><br></pre></td></tr></table></figure>
+
+<p>id 很长，但是你并不需要复制整个字符串，前一小部分就够了。<br>查看某一次提交更新了什么，使用 git show:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git show b10cc123</span><br><span class="line"></span><br><span class="line">commit b10cc1238e355c02a044ef9f9860811ff605c9b4</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Mon May 30 16:30:04 2016 +0300</span><br><span class="line"></span><br><span class="line">    Added content to hello.txt</span><br><span class="line"></span><br><span class="line">diff --git a/hello.txt b/hello.txt</span><br><span class="line">index e69de29..b546a21 100644</span><br><span class="line">--- a/hello.txt</span><br><span class="line">+++ b/hello.txt</span><br><span class="line">@@ -0,0 +1 @@</span><br><span class="line">+Nice weather today, isn<span class="string">&#x27;t it?</span></span><br></pre></td></tr></table></figure>
+
+<p>查看两次提交的不同，可以使用 git diff [commit-from]..[commit-to] 语法：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git diff 09bd8cc..ba25c0ff</span><br><span class="line"></span><br><span class="line">diff --git a/feature.txt b/feature.txt</span><br><span class="line">new file mode 100644</span><br><span class="line">index 0000000..e69de29</span><br><span class="line">diff --git a/hello.txt b/hello.txt</span><br><span class="line">index e69de29..b546a21 100644</span><br><span class="line">--- a/hello.txt</span><br><span class="line">+++ b/hello.txt</span><br><span class="line">@@ -0,0 +1 @@</span><br><span class="line">+Nice weather today, isn<span class="string">&#x27;t it?</span></span><br></pre></td></tr></table></figure>
+
+<p>比较首次提交和最后一次提交，我们可以看到所有的更改。当然使用git difftool命令更加方便。</p>
+<h2 id="回滚某个文件到之前的版本"><a href="#回滚某个文件到之前的版本" class="headerlink" title="回滚某个文件到之前的版本"></a>回滚某个文件到之前的版本</h2><p>git 允许我们将某个特定的文件回滚到特定的提交，使用的也是 git checkout。</p>
+<p>下面的例子，我们将hello.txt回滚到最初的状态，需要指定回滚到哪个提交，以及文件的全路径。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git checkout 09bd8cc1 hello.txt</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="回滚提交"><a href="#回滚提交" class="headerlink" title="回滚提交"></a>回滚提交</h2><p>如果你发现最新的一次提交完了加某个文件，你可以通过 git commit —amend来修复，它会把最新的提交打回暂存区，并尝试重新提交。</p>
+<p>如果是更复杂的情况，比如不是最新的提交了。那你可以使用git revert。</p>
+<p>最新的一次提交别名也叫HEAD。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git revert HEAD</span><br></pre></td></tr></table></figure>
+<p>其他提交可以使用id:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git revert HEAD</span><br></pre></td></tr></table></figure>
+<p>混滚提交时，发生冲突是非常频繁的。当文件被后面的提交修改了以后，git不能正确回滚。</p>
+<h2 id="解决合并冲突"><a href="#解决合并冲突" class="headerlink" title="解决合并冲突"></a>解决合并冲突</h2><p>冲突经常出现在合并分支或者是拉去别人的代码。有些时候git能自动处理冲突，但大部分需要我们手动处理。</p>
+<p>比如John 和 Tim 分别在各自的分支上写了两部分代码。<br>John 喜欢 for:</p>
+<p>&#x2F;&#x2F; Use a for loop to console.log contents.<br>for(var i&#x3D;0; i&lt;arr.length; i++) {<br>console.log(arr[i]);<br>}<br>Tim 喜欢 forEach:</p>
+<p>&#x2F;&#x2F; Use forEach to console.log contents.<br>arr.forEach(function(item) {<br>console.log(item);<br>});</p>
+<p>假设John 现在去拉取 Tim的代码:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git merge tim_branch</span><br><span class="line"></span><br><span class="line">Auto-merging print_array.js</span><br><span class="line">CONFLICT (content): Merge conflict <span class="keyword">in</span> print_array.js</span><br><span class="line">Automatic merge failed; fix conflicts and <span class="keyword">then</span> commit the result.</span><br></pre></td></tr></table></figure>
+<p>这时候git并不知道如何解决冲突，因为他不知道John和Tim谁写得更好。</p>
+<p>于是它就在代码中插入标记。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt; <span class="variable constant_">HEAD</span></span><br><span class="line"><span class="comment">// Use a for loop to console.log contents.</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;arr.<span class="property">length</span>; i++) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(arr[i]);</span><br><span class="line">&#125;</span><br><span class="line">=======</span><br><span class="line"><span class="comment">// Use forEach to console.log contents.</span></span><br><span class="line">arr.<span class="title function_">forEach</span>(<span class="keyword">function</span>(<span class="params">item</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(item);</span><br><span class="line">&#125;);</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;&gt;&gt; <span class="title class_">Tim</span> s commit.</span><br></pre></td></tr></table></figure>
+
+<p>&#x3D;&#x3D;&#x3D;&#x3D; 号上方是当前最新一次提交，下方是冲突的代码。我们需要解决这样的冲突，经过组委会成员讨论，一致认定，在座的各位都是垃圾！两个都不要。改成下面的代码:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// Not using for loop or forEach.</span><br><span class="line">// Use Array.toString() to console.log contents.</span><br><span class="line">console.log(arr.toString());</span><br></pre></td></tr></table></figure>
+<p>好了，再提交一下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ git add -A</span><br><span class="line">$ git commit -m &quot;Array printing conflict resolved.&quot;</span><br></pre></td></tr></table></figure>
+
+<p>如果在大型项目中，这个过程可能容易出问题。你可以使用<a href="https://git-scm.com/download/gui/linux">GUI工具</a>来帮助你。使用 git mergetool。</p>
+<h2 id="配置-gitignore"><a href="#配置-gitignore" class="headerlink" title="配置 .gitignore"></a>配置 .gitignore</h2><p>大部分项目中，会有写文件，文件夹是我们不想提交的。为了防止一不小心提交，我们需要gitignore文件：</p>
+<ol>
+<li>在项目根目录创建.gitignore文件</li>
+<li>在文件中列出不需要提交的文件名，文件夹名，每个一行</li>
+<li>.gitignore文件需要提交，就像普通文件一样</li>
+</ol>
+<p>通常会被ignore的文件有：</p>
+<ul>
+<li>log文件</li>
+<li>task runner builds</li>
+<li>node_modules等文件夹</li>
+<li>IDES生成的文件</li>
+<li>个人笔记</li>
+</ul>
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">*.log</span><br><span class="line">build/</span><br><span class="line">node_modules/</span><br><span class="line">.idea/</span><br><span class="line">my_notes.txt</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
       </tags>
   </entry>
   <entry>
@@ -361,272 +626,6 @@
       </categories>
       <tags>
         <tag>Linux fdisk</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Git入门</title>
-    <url>/2017/03/03/learn-git/</url>
-    <content><![CDATA[<h1 id="基本了解"><a href="#基本了解" class="headerlink" title="基本了解"></a>基本了解</h1><p>git命令是一些命令行工具的集合，它可以用来跟踪，记录文件的变动。比如你可以进行保存，比对，分析，合并等等。这个过程被称之为版本控制。已经有一系列的版本控制系统，比如SVN, Mercurial, Perforce, CVS, Bitkeepe等等。</p>
-<p>Git是分布式的，这意味着它并不依赖于中心服务器，任何一台机器都可以有一个本地版本的控制系统，我们称之为仓库。如果是多人协作的话，你需要还需要一个线上仓库，用来同步信息。这就是GitHub, BitBucket的工作。</p>
-<span id="more"></span>
-
-<h2 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h2><p>安装git非常直接：</p>
-<ul>
-<li><p>Linux - 打开控制台，然后通过包管理安装，在Ubuntu上命令是：</p>
-  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install git-all</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Windows - 推荐使用<a href="https://git-for-windows.github.io/">git for windows</a>，它包括了图形工具以及命令行模拟器。</p>
-</li>
-<li><p>OS X - 最简单的方式是使用homebrew安装，命令行执行</p>
-</li>
-</ul>
-<p>如果你是在是先用图形工具的话，那么推荐你使用 <a href="https://desktop.github.com/">Github desktop</a>,<a href="https://www.atlassian.com/software/sourcetree">Sourcetree</a>。但我还是推荐你使用命令行，下面的内容就都是命令行的。</p>
-<h2 id="配置Git"><a href="#配置Git" class="headerlink" title="配置Git"></a>配置Git</h2><p>安装完git,首要任务是配置我们的信息，最重要的是用户名及邮箱，打开终端，执行以下命令。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git config --global user.name <span class="string">&quot;My Name&quot;</span></span><br><span class="line">$ git config --global user.email myEmail@example.com</span><br></pre></td></tr></table></figure>
-
-<p>配置好这两项，用户就能知道谁做了什么，并且一切都更有组织性了不是吗？</p>
-<h2 id="创建一个新仓库-git-init"><a href="#创建一个新仓库-git-init" class="headerlink" title="创建一个新仓库 - git init"></a>创建一个新仓库 - git init</h2><p>git 会把所有文件以及历史记录保存在你的项目中，创建一个新的仓库，首先要去到项目路径，执行 git init。然后git会创建一个隐藏的文件夹.git，所有的信息都储存在其中。</p>
-<p>在桌面创建一个联系文件夹 git_exercise, 打开终端：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> Desktop/git_exercise/</span><br><span class="line">$ git init</span><br></pre></td></tr></table></figure>
-
-<p>OK，现在项目还什么都没有，新建一个 hello.txt 文件试试~</p>
-<h2 id="检查状态-git-status"><a href="#检查状态-git-status" class="headerlink" title="检查状态 - git status"></a>检查状态 - git status</h2><p>git status 是另一个非常重要的命令，它会告诉我们创库的当前状态：是否为最新代码，有什么更新等等<br>执行git status:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git status</span><br><span class="line"></span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">Initial commit</span><br><span class="line"></span><br><span class="line">Untracked files:</span><br><span class="line">  (use <span class="string">&quot;git add ...&quot;</span> to include <span class="keyword">in</span> what will be committed)</span><br><span class="line"></span><br><span class="line">	hello.txt</span><br></pre></td></tr></table></figure>
-
-<p>git 告诉我们，hello.txt尚未跟踪，这是因为这个文件是新的，git不知道是应该跟踪它的变动呢，还是直接忽略不管呢。为了跟踪我们的新文件，我们需要暂存它。</p>
-<h2 id="暂存-git-add"><a href="#暂存-git-add" class="headerlink" title="暂存 - git add"></a>暂存 - git add</h2><p>git 有个概念叫 暂存区，你可以把它看成一块空白帆布，包裹着所有你可能会提交的变动。它一开始为空，你可以通过 git add 命令添加内容，并使用 git commit 提交。</p>
-<p>这个例子中只有一个文件：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git add hello.txt</span><br></pre></td></tr></table></figure>
-
-<p>如果需要提交目录下的所有内容，可以这样：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git add A</span><br></pre></td></tr></table></figure>
-
-<p>再次使用git status查看：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git status</span><br><span class="line"></span><br><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">Initial commit</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use <span class="string">&quot;git rm --cached ...&quot;</span> to unstage)</span><br><span class="line"></span><br><span class="line">	new file:   hello.txt</span><br></pre></td></tr></table></figure>
-
-<p>我们的文件已经提交了。状态信息还会告诉我们暂存区文件发生了什么变动，不过这里我们提交的是一个全新文件。</p>
-<h2 id="提交-git-commit"><a href="#提交-git-commit" class="headerlink" title="提交 - git commit"></a>提交 - git commit</h2><p>一次提交代表着我们的仓库到了一个交付状态，通常是完成了某一块小功能。它就像是一个快照，允许我们像使用时光机一样回到旧时光。</p>
-<p>创建提交，需要我们提交东西到暂存区（git add），然后：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git commit -m <span class="string">&quot;Initial commit.&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>这就创建了一次提交，-m “Initial commit.”表示对这次提交的描述，建议使用有意义的描述性信息。</p>
-<h1 id="远端仓库"><a href="#远端仓库" class="headerlink" title="远端仓库"></a>远端仓库</h1><p>到目前为止，我们的操作都是在本地的，它存在于.git文件中。为了能够协同开发，我们需要把代码发布到远端仓库上。</p>
-<h2 id="链接远端仓库-git-remote-add"><a href="#链接远端仓库-git-remote-add" class="headerlink" title="链接远端仓库 - git remote add"></a>链接远端仓库 - git remote add</h2><p>为了能够上传到远端仓库，我们需要先建立起链接，这篇教程中，远端仓库的地址为：<a href="https://github.com/tutorialzine/awesome-project">https://github.com/tutorialzine/awesome-project</a>,但你应该自己在Github, BitBucket上搭建仓库，自己一步一步尝试。</p>
-<p>添加测试用的远端仓库</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git remote add origin https://github.com/tutorialzine/awesome-project.git</span><br></pre></td></tr></table></figure>
-
-<p>一个项目可以同时拥有好几个远端仓库为了能够区分，通常会起不同的名字。通常主远端仓库被称为origin。</p>
-<h2 id="上传到服务器-git-push"><a href="#上传到服务器-git-push" class="headerlink" title="上传到服务器 - git push"></a>上传到服务器 - git push</h2><p>每次我们要提交代码到服务器上时，都会使用到git push。<br>git push命令会有两个参数，远端仓库的名字，以及分支的名字：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git push origin master</span><br><span class="line"></span><br><span class="line">Counting objects: 3, <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (3/3), 212 bytes | 0 bytes/s, <span class="keyword">done</span>.</span><br><span class="line">Total 3 (delta 0), reused 0 (delta 0)</span><br><span class="line">To https://github.com/tutorialzine/awesome-project.git</span><br><span class="line"> * [new branch]      master -&gt; master</span><br></pre></td></tr></table></figure>
-
-<p>取决于你使用的服务器，push过程你可能需要验证身份。如果没有出差错，现在使用浏览器去你的远端分支上看，hello.txt已经在那里等着你了。</p>
-<h2 id="克隆仓库-git-clone"><a href="#克隆仓库-git-clone" class="headerlink" title="克隆仓库 - git clone"></a>克隆仓库 - git clone</h2><p>放在Github上的开源项目，人们可以看到你的代码。可以使用 git clone进行下载到本地。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/tutorialzine/awesome-project.git</span><br></pre></td></tr></table></figure>
-
-<p>本地也会创建一个新的仓库，并自动将github上的分支设为远端分支。</p>
-<h2 id="从服务器上拉取代码-git-pull"><a href="#从服务器上拉取代码-git-pull" class="headerlink" title="从服务器上拉取代码 - git pull"></a>从服务器上拉取代码 - git pull</h2><p>如果你更新了代码到仓库上，其他人可以通过git pull命令拉取你的变动：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git pull origin master</span><br><span class="line">From https://github.com/tutorialzine/awesome-project</span><br><span class="line"> * branch            master     -&gt; FETCH_HEAD</span><br><span class="line">Already up-to-date.</span><br></pre></td></tr></table></figure>
-
-<p>因为暂时没有其他人提交，所有没有任何变动</p>
-<h1 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h1><p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/learn-git-in-30-minutes-branch.jpg"></p>
-<p>当你在做一个新功能的时候，最好是在一个独立的区域上开发，通常称之为分支。分支之间相互独立，并且拥有自己的历史记录。这样做的原因是：</p>
-<ul>
-<li>稳定版本的代码不会被破坏</li>
-<li>不同的功能可以由不同开发者同时开发。</li>
-<li>开发者可以专注于自己的分支，不用担心被其他人破坏了环境</li>
-<li>在不确定之前，同一个特性可以拥有几个版本，便于比较</li>
-</ul>
-<h2 id="创建新分支-git-branch"><a href="#创建新分支-git-branch" class="headerlink" title="创建新分支 - git branch"></a>创建新分支 - git branch</h2><p>每一个仓库的默认分支都叫master, 创建新分支可以这样：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git branch amazing_new_feature</span><br></pre></td></tr></table></figure>
-
-<p>创建了一个名为amazing_new_feature的新分支，它跟当前分支同一起点</p>
-<h2 id="切换分支-git-checkout"><a href="#切换分支-git-checkout" class="headerlink" title="切换分支 - git checkout"></a>切换分支 - git checkout</h2><p>单独使用git branch，可以查看分支状态：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git branch</span><br><span class="line">  amazing_new_feature</span><br><span class="line">* master</span><br></pre></td></tr></table></figure>
-
-<p>***** 号表示当前活跃分支为master，使用git checkout切换分支。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git checkout amazing_new_feature</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="合并分支-git-merge"><a href="#合并分支-git-merge" class="headerlink" title="合并分支 - git merge"></a>合并分支 - git merge</h2><p>我们的 amazing_new_feature 分支的任务是增加一个featuer.txt。我们来创建，添加到暂存区，提交。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git add feature.txt</span><br><span class="line">$ git commit -m <span class="string">&quot;New feature complete.&quot;</span></span><br></pre></td></tr></table></figure>
-<p>新分支任务完成了，回到master分支</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git checkout master</span><br></pre></td></tr></table></figure>
-
-<p>现在去查看文件，你会发现，之前创建的feature.txt文件不见了，因为master分支上并没有feature.txt。使用git merge 把 amazing_new_feature 分支合并到master上。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git merge amazing_new_feature</span><br></pre></td></tr></table></figure>
-<p>ok! 然后再把amazing_new_feature 分支删掉吧。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git branch -d amazing_new_feature</span><br></pre></td></tr></table></figure>
-
-
-
-
-<h1 id="高级"><a href="#高级" class="headerlink" title="高级"></a>高级</h1><p>这篇文章的最后一节，我们来说些比较高级并且使用的技巧。</p>
-<h2 id="比对两个不同提交之间的差别"><a href="#比对两个不同提交之间的差别" class="headerlink" title="比对两个不同提交之间的差别"></a>比对两个不同提交之间的差别</h2><p>每次提交都有一个唯一id，查看所有提交和他们的id，可以使用 git log:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git <span class="built_in">log</span></span><br><span class="line"></span><br><span class="line">commit ba25c0ff30e1b2f0259157b42b9f8f5d174d80d7</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Mon May 30 17:15:28 2016 +0300</span><br><span class="line"></span><br><span class="line">    New feature complete</span><br><span class="line"></span><br><span class="line">commit b10cc1238e355c02a044ef9f9860811ff605c9b4</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Mon May 30 16:30:04 2016 +0300</span><br><span class="line"></span><br><span class="line">    Added content to hello.txt</span><br><span class="line"></span><br><span class="line">commit 09bd8cc171d7084e78e4d118a2346b7487dca059</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Sat May 28 17:52:14 2016 +0300</span><br><span class="line"></span><br><span class="line">    Initial commit</span><br></pre></td></tr></table></figure>
-
-<p>id 很长，但是你并不需要复制整个字符串，前一小部分就够了。<br>查看某一次提交更新了什么，使用 git show:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git show b10cc123</span><br><span class="line"></span><br><span class="line">commit b10cc1238e355c02a044ef9f9860811ff605c9b4</span><br><span class="line">Author: Tutorialzine</span><br><span class="line">Date:   Mon May 30 16:30:04 2016 +0300</span><br><span class="line"></span><br><span class="line">    Added content to hello.txt</span><br><span class="line"></span><br><span class="line">diff --git a/hello.txt b/hello.txt</span><br><span class="line">index e69de29..b546a21 100644</span><br><span class="line">--- a/hello.txt</span><br><span class="line">+++ b/hello.txt</span><br><span class="line">@@ -0,0 +1 @@</span><br><span class="line">+Nice weather today, isn<span class="string">&#x27;t it?</span></span><br></pre></td></tr></table></figure>
-
-<p>查看两次提交的不同，可以使用 git diff [commit-from]..[commit-to] 语法：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git diff 09bd8cc..ba25c0ff</span><br><span class="line"></span><br><span class="line">diff --git a/feature.txt b/feature.txt</span><br><span class="line">new file mode 100644</span><br><span class="line">index 0000000..e69de29</span><br><span class="line">diff --git a/hello.txt b/hello.txt</span><br><span class="line">index e69de29..b546a21 100644</span><br><span class="line">--- a/hello.txt</span><br><span class="line">+++ b/hello.txt</span><br><span class="line">@@ -0,0 +1 @@</span><br><span class="line">+Nice weather today, isn<span class="string">&#x27;t it?</span></span><br></pre></td></tr></table></figure>
-
-<p>比较首次提交和最后一次提交，我们可以看到所有的更改。当然使用git difftool命令更加方便。</p>
-<h2 id="回滚某个文件到之前的版本"><a href="#回滚某个文件到之前的版本" class="headerlink" title="回滚某个文件到之前的版本"></a>回滚某个文件到之前的版本</h2><p>git 允许我们将某个特定的文件回滚到特定的提交，使用的也是 git checkout。</p>
-<p>下面的例子，我们将hello.txt回滚到最初的状态，需要指定回滚到哪个提交，以及文件的全路径。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git checkout 09bd8cc1 hello.txt</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="回滚提交"><a href="#回滚提交" class="headerlink" title="回滚提交"></a>回滚提交</h2><p>如果你发现最新的一次提交完了加某个文件，你可以通过 git commit —amend来修复，它会把最新的提交打回暂存区，并尝试重新提交。</p>
-<p>如果是更复杂的情况，比如不是最新的提交了。那你可以使用git revert。</p>
-<p>最新的一次提交别名也叫HEAD。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git revert HEAD</span><br></pre></td></tr></table></figure>
-<p>其他提交可以使用id:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git revert HEAD</span><br></pre></td></tr></table></figure>
-<p>混滚提交时，发生冲突是非常频繁的。当文件被后面的提交修改了以后，git不能正确回滚。</p>
-<h2 id="解决合并冲突"><a href="#解决合并冲突" class="headerlink" title="解决合并冲突"></a>解决合并冲突</h2><p>冲突经常出现在合并分支或者是拉去别人的代码。有些时候git能自动处理冲突，但大部分需要我们手动处理。</p>
-<p>比如John 和 Tim 分别在各自的分支上写了两部分代码。<br>John 喜欢 for:</p>
-<p>&#x2F;&#x2F; Use a for loop to console.log contents.<br>for(var i&#x3D;0; i&lt;arr.length; i++) {<br>console.log(arr[i]);<br>}<br>Tim 喜欢 forEach:</p>
-<p>&#x2F;&#x2F; Use forEach to console.log contents.<br>arr.forEach(function(item) {<br>console.log(item);<br>});</p>
-<p>假设John 现在去拉取 Tim的代码:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git merge tim_branch</span><br><span class="line"></span><br><span class="line">Auto-merging print_array.js</span><br><span class="line">CONFLICT (content): Merge conflict <span class="keyword">in</span> print_array.js</span><br><span class="line">Automatic merge failed; fix conflicts and <span class="keyword">then</span> commit the result.</span><br></pre></td></tr></table></figure>
-<p>这时候git并不知道如何解决冲突，因为他不知道John和Tim谁写得更好。</p>
-<p>于是它就在代码中插入标记。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;&lt;&lt;&lt;&lt;&lt;&lt; <span class="variable constant_">HEAD</span></span><br><span class="line"><span class="comment">// Use a for loop to console.log contents.</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;arr.<span class="property">length</span>; i++) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(arr[i]);</span><br><span class="line">&#125;</span><br><span class="line">=======</span><br><span class="line"><span class="comment">// Use forEach to console.log contents.</span></span><br><span class="line">arr.<span class="title function_">forEach</span>(<span class="keyword">function</span>(<span class="params">item</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(item);</span><br><span class="line">&#125;);</span><br><span class="line">&gt;&gt;&gt;&gt;&gt;&gt;&gt; <span class="title class_">Tim</span> s commit.</span><br></pre></td></tr></table></figure>
-
-<p>&#x3D;&#x3D;&#x3D;&#x3D; 号上方是当前最新一次提交，下方是冲突的代码。我们需要解决这样的冲突，经过组委会成员讨论，一致认定，在座的各位都是垃圾！两个都不要。改成下面的代码:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// Not using for loop or forEach.</span><br><span class="line">// Use Array.toString() to console.log contents.</span><br><span class="line">console.log(arr.toString());</span><br></pre></td></tr></table></figure>
-<p>好了，再提交一下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ git add -A</span><br><span class="line">$ git commit -m &quot;Array printing conflict resolved.&quot;</span><br></pre></td></tr></table></figure>
-
-<p>如果在大型项目中，这个过程可能容易出问题。你可以使用<a href="https://git-scm.com/download/gui/linux">GUI工具</a>来帮助你。使用 git mergetool。</p>
-<h2 id="配置-gitignore"><a href="#配置-gitignore" class="headerlink" title="配置 .gitignore"></a>配置 .gitignore</h2><p>大部分项目中，会有写文件，文件夹是我们不想提交的。为了防止一不小心提交，我们需要gitignore文件：</p>
-<ol>
-<li>在项目根目录创建.gitignore文件</li>
-<li>在文件中列出不需要提交的文件名，文件夹名，每个一行</li>
-<li>.gitignore文件需要提交，就像普通文件一样</li>
-</ol>
-<p>通常会被ignore的文件有：</p>
-<ul>
-<li>log文件</li>
-<li>task runner builds</li>
-<li>node_modules等文件夹</li>
-<li>IDES生成的文件</li>
-<li>个人笔记</li>
-</ul>
-<p>例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">*.log</span><br><span class="line">build/</span><br><span class="line">node_modules/</span><br><span class="line">.idea/</span><br><span class="line">my_notes.txt</span><br></pre></td></tr></table></figure>
-
-
-
-]]></content>
-      <categories>
-        <category>Java架构</category>
-      </categories>
-      <tags>
-        <tag>Git</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MySQL数据库开发设计规范</title>
-    <url>/2022/11/09/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/</url>
-    <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>本规范由四部分组成：表结构设计、索引设计、高可用设计、分布式架构设计。</p>
-<p>四大规范，每个规范10条准则。</p>
-<h1 id="表结构设计规范"><a href="#表结构设计规范" class="headerlink" title="表结构设计规范"></a>表结构设计规范</h1><ol>
-<li><p>INT 类型<strong>不使用</strong> unsigned     无符号属性，容易引入额外的计算问题。</p>
-</li>
-<li><p>自增用 8 字节 BIG INT，<strong>不要使用</strong> 4 字节 INT，且自增在 MySQL     8.0 版本前有回溯问题，请考虑是否业务有影响。</p>
-</li>
-<li><p>字符集使用 UTF8MB4 字符编码，<strong>不推荐</strong> GBK、UTF-8 等其他字符集。</p>
-</li>
-<li><p>日期类型用 DATETIME     类型，需要精确到毫秒用 DATETIME(6)，<strong>不要使用</strong> INT、TIMESTAMP。</p>
-</li>
-<li><p>类型 JSON     可用于存储非结构化数据，典型场景为用户标签，<strong>不要</strong>将 JSON 用于频繁更新的字段场景。</p>
-</li>
-<li><p>每张表<strong>一定</strong>要有一个主键，这样至少满足一范式的要求，<strong>核心业务表</strong>用全局唯一字段（雪花算法、有序UUID）做主键，<strong>不要</strong>使用自增做主键。</p>
-</li>
-<li><p>对于日志类的流水表、报警表、日志表，可以使用压缩设计，提升存储效率。MySQL     5.7 版本开始推荐使用透明页压缩，<strong>不要</strong>使用传统的 KEY_BLOCK_SIZE 的页压缩。</p>
-</li>
-<li><p>类别设计，用 ENUM+CHECK 约束，<strong>不要</strong>使用 INT 类型的设计。</p>
-</li>
-<li><p>敏感字段需加密，如账户密码、信用卡号等存储使用：动态盐     + 非固定加密算法（MD5&#x2F;AES256等） + 多轮加密，<strong>不要</strong>简单使用 MD5 算法加密，容易被暴力破解。</p>
-</li>
-<li><p>MySQL 可以通过 KV     的方式访问表中的数据，若业务只是简单的 SET、GET 请求，可考虑将其转化为 Memcached 的 KV 访问方式，减少 SQL     解析的开销，性能可以有至少 50% 的提升。</p>
-</li>
-</ol>
-<h1 id="索引设计规范"><a href="#索引设计规范" class="headerlink" title="索引设计规范"></a>索引设计规范</h1><ol>
-<li><p><strong>不要陷入</strong>设置单表行数、列数限制的固有印象，其他关系型数据库没有行数、列数限制，MySQL     也没有，大表的缺点不是性能，而是后续的 DDL 管理问题，随着 MySQL 8.0 快速加列功能的上线，大表 DDL 问题基本已解决。</p>
-</li>
-<li><p>MySQL 是索引组织表，表中的数据以 B+ 树索引结构，根据主键逻辑排序，由于 B+ 树索引的特点是树的高度为     3~4 层，所以从数十亿的记录中，通过主键查询一条记录只需要 3、4 次 I&#x2F;O，当前到 SSD 存储设备设置每秒至少能完成 10000 次的     I&#x2F;O 查询，<strong>不要</strong>担心通过索引查询一条或几条记录的性能，每秒百万次查询并不难。</p>
-</li>
-<li><p>MySQL     是索引组织表，二级索引只存储（键值、主键值），因此需要再通过一次主键索引查询得到记录，这种方式成为回表。在核心业务中，<strong>使用</strong>索引覆盖技术，提升索引查询性能，对于回表记录数比较大的场景，甚至可以有 10 倍的性能提升；</p>
-</li>
-<li><p>对类似 WHERE a &#x3D; ? ORDER     BY b 这样的查询，<strong>一定</strong>要创建（a、b）组合索引，这样可以避免一次额外排序，提升查询性能。</p>
-</li>
-<li><p>MySQL 优化器是     CBO（Cost-based Optimizer），所有查询基于成本而不是规则，若发现 SQL 执行计划发生变化，<strong>不要怀疑     MySQL 出错，请先分析数据特点、索引创建是否合理，是否可以通过直方图校准数据</strong>。</p>
-</li>
-<li><p>MySQL JOIN 支持     NLJ（Nested Loop Join）和 NHJ（Nested Hash Join）两种方式。对于 OLTP 业务，放心大胆使用 JOIN，但<strong>一定</strong>要做好索引的设计和索引覆盖的考虑（不考虑分布式数据库场景）；对于     OLAP 业务，MySQL 8.0 版本开始，支持 Hash Join，对于大数据量的关联，性能提升非常多，<strong>可以</strong>在不超过 10T 的数仓场景中考虑使用，超过     10T数据量，请<strong>一定</strong>使用大数据产品，如 Hive、Spark、麒麟等产品。</p>
-</li>
-<li><p>MySQL 5.7     版本开始子查询优化已经做得不错，但是编写的子查询<strong>不能</strong>是关联子查询，上线前<strong>一定</strong>需要确认，若发现关联子查询，请改写子查询为     JOIN 或其他方式。</p>
-</li>
-<li><p><strong>不要</strong>因为数据量大，使用分区表，MySQL 是索引组织表，数据量再大，定位记录也只需要3、4 次     I&#x2F;O。可以考虑分区表<strong>唯一</strong>的应用场景是：需要定期清理历史流水类数据，但如果业务可以按月、按天做分表，那么当前     MySQL 8.0 版本，分区表也不推荐使用。</p>
-</li>
-<li><p>业务上线或新版本发布前，DBA <strong>一定</strong>要进行所有 SQL     Review，确保 SQL 走索引，否则不予上线，或由业务以邮件等正式方式，通知 DBA 该 SQL 不会引起线上事故，业务方承担后续责任。</p>
-</li>
-<li><p>DBA <strong>每天</strong>要对数据库进行巡检，及早发现慢查询或潜在数据库风险，将任何潜在问题<strong>尽早</strong>抛出，否则后续自己承担相关责任。</p>
-</li>
-</ol>
-<h1 id="高可用设计规范"><a href="#高可用设计规范" class="headerlink" title="高可用设计规范"></a>高可用设计规范</h1><ol>
-<li><p>MySQL 高可用的基石是利用二进制日志的复制技术，核心业务<strong>一定</strong>要使用无损半同步方式，但凡不使用无损半同步的高可用架构，请业务方业务以邮件等正式方式回复，数据丢失等后续问题自己承担相关责任。</p>
-</li>
-<li><p>MySQL 5.7 版本开始，<strong>一定</strong>要使用基于 WRITESET     的从机回放，避免主从延迟。</p>
-</li>
-<li><p>当前 MySQL     发生主从延迟的可能性主要是存在大事务，比如定期计算收益等操作，这类大事务，<strong>一定</strong>要通知业务方将大事务拆成小事务，否则不予上线；若要上线，请业务方以邮件等方式回复，自己承担后续主从延迟带来的后续一系列问题。</p>
-</li>
-<li><p>MySQL 8.0 版本开始<strong>推荐</strong>金融业务使用 MGR(MySQL Group     Replication），通过 Paxos 协议保证数据一致性，并自己完成选主的逻辑，也可以使用多主模式，数据不冲突的情况下，可以大幅提升写入性能。</p>
-</li>
-<li><p>对于核心业务，<strong>必须</strong>遵循互不信任原则，数据一致性不单单依赖     MySQL 复制本身，DBA 这里需要通过逻辑的方式，对主从数据进行核对，业务这里也需要一套业务层的逻辑进行“对账”。</p>
-</li>
-<li><p>核心业务，<strong>务必</strong>使用一地三中心，两地三中心的跨机房复制架构，这样发生机房级故障，可以切换到另一个机房，保证业务可用性。</p>
-</li>
-<li><p>同城容灾架构<strong>一定</strong>要评估切换到另一个机房后业务访问的性能，多次跨机房访问     DB，虽然每次只多了 2~3ms，但也存在业务雪崩问题，推荐 DB 切换机房，上层业务跟着一起联动切换。</p>
-</li>
-<li><p>对于有跨城容灾需求的业务，<strong>可以</strong>考虑使用三地五中心架构，但是由于 30ms     延迟，业务需要进行评估，对于核心业务，<strong>务必</strong>使用业务层的跨城机制，将数据层的多次网络耗时合并为一次，这样能大大提升业务的性能。</p>
-</li>
-<li><p>业界的 MHA、Ochestrator     等高可用套件都是基于 ssh 访问 MySQL，稳定性、安全性不高，<strong>不推荐</strong>大厂使用；自己开发一个数据库管理平台，通过     agent 的模式管理高可用和 MySQL 数据库的日常操作更为安全、有效。</p>
-</li>
-<li><p><strong>一定</strong>做好数据备份架构的设计，全备 + 增量备份 +     延迟备机（可选），做到可以基于任何一点恢复和回滚，同时，遵循互不信任原则，备份文件一定要进行检查，确保需要时一定能够进行恢复。</p>
-</li>
-</ol>
-<h1 id="分布式架构设计规范"><a href="#分布式架构设计规范" class="headerlink" title="分布式架构设计规范"></a>分布式架构设计规范</h1><ol>
-<li><p>分布式数据库的本质就是根据某几个列的规则，将数据水平打散，存在不同的实例中。数据拆分的列称为分区键（Shard     Key），分区键<strong>一定</strong>是业务大部分访问（超过 80%）的表都会使用的列。若选不出合适的分区键，那就<strong>一定不要</strong>进行分布式数据库架构的设计；互联网业务绝大部分分区键的选择是用户维度。</p>
-</li>
-<li><p>分区算法<strong>绝大部分</strong>场景使用     Hash算法，这样数据的存储和访问可以平均到下面多个实例，真正的做到可扩展性，Range 算法通常无法解决热点问题，会是灾难，但 Range     算法可以在单实例中使用，作为二级拆分数据的规则。</p>
-</li>
-<li><p>分布式数据库分片时，一开始就设计为<strong>不少于</strong> 1000     个分片的规则，不用担心分片过多的问题，管理 1 个分片和 1000 个分片的成本是一样的，但为后续的扩容做好了充足的准备。</p>
-</li>
-<li><p>分布式数据库扩缩容就是通过部分过滤的复制技术，按库或按表进行数据同步，分库分表设计<strong>推荐</strong>库名、表都不同，做到全局唯一，方便后续拆分。</p>
-</li>
-<li><p>分布式数据库索引设计中，非分区键的唯一索引<strong>一定</strong>带入分区键信息，这样业务查询时可以直接定位到数据所在分片，提升查询效率。</p>
-</li>
-<li><p>分布式数据库索引设计中，数据库层的唯一约束只在单个实例中保证，若要保证全局唯一，<strong>一定</strong>要使用全局唯一的索引设计。</p>
-</li>
-<li><p>直接使用 JOIN 请确认<strong>一定</strong>可以单元化在一个分片中完成，如果涉及跨分片的     JOIN，请通知业务修改成多条 SQL 的访问方式，只访问指定分片而不是所有分片。</p>
-</li>
-<li><p>分布式数据库可以进行业务层的分库分表访问，和通过数据库中间件的访问，对于业务耗时敏感的业务，<strong>推荐</strong>业务层直接根据路由规则访问数据，否则使用数据库中间件，简单易用。</p>
-</li>
-<li><p>对于耗时敏感的核心业务，<strong>推荐</strong>使用最终一致的业务层柔性事务，数据库层的     2PC 分布式事务耗时较大，性能较为一般，但是 2PC 使用简单，能满足大部分业务的使用。</p>
-</li>
-<li><p><strong>一定</strong>要利用好分布式数据库架构的特点，设计多活架构，每个机房都可以有写入流量，提升资源使用率和业务连续性，请 DBA     和业务方一起做好全链路的架构设计。</p>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>MySQL规范</tag>
       </tags>
   </entry>
   <entry>
