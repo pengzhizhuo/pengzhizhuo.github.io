@@ -1237,4 +1237,21 @@
         <tag>MySQL规范</tag>
       </tags>
   </entry>
+  <entry>
+    <title>MySQL的SQL规范</title>
+    <url>/2022/11/10/MySQL%E7%9A%84SQL%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<p>良好的 SQL 习惯能大大降低慢查询出现的概率，下面主要介绍一些 SQL 规范</p>
+<h1 id="避免隐式转换"><a href="#避免隐式转换" class="headerlink" title="避免隐式转换"></a>避免隐式转换</h1><p>当操作符与不同类型的操作数一起使用时，会发生类型转换以使操作数兼容。则会发生转换隐式<br>隐式转换的类型主要有字段类型不一致、in参数包含多个类型、字符集类型或校对规则不一致等<br>隐式类型转换可能导致无法使用索引、查询结果不准确等</p>
+<h1 id="尽量不使用-select-，只选择需要的字段"><a href="#尽量不使用-select-，只选择需要的字段" class="headerlink" title="尽量不使用 select * ，只选择需要的字段"></a>尽量不使用 select * ，只选择需要的字段</h1><p>因为使用 selec * 会读取不需要的列，会增加 CPU 负载、磁盘 I&#x2F;O、网络流量的消耗，并且容易在增加或者删除字段后导致程序报错</p>
+<h1 id="禁止单条-SQL-语句同时更新多张表"><a href="#禁止单条-SQL-语句同时更新多张表" class="headerlink" title="禁止单条 SQL 语句同时更新多张表"></a>禁止单条 SQL 语句同时更新多张表</h1><h1 id="禁止使用以-“-”-开头的模糊查询"><a href="#禁止使用以-“-”-开头的模糊查询" class="headerlink" title="禁止使用以 “%” 开头的模糊查询"></a>禁止使用以 “%” 开头的模糊查询</h1><p>以 “%” 开头的模糊查询大都是不能使用索引的</p>
+<h1 id="在-SQL-中不建议使用-sleep"><a href="#在-SQL-中不建议使用-sleep" class="headerlink" title="在 SQL 中不建议使用 sleep()"></a>在 SQL 中不建议使用 sleep()</h1><p>使用 sleep() 可能会增加 SQL 加锁的时间，从而影响并发性能</p>
+<h1 id="避免大表的-join"><a href="#避免大表的-join" class="headerlink" title="避免大表的 join"></a>避免大表的 join</h1><p>可能会导致数据库高负载，从而影响其他查询</p>
+<h1 id="同一张表的多条-alter-语句要合成一次操作"><a href="#同一张表的多条-alter-语句要合成一次操作" class="headerlink" title="同一张表的多条 alter 语句要合成一次操作"></a>同一张表的多条 alter 语句要合成一次操作</h1>]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL规范</tag>
+      </tags>
+  </entry>
 </search>
