@@ -240,7 +240,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2022-11-11 16:50:14 / 修改时间：17:02:09" itemprop="dateCreated datePublished" datetime="2022-11-11T16:50:14+08:00">2022-11-11</time>
+      <time title="创建时间：2022-11-11 16:50:14 / 修改时间：18:37:29" itemprop="dateCreated datePublished" datetime="2022-11-11T16:50:14+08:00">2022-11-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -262,10 +262,26 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="帮助命令"><a href="#帮助命令" class="headerlink" title="帮助命令"></a>帮助命令</h1><ul>
-<li>docker version<br>  检查docker版本</li>
+          <h1 id="仓库，镜像，容器的关系"><a href="#仓库，镜像，容器的关系" class="headerlink" title="仓库，镜像，容器的关系"></a>仓库，镜像，容器的关系</h1><p>Docker包括三个基本概念：</p>
+<ul>
+<li>镜像（<code>Image</code>）：Docker 镜像是一个特殊的文件系统，除了提供容器运行时所需的程序、库、资源、配置等文件外，还包含了一些为运行时准备的一些配置参数（如匿名卷、环境变量、用户等）。镜像不包含任何动态数据，其内容在构建之后也不会被改变。 </li>
+<li>容器（<code>Container</code>）：镜像（<code>Image</code>）和容器（<code>Container</code>）的关系，就像是面向对象程序设计中的 <code>类</code> 和 <code>实例</code> 一样，镜像是静态的定义，容器是镜像运行时的实体。容器可以被创建、启动、停止、删除、暂停等。 </li>
+<li>仓库（<code>Repository</code>）：仓库（<code>Repository</code>）类似Git的远程仓库，集中存放镜像文件。</li>
 </ul>
-<h1 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h1><h1 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h1><h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1>
+<p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/docker-architecture.svg"></p>
+<h1 id="Docker命令概览"><a href="#Docker命令概览" class="headerlink" title="Docker命令概览"></a>Docker命令概览</h1><ul>
+<li>Docker帮助命令—<code>docker --help</code></li>
+<li>Docker环境信息 — <code>docker [info|version]</code></li>
+<li>容器生命周期管理 — <code>docker  [create|exec|run|start|stop|restart|kill|rm|pause|unpause]</code></li>
+<li>容器操作管理 — <code>docker [ps|inspect|top|attach|wait|export|port|rename|stat]</code></li>
+<li>容器rootfs命令 — <code>docker [commit|cp|diff]</code></li>
+<li>镜像仓库 — <code>docker [login|pull|push|search]</code></li>
+<li>本地镜像管理 — <code>docker [build|images|rmi|tag|save|import|load]</code></li>
+<li>容器资源管理 — <code>docker [volume|network]</code></li>
+<li>系统日志信息 — <code>docker [events|history|logs]</code></li>
+</ul>
+<p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/docker_commands.png"></p>
+
       
     </div>
 
@@ -754,7 +770,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-11 17:04:57" itemprop="dateModified" datetime="2022-11-11T17:04:57+08:00">2022-11-11</time>
+      <time title="修改时间：2022-11-11 17:52:49" itemprop="dateModified" datetime="2022-11-11T17:52:49+08:00">2022-11-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -776,7 +792,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="Docker核心技术基础"><a href="#Docker核心技术基础" class="headerlink" title="Docker核心技术基础"></a>Docker核心技术基础</h1><h2 id="docker简介"><a href="#docker简介" class="headerlink" title="docker简介"></a>docker简介</h2><h3 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h3><ul>
+          <h2 id="docker简介"><a href="#docker简介" class="headerlink" title="docker简介"></a>docker简介</h2><h3 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h3><ul>
 <li>Linux命令</li>
 <li>git</li>
 <li>Docker相关开发语言和技术<ul>
@@ -789,7 +805,9 @@
 </ul>
 </li>
 </ul>
-<h3 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h3><ul>
+<h3 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h3><p><strong>Docker</strong> 使用 <code>Google</code> 公司推出的 <a target="_blank" rel="noopener" href="https://golang.google.cn/">Go 语言</a> 进行开发实现，基于 <code>Linux</code> 内核的 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Cgroups">cgroup</a>，<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Linux_namespaces">namespace</a>，以及 <a target="_blank" rel="noopener" href="https://docs.docker.com/storage/storagedriver/overlayfs-driver/">OverlayFS</a> 类的 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Union_mount">Union FS</a> 等技术，对进程进行封装隔离，属于 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Operating-system-level_virtualization">操作系统层面的虚拟化技术</a>。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。最初实现是基于 <a target="_blank" rel="noopener" href="https://linuxcontainers.org/lxc/introduction/">LXC</a>，从 <code>0.7</code> 版本以后开始去除 <code>LXC</code>，转而使用自行开发的 <a target="_blank" rel="noopener" href="https://github.com/docker/libcontainer">libcontainer</a>，从 <code>1.11</code> 版本开始，则进一步演进为使用 <a target="_blank" rel="noopener" href="https://github.com/opencontainers/runc">runC</a> 和 <a target="_blank" rel="noopener" href="https://github.com/containerd/containerd">containerd</a>。</p>
+<p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/docker-on-linux.png"></p>
+<ul>
 <li><p>问题：为什么会有Docker出现</p>
 <ul>
 <li>开发和运维环境的差异导致部署失败</li>
@@ -814,7 +832,9 @@
 </ul>
 </li>
 </ul>
-<h3 id="能干嘛"><a href="#能干嘛" class="headerlink" title="能干嘛"></a>能干嘛</h3><ul>
+<h3 id="能干嘛"><a href="#能干嘛" class="headerlink" title="能干嘛"></a>能干嘛</h3><p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/virtualization.png"></p>
+<p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/docker.png"></p>
+<ul>
 <li><p>之前的虚拟机技术</p>
 <ul>
 <li>虚拟机是带环境安装的一种解决方案</li>

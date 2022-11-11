@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Docker常见命令</title>
+    <url>/2022/11/11/Docker%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<h1 id="仓库，镜像，容器的关系"><a href="#仓库，镜像，容器的关系" class="headerlink" title="仓库，镜像，容器的关系"></a>仓库，镜像，容器的关系</h1><p>Docker包括三个基本概念：</p>
+<ul>
+<li>镜像（<code>Image</code>）：Docker 镜像是一个特殊的文件系统，除了提供容器运行时所需的程序、库、资源、配置等文件外，还包含了一些为运行时准备的一些配置参数（如匿名卷、环境变量、用户等）。镜像不包含任何动态数据，其内容在构建之后也不会被改变。 </li>
+<li>容器（<code>Container</code>）：镜像（<code>Image</code>）和容器（<code>Container</code>）的关系，就像是面向对象程序设计中的 <code>类</code> 和 <code>实例</code> 一样，镜像是静态的定义，容器是镜像运行时的实体。容器可以被创建、启动、停止、删除、暂停等。 </li>
+<li>仓库（<code>Repository</code>）：仓库（<code>Repository</code>）类似Git的远程仓库，集中存放镜像文件。</li>
+</ul>
+<p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/docker-architecture.svg"></p>
+<h1 id="Docker命令概览"><a href="#Docker命令概览" class="headerlink" title="Docker命令概览"></a>Docker命令概览</h1><ul>
+<li>Docker帮助命令—<code>docker --help</code></li>
+<li>Docker环境信息 — <code>docker [info|version]</code></li>
+<li>容器生命周期管理 — <code>docker  [create|exec|run|start|stop|restart|kill|rm|pause|unpause]</code></li>
+<li>容器操作管理 — <code>docker [ps|inspect|top|attach|wait|export|port|rename|stat]</code></li>
+<li>容器rootfs命令 — <code>docker [commit|cp|diff]</code></li>
+<li>镜像仓库 — <code>docker [login|pull|push|search]</code></li>
+<li>本地镜像管理 — <code>docker [build|images|rmi|tag|save|import|load]</code></li>
+<li>容器资源管理 — <code>docker [volume|network]</code></li>
+<li>系统日志信息 — <code>docker [events|history|logs]</code></li>
+</ul>
+<p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/docker_commands.png"></p>
+]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Docker命令</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Docker安装</title>
     <url>/2022/11/11/Docker%E5%AE%89%E8%A3%85/</url>
     <content><![CDATA[<h2 id="Docker安装"><a href="#Docker安装" class="headerlink" title="Docker安装"></a>Docker安装</h2><h3 id="前提说明"><a href="#前提说明" class="headerlink" title="前提说明"></a>前提说明</h3><blockquote>
@@ -190,119 +220,20 @@
       </tags>
   </entry>
   <entry>
-    <title>Docker常见命令</title>
-    <url>/2022/11/11/Docker%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4/</url>
-    <content><![CDATA[<h1 id="帮助命令"><a href="#帮助命令" class="headerlink" title="帮助命令"></a>帮助命令</h1><ul>
-<li>docker version<br>  检查docker版本</li>
-</ul>
-<h1 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h1><h1 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h1><h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1>]]></content>
+    <title>MySQL的SQL规范</title>
+    <url>/2022/11/10/MySQL%E7%9A%84SQL%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<p>良好的 SQL 习惯能大大降低慢查询出现的概率，下面主要介绍一些 SQL 规范</p>
+<h1 id="避免隐式转换"><a href="#避免隐式转换" class="headerlink" title="避免隐式转换"></a>避免隐式转换</h1><p>当操作符与不同类型的操作数一起使用时，会发生类型转换以使操作数兼容。则会发生转换隐式<br>隐式转换的类型主要有字段类型不一致、in参数包含多个类型、字符集类型或校对规则不一致等<br>隐式类型转换可能导致无法使用索引、查询结果不准确等</p>
+<h1 id="尽量不使用-select-，只选择需要的字段"><a href="#尽量不使用-select-，只选择需要的字段" class="headerlink" title="尽量不使用 select * ，只选择需要的字段"></a>尽量不使用 select * ，只选择需要的字段</h1><p>因为使用 selec * 会读取不需要的列，会增加 CPU 负载、磁盘 I&#x2F;O、网络流量的消耗，并且容易在增加或者删除字段后导致程序报错</p>
+<h1 id="禁止单条-SQL-语句同时更新多张表"><a href="#禁止单条-SQL-语句同时更新多张表" class="headerlink" title="禁止单条 SQL 语句同时更新多张表"></a>禁止单条 SQL 语句同时更新多张表</h1><h1 id="禁止使用以-“-”-开头的模糊查询"><a href="#禁止使用以-“-”-开头的模糊查询" class="headerlink" title="禁止使用以 “%” 开头的模糊查询"></a>禁止使用以 “%” 开头的模糊查询</h1><p>以 “%” 开头的模糊查询大都是不能使用索引的</p>
+<h1 id="在-SQL-中不建议使用-sleep"><a href="#在-SQL-中不建议使用-sleep" class="headerlink" title="在 SQL 中不建议使用 sleep()"></a>在 SQL 中不建议使用 sleep()</h1><p>使用 sleep() 可能会增加 SQL 加锁的时间，从而影响并发性能</p>
+<h1 id="避免大表的-join"><a href="#避免大表的-join" class="headerlink" title="避免大表的 join"></a>避免大表的 join</h1><p>可能会导致数据库高负载，从而影响其他查询</p>
+<h1 id="同一张表的多条-alter-语句要合成一次操作"><a href="#同一张表的多条-alter-语句要合成一次操作" class="headerlink" title="同一张表的多条 alter 语句要合成一次操作"></a>同一张表的多条 alter 语句要合成一次操作</h1>]]></content>
       <categories>
-        <category>Docker</category>
+        <category>MySQL</category>
       </categories>
       <tags>
-        <tag>Docker命令</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Docker简介</title>
-    <url>/2022/11/10/Docker%E7%AE%80%E4%BB%8B/</url>
-    <content><![CDATA[<h1 id="Docker核心技术基础"><a href="#Docker核心技术基础" class="headerlink" title="Docker核心技术基础"></a>Docker核心技术基础</h1><h2 id="docker简介"><a href="#docker简介" class="headerlink" title="docker简介"></a>docker简介</h2><h3 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h3><ul>
-<li>Linux命令</li>
-<li>git</li>
-<li>Docker相关开发语言和技术<ul>
-<li>Swarm</li>
-<li>Compose</li>
-<li>Mesos</li>
-<li>Machine</li>
-<li>k8s</li>
-<li>CI&#x2F;CD Jenkins整合</li>
-</ul>
-</li>
-</ul>
-<h3 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h3><ul>
-<li><p>问题：为什么会有Docker出现</p>
-<ul>
-<li>开发和运维环境的差异导致部署失败</li>
-</ul>
-</li>
-<li><p>出于高并发以及快速响应的需要，系统新功能需要快速上线(秒级)</p>
-<ul>
-<li><strong>软件可以带环境安装</strong></li>
-<li>安装的时候，把原始环境一模一样地复制过来<br>  开发人员利用Docker可以消除协作编码时“在我的机器上可以正常工作”的问题</li>
-</ul>
-</li>
-<li><p>Docker理念</p>
-<ul>
-<li>打破代码即应用的理念，变成镜像即应用</li>
-</ul>
-</li>
-<li><p>一次构建，处处运行</p>
-</li>
-<li><p>一句话</p>
-<ul>
-<li>是解决了运行环境和配置问题的软件容器，是方便做持续集成并有助于整体发布的容器虚拟化技术</li>
-</ul>
-</li>
-</ul>
-<h3 id="能干嘛"><a href="#能干嘛" class="headerlink" title="能干嘛"></a>能干嘛</h3><ul>
-<li><p>之前的虚拟机技术</p>
-<ul>
-<li>虚拟机是带环境安装的一种解决方案</li>
-<li>它可以在一种操作系统里面运行另一种操作系统，应用程序对此毫无感知。虚拟机看上去跟真实系统完全一样，对于底层系统来说，虚拟机就是一个普通文件，不需要就可以删除。<br>  这类虚拟机完美地运行了另一套系统，能够使应用程序、操作系统和硬件三者之间的逻辑不变</li>
-<li>缺点：<ul>
-<li>资源占用多</li>
-<li>冗余步骤多</li>
-<li>启动慢</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>容器虚拟化技术</p>
-<ul>
-<li><p>Linux发展了另一种虚拟化技术，LXC</p>
-</li>
-<li><p>Linux容器不是模拟一个完整地操作系统，而是对进程进行隔离<br>  容器和虚拟机不同，不需要捆绑一个完整的操作系统，只需要软件工作所需要的库资源和设置</p>
-</li>
-<li><p><strong>重点就是容器是共用操作系统内核的，不进行硬件虚拟</strong></p>
-</li>
-<li><p><strong>每个容器是相互隔离的，每个容器都有自己的文件系统，容器之间进程不会相互影响，能够区分计算资源</strong></p>
-</li>
-</ul>
-</li>
-<li><p>开发&#x2F;运维(DevOps)</p>
-<ul>
-<li>开发自运维</li>
-<li>一次构建，随处运行<br>  一次构建是指开发工程师做一次构建<br>  无需运维工程师再做构建<br>  随处运行是指对于这个构建的交付物，可以随处运行<ul>
-<li>更快捷的应用交付和部署</li>
-<li>更便捷的升级和扩缩容</li>
-<li>更简单的系统运维</li>
-<li>更高效的计算资源利用</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>企业级</p>
-</li>
-</ul>
-<h3 id="去哪下"><a href="#去哪下" class="headerlink" title="去哪下"></a>去哪下</h3><ul>
-<li><p>官网</p>
-<ul>
-<li>docker官网：<a href="http://www.docker.com/">http://www.docker.com</a></li>
-<li>docker中文网站：<a href="https://www.docker-cn.com/">https://www.docker-cn.com</a></li>
-</ul>
-</li>
-<li><p>仓库</p>
-<ul>
-<li><a href="https://hub.dokcer.com/">https://hub.dokcer.com</a></li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Docker</category>
-      </categories>
-      <tags>
-        <tag>Docker</tag>
+        <tag>MySQL规范</tag>
       </tags>
   </entry>
   <entry>
@@ -432,20 +363,109 @@
       </tags>
   </entry>
   <entry>
-    <title>MySQL的SQL规范</title>
-    <url>/2022/11/10/MySQL%E7%9A%84SQL%E8%A7%84%E8%8C%83/</url>
-    <content><![CDATA[<p>良好的 SQL 习惯能大大降低慢查询出现的概率，下面主要介绍一些 SQL 规范</p>
-<h1 id="避免隐式转换"><a href="#避免隐式转换" class="headerlink" title="避免隐式转换"></a>避免隐式转换</h1><p>当操作符与不同类型的操作数一起使用时，会发生类型转换以使操作数兼容。则会发生转换隐式<br>隐式转换的类型主要有字段类型不一致、in参数包含多个类型、字符集类型或校对规则不一致等<br>隐式类型转换可能导致无法使用索引、查询结果不准确等</p>
-<h1 id="尽量不使用-select-，只选择需要的字段"><a href="#尽量不使用-select-，只选择需要的字段" class="headerlink" title="尽量不使用 select * ，只选择需要的字段"></a>尽量不使用 select * ，只选择需要的字段</h1><p>因为使用 selec * 会读取不需要的列，会增加 CPU 负载、磁盘 I&#x2F;O、网络流量的消耗，并且容易在增加或者删除字段后导致程序报错</p>
-<h1 id="禁止单条-SQL-语句同时更新多张表"><a href="#禁止单条-SQL-语句同时更新多张表" class="headerlink" title="禁止单条 SQL 语句同时更新多张表"></a>禁止单条 SQL 语句同时更新多张表</h1><h1 id="禁止使用以-“-”-开头的模糊查询"><a href="#禁止使用以-“-”-开头的模糊查询" class="headerlink" title="禁止使用以 “%” 开头的模糊查询"></a>禁止使用以 “%” 开头的模糊查询</h1><p>以 “%” 开头的模糊查询大都是不能使用索引的</p>
-<h1 id="在-SQL-中不建议使用-sleep"><a href="#在-SQL-中不建议使用-sleep" class="headerlink" title="在 SQL 中不建议使用 sleep()"></a>在 SQL 中不建议使用 sleep()</h1><p>使用 sleep() 可能会增加 SQL 加锁的时间，从而影响并发性能</p>
-<h1 id="避免大表的-join"><a href="#避免大表的-join" class="headerlink" title="避免大表的 join"></a>避免大表的 join</h1><p>可能会导致数据库高负载，从而影响其他查询</p>
-<h1 id="同一张表的多条-alter-语句要合成一次操作"><a href="#同一张表的多条-alter-语句要合成一次操作" class="headerlink" title="同一张表的多条 alter 语句要合成一次操作"></a>同一张表的多条 alter 语句要合成一次操作</h1>]]></content>
+    <title>Docker简介</title>
+    <url>/2022/11/10/Docker%E7%AE%80%E4%BB%8B/</url>
+    <content><![CDATA[<h2 id="docker简介"><a href="#docker简介" class="headerlink" title="docker简介"></a>docker简介</h2><h3 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h3><ul>
+<li>Linux命令</li>
+<li>git</li>
+<li>Docker相关开发语言和技术<ul>
+<li>Swarm</li>
+<li>Compose</li>
+<li>Mesos</li>
+<li>Machine</li>
+<li>k8s</li>
+<li>CI&#x2F;CD Jenkins整合</li>
+</ul>
+</li>
+</ul>
+<h3 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h3><p><strong>Docker</strong> 使用 <code>Google</code> 公司推出的 <a href="https://golang.google.cn/">Go 语言</a> 进行开发实现，基于 <code>Linux</code> 内核的 <a href="https://zh.wikipedia.org/wiki/Cgroups">cgroup</a>，<a href="https://en.wikipedia.org/wiki/Linux_namespaces">namespace</a>，以及 <a href="https://docs.docker.com/storage/storagedriver/overlayfs-driver/">OverlayFS</a> 类的 <a href="https://en.wikipedia.org/wiki/Union_mount">Union FS</a> 等技术，对进程进行封装隔离，属于 <a href="https://en.wikipedia.org/wiki/Operating-system-level_virtualization">操作系统层面的虚拟化技术</a>。由于隔离的进程独立于宿主和其它的隔离的进程，因此也称其为容器。最初实现是基于 <a href="https://linuxcontainers.org/lxc/introduction/">LXC</a>，从 <code>0.7</code> 版本以后开始去除 <code>LXC</code>，转而使用自行开发的 <a href="https://github.com/docker/libcontainer">libcontainer</a>，从 <code>1.11</code> 版本开始，则进一步演进为使用 <a href="https://github.com/opencontainers/runc">runC</a> 和 <a href="https://github.com/containerd/containerd">containerd</a>。</p>
+<p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/docker-on-linux.png"></p>
+<ul>
+<li><p>问题：为什么会有Docker出现</p>
+<ul>
+<li>开发和运维环境的差异导致部署失败</li>
+</ul>
+</li>
+<li><p>出于高并发以及快速响应的需要，系统新功能需要快速上线(秒级)</p>
+<ul>
+<li><strong>软件可以带环境安装</strong></li>
+<li>安装的时候，把原始环境一模一样地复制过来<br>  开发人员利用Docker可以消除协作编码时“在我的机器上可以正常工作”的问题</li>
+</ul>
+</li>
+<li><p>Docker理念</p>
+<ul>
+<li>打破代码即应用的理念，变成镜像即应用</li>
+</ul>
+</li>
+<li><p>一次构建，处处运行</p>
+</li>
+<li><p>一句话</p>
+<ul>
+<li>是解决了运行环境和配置问题的软件容器，是方便做持续集成并有助于整体发布的容器虚拟化技术</li>
+</ul>
+</li>
+</ul>
+<h3 id="能干嘛"><a href="#能干嘛" class="headerlink" title="能干嘛"></a>能干嘛</h3><p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/virtualization.png"></p>
+<p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/docker.png"></p>
+<ul>
+<li><p>之前的虚拟机技术</p>
+<ul>
+<li>虚拟机是带环境安装的一种解决方案</li>
+<li>它可以在一种操作系统里面运行另一种操作系统，应用程序对此毫无感知。虚拟机看上去跟真实系统完全一样，对于底层系统来说，虚拟机就是一个普通文件，不需要就可以删除。<br>  这类虚拟机完美地运行了另一套系统，能够使应用程序、操作系统和硬件三者之间的逻辑不变</li>
+<li>缺点：<ul>
+<li>资源占用多</li>
+<li>冗余步骤多</li>
+<li>启动慢</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>容器虚拟化技术</p>
+<ul>
+<li><p>Linux发展了另一种虚拟化技术，LXC</p>
+</li>
+<li><p>Linux容器不是模拟一个完整地操作系统，而是对进程进行隔离<br>  容器和虚拟机不同，不需要捆绑一个完整的操作系统，只需要软件工作所需要的库资源和设置</p>
+</li>
+<li><p><strong>重点就是容器是共用操作系统内核的，不进行硬件虚拟</strong></p>
+</li>
+<li><p><strong>每个容器是相互隔离的，每个容器都有自己的文件系统，容器之间进程不会相互影响，能够区分计算资源</strong></p>
+</li>
+</ul>
+</li>
+<li><p>开发&#x2F;运维(DevOps)</p>
+<ul>
+<li>开发自运维</li>
+<li>一次构建，随处运行<br>  一次构建是指开发工程师做一次构建<br>  无需运维工程师再做构建<br>  随处运行是指对于这个构建的交付物，可以随处运行<ul>
+<li>更快捷的应用交付和部署</li>
+<li>更便捷的升级和扩缩容</li>
+<li>更简单的系统运维</li>
+<li>更高效的计算资源利用</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>企业级</p>
+</li>
+</ul>
+<h3 id="去哪下"><a href="#去哪下" class="headerlink" title="去哪下"></a>去哪下</h3><ul>
+<li><p>官网</p>
+<ul>
+<li>docker官网：<a href="http://www.docker.com/">http://www.docker.com</a></li>
+<li>docker中文网站：<a href="https://www.docker-cn.com/">https://www.docker-cn.com</a></li>
+</ul>
+</li>
+<li><p>仓库</p>
+<ul>
+<li><a href="https://hub.dokcer.com/">https://hub.dokcer.com</a></li>
+</ul>
+</li>
+</ul>
+]]></content>
       <categories>
-        <category>MySQL</category>
+        <category>Docker</category>
       </categories>
       <tags>
-        <tag>MySQL规范</tag>
+        <tag>Docker</tag>
       </tags>
   </entry>
   <entry>
@@ -931,6 +951,18 @@
       </tags>
   </entry>
   <entry>
+    <title>利用Spring的Resource类读写中文Properties</title>
+    <url>/2017/05/09/spring-resource-properties/</url>
+    <content><![CDATA[<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>Spring对Properties的读取进行了完善而全面的封装，对于写则仍需配合FileOutputStream进行。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.oolong.common.util;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.PathMatchingResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.ResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserVar</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">configFile</span> <span class="operator">=</span> <span class="string">&quot;classpath*:param.properties&quot;</span>;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> org.springframework.core.io.Resource resourceWritable;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Properties p;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 注意事项:</span></span><br><span class="line"><span class="comment">   * 1、properties放在source目录下</span></span><br><span class="line"><span class="comment">   * 2、param.properties至少有一对键值对</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">static</span> &#123;</span><br><span class="line">    p = <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">    org.springframework.core.io.Resource[] resources = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="type">ResourcePatternResolver</span> <span class="variable">resolver</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PathMatchingResourcePatternResolver</span>();</span><br><span class="line">      resources = resolver.getResources(configFile);</span><br><span class="line">      <span class="keyword">if</span> (resources != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (org.springframework.core.io.Resource r : resources) &#123;</span><br><span class="line">          <span class="keyword">if</span> (r != <span class="literal">null</span>) &#123;</span><br><span class="line">            p.load(r.getInputStream());</span><br><span class="line">            resourceWritable = r;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e1) &#123;</span><br><span class="line">      e1.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">get</span><span class="params">(String key)</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">v</span> <span class="operator">=</span> (String) p.get(key);</span><br><span class="line">    <span class="keyword">if</span> (v != <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">String</span>(v.getBytes(<span class="string">&quot;ISO-8859-1&quot;</span>), <span class="string">&quot;GBK&quot;</span>);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(String key,String value)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">null</span> != resourceWritable) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">OutputStream</span> <span class="variable">fos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(resourceWritable.getFile());</span><br><span class="line">        <span class="type">Properties</span> <span class="variable">p</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">        p.load(resourceWritable.getInputStream());</span><br><span class="line">        value = <span class="keyword">new</span> <span class="title class_">String</span>(value.getBytes(<span class="string">&quot;GBK&quot;</span>),<span class="string">&quot;ISO-8859-1&quot;</span>);</span><br><span class="line">        p.setProperty(key, value);</span><br><span class="line">        p.store(fos, <span class="literal">null</span>);</span><br><span class="line">        fos.close();</span><br><span class="line">      &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Tomcat8安装配置优化</title>
     <url>/2017/06/02/tomcat-install-and-settings/</url>
     <content><![CDATA[<h2 id="Tomcat-8-安装"><a href="#Tomcat-8-安装" class="headerlink" title="Tomcat 8 安装"></a>Tomcat 8 安装</h2><ul>
@@ -1104,6 +1136,138 @@
       </categories>
       <tags>
         <tag>tomcat</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>运维安全的四个层次</title>
+    <url>/2020/05/07/%E8%BF%90%E7%BB%B4%E5%AE%89%E5%85%A8%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%B1%82%E6%AC%A1/</url>
+    <content><![CDATA[<h1 id="运维安全的四个层次"><a href="#运维安全的四个层次" class="headerlink" title="运维安全的四个层次"></a>运维安全的四个层次</h1><h2 id="网络安全"><a href="#网络安全" class="headerlink" title="网络安全"></a>网络安全</h2><h3 id="网络设备的安全"><a href="#网络设备的安全" class="headerlink" title="网络设备的安全"></a>网络设备的安全</h3><ul>
+<li>思科、华为等网络设备定期升级，修复bug和曝出的漏洞</li>
+<li>公网防火墙，核心交换机等核心网络设备的管理</li>
+</ul>
+<h3 id="外网安全策略"><a href="#外网安全策略" class="headerlink" title="外网安全策略"></a>外网安全策略</h3><ul>
+<li>IDC，防火墙策略，严把上行端口开放</li>
+<li>公网上下行流量监控</li>
+<li>对DDos攻击提高警惕，提前准备应急预案<ul>
+<li>临时提高流量，硬抗</li>
+<li>启动流量清洗，将攻击流量引入黑洞，有可能误杀正常用户</li>
+</ul>
+</li>
+</ul>
+<h3 id="专线安全策略"><a href="#专线安全策略" class="headerlink" title="专线安全策略"></a>专线安全策略</h3><ul>
+<li>对涉及金融、支付等项目设立专线</li>
+</ul>
+<h3 id="VPN安全策略"><a href="#VPN安全策略" class="headerlink" title="VPN安全策略"></a>VPN安全策略</h3><ul>
+<li>IPsec VPN：site to site</li>
+<li>OpenVPN： peer to site</li>
+<li>摒弃PPTP等不含加密算法的vpn服务</li>
+<li>端口全禁止，需要通信的申请审批后，再由管理员开放</li>
+</ul>
+<h2 id="数据安全"><a href="#数据安全" class="headerlink" title="数据安全"></a>数据安全</h2><h3 id="数据库用户权限"><a href="#数据库用户权限" class="headerlink" title="数据库用户权限"></a>数据库用户权限</h3><ul>
+<li>管理员权限限定，不允许远程root</li>
+<li>定期更换管理员密码</li>
+<li>应用权限最小化，专人管理</li>
+<li>手动查询权限可审计</li>
+</ul>
+<h3 id="数据库审计设备"><a href="#数据库审计设备" class="headerlink" title="数据库审计设备"></a>数据库审计设备</h3><ul>
+<li>数据库主库不能开一般查询日志（为了性能）</li>
+<li>交换机上镜像流量，接入审计设备，实现实时审计</li>
+<li>不要设计串行在系统里，形成单点和瓶颈</li>
+</ul>
+<h3 id="数据库脱敏"><a href="#数据库脱敏" class="headerlink" title="数据库脱敏"></a>数据库脱敏</h3><ul>
+<li>姓名、身份证、手机号、银行卡号等敏感信息应脱敏处理</li>
+<li>对程序脱敏协同系统架构部共同出规范</li>
+<li>对手动查询权限脱敏，按列授权，录屏</li>
+</ul>
+<h3 id="备份策略"><a href="#备份策略" class="headerlink" title="备份策略"></a>备份策略</h3><ul>
+<li>每周全备，每天增备</li>
+<li>备份文件要每天利用内网流量低谷时间，推送到远程主机，有条件的应跨机房备份</li>
+<li>一定要规划定期恢复测试，保证备份的可用性</li>
+</ul>
+<h2 id="应用安全"><a href="#应用安全" class="headerlink" title="应用安全"></a>应用安全</h2><h3 id="操作系统安全"><a href="#操作系统安全" class="headerlink" title="操作系统安全"></a>操作系统安全</h3><ul>
+<li>系统基础优化（内核优化，优化工具）</li>
+<li>日期，时区同步</li>
+<li>root密码复杂度足够高，需要在操作系统里做定时过期策略</li>
+<li>每三个月使用脚本更新服务器的root密码和iDrac密码，并将更换后的密码加密打包发送给指定管理员邮箱，同时提交gitlab</li>
+<li>对系统关键文件进行md5监控，例如&#x2F;etc&#x2F;passwd，~&#x2F;.ssh&#x2F;authorized_keys文件等，如有变更，触发报警</li>
+<li>定期查毒，漏扫，定期安排更新操作系统</li>
+<li>&#x2F;etc&#x2F;ssh&#x2F;sshd_config里配置：<ul>
+<li>PasswordAuthentication no</li>
+<li>PermitRootLogin without-password</li>
+</ul>
+</li>
+<li>使用saltstack等批量管理软件进行特权命令执行和备份脚本执行（避开ssh协议）</li>
+</ul>
+<h3 id="应用系统安全"><a href="#应用系统安全" class="headerlink" title="应用系统安全"></a>应用系统安全</h3><h4 id="WEB应用防火墙（WAF）"><a href="#WEB应用防火墙（WAF）" class="headerlink" title="WEB应用防火墙（WAF）"></a>WEB应用防火墙（WAF）</h4><ul>
+<li>防SQL注入</li>
+<li>防CC攻击</li>
+<li>防XSS跨站脚本</li>
+</ul>
+<h4 id="应用系统漏洞"><a href="#应用系统漏洞" class="headerlink" title="应用系统漏洞"></a>应用系统漏洞</h4><ul>
+<li>关注0day漏洞新闻</li>
+<li>及时整改并上线投产</li>
+<li>组织技术力量测试，复现</li>
+</ul>
+<h4 id="日志收集和分析"><a href="#日志收集和分析" class="headerlink" title="日志收集和分析"></a>日志收集和分析</h4><ul>
+<li>完善日志收集方案，集中转储</li>
+<li>通过应用系统日志分析，进行安全预警</li>
+</ul>
+<h4 id="DNS劫持"><a href="#DNS劫持" class="headerlink" title="DNS劫持"></a>DNS劫持</h4><ul>
+<li>全站https，购买泛域名证书</li>
+<li>有条件的可以自己维护公网DNS，上dnssec数字签名</li>
+<li>采购基调、听云等第三方拨测服务，分布式监控网站质量</li>
+<li>向ISP投诉，工信部举报</li>
+</ul>
+<h4 id="Basic-Auth"><a href="#Basic-Auth" class="headerlink" title="Basic Auth"></a>Basic Auth</h4><ul>
+<li>在nginx上做，非常简单</li>
+<li>对防脚本攻击有奇效</li>
+</ul>
+<h3 id="企业邮箱服务器安全"><a href="#企业邮箱服务器安全" class="headerlink" title="企业邮箱服务器安全"></a>企业邮箱服务器安全</h3><h4 id="推荐使用微软的Exchange"><a href="#推荐使用微软的Exchange" class="headerlink" title="推荐使用微软的Exchange"></a>推荐使用微软的Exchange</h4><p>功能强大，维护相对简单</p>
+<h4 id="投产反垃圾邮件网关"><a href="#投产反垃圾邮件网关" class="headerlink" title="投产反垃圾邮件网关"></a>投产反垃圾邮件网关</h4><p>投产梭子鱼反垃圾邮件网关，防伪造发信人</p>
+<h4 id="群发审核管控"><a href="#群发审核管控" class="headerlink" title="群发审核管控"></a>群发审核管控</h4><h4 id="用好邮件组"><a href="#用好邮件组" class="headerlink" title="用好邮件组"></a>用好邮件组</h4><h4 id="接入AD域控"><a href="#接入AD域控" class="headerlink" title="接入AD域控"></a>接入AD域控</h4><h3 id="域名安全管理"><a href="#域名安全管理" class="headerlink" title="域名安全管理"></a>域名安全管理</h3><h4 id="做好ICP备案"><a href="#做好ICP备案" class="headerlink" title="做好ICP备案"></a>做好ICP备案</h4><ul>
+<li>域名证书</li>
+<li>域名实名认证（公司模板）</li>
+<li>接入商处蓝色幕布拍照</li>
+<li>法人身份证、管理员身份证</li>
+<li>网站真实性核验单</li>
+</ul>
+<h4 id="公网解析"><a href="#公网解析" class="headerlink" title="公网解析"></a>公网解析</h4><ul>
+<li>专人管理，邮件申请，审批</li>
+<li>将业务解析至不同公网IP出口，双活机房</li>
+<li>智能解析，解析至不同线路</li>
+<li>如有条件，可购买公网解析套餐服务，安全服务等</li>
+</ul>
+<h2 id="内网安全"><a href="#内网安全" class="headerlink" title="内网安全"></a>内网安全</h2><p>80%以上的企业IT安全问题出自内网安全</p>
+<h3 id="堡垒机"><a href="#堡垒机" class="headerlink" title="堡垒机"></a>堡垒机</h3><ul>
+<li>一定要强制使用堡垒机登录服务器</li>
+<li>ssh私钥通行短语机制，避免密钥失窃</li>
+<li>定期审计堡垒机操作日志</li>
+<li>如果有必要，可以上2FA（双因子验证）</li>
+</ul>
+<h3 id="AD域控"><a href="#AD域控" class="headerlink" title="AD域控"></a>AD域控</h3><p>有条件一定要接入windows域控，要求密码复杂度和定期过期</p>
+<ul>
+<li>邮箱</li>
+<li>wifi</li>
+<li>vpn账号密码</li>
+<li>内网系统账号</li>
+<li>业务系统账号</li>
+<li>网络设备等</li>
+</ul>
+<h3 id="办公网安全"><a href="#办公网安全" class="headerlink" title="办公网安全"></a>办公网安全</h3><ul>
+<li>专业的HelpDesk团队</li>
+<li>企业级杀毒软件</li>
+<li>办公电脑接入域控</li>
+<li>上网行为管理</li>
+<li>流量监控，mac地址绑定</li>
+<li>有条件的可以在办公环境上一个小型的业务机房</li>
+<li>wifi管控，单做guest接入点，不能访问业务核心网络</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>运维安全</tag>
       </tags>
   </entry>
   <entry>
@@ -1311,150 +1475,6 @@
       </categories>
       <tags>
         <tag>Linux磁盘分区</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>运维安全的四个层次</title>
-    <url>/2020/05/07/%E8%BF%90%E7%BB%B4%E5%AE%89%E5%85%A8%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%B1%82%E6%AC%A1/</url>
-    <content><![CDATA[<h1 id="运维安全的四个层次"><a href="#运维安全的四个层次" class="headerlink" title="运维安全的四个层次"></a>运维安全的四个层次</h1><h2 id="网络安全"><a href="#网络安全" class="headerlink" title="网络安全"></a>网络安全</h2><h3 id="网络设备的安全"><a href="#网络设备的安全" class="headerlink" title="网络设备的安全"></a>网络设备的安全</h3><ul>
-<li>思科、华为等网络设备定期升级，修复bug和曝出的漏洞</li>
-<li>公网防火墙，核心交换机等核心网络设备的管理</li>
-</ul>
-<h3 id="外网安全策略"><a href="#外网安全策略" class="headerlink" title="外网安全策略"></a>外网安全策略</h3><ul>
-<li>IDC，防火墙策略，严把上行端口开放</li>
-<li>公网上下行流量监控</li>
-<li>对DDos攻击提高警惕，提前准备应急预案<ul>
-<li>临时提高流量，硬抗</li>
-<li>启动流量清洗，将攻击流量引入黑洞，有可能误杀正常用户</li>
-</ul>
-</li>
-</ul>
-<h3 id="专线安全策略"><a href="#专线安全策略" class="headerlink" title="专线安全策略"></a>专线安全策略</h3><ul>
-<li>对涉及金融、支付等项目设立专线</li>
-</ul>
-<h3 id="VPN安全策略"><a href="#VPN安全策略" class="headerlink" title="VPN安全策略"></a>VPN安全策略</h3><ul>
-<li>IPsec VPN：site to site</li>
-<li>OpenVPN： peer to site</li>
-<li>摒弃PPTP等不含加密算法的vpn服务</li>
-<li>端口全禁止，需要通信的申请审批后，再由管理员开放</li>
-</ul>
-<h2 id="数据安全"><a href="#数据安全" class="headerlink" title="数据安全"></a>数据安全</h2><h3 id="数据库用户权限"><a href="#数据库用户权限" class="headerlink" title="数据库用户权限"></a>数据库用户权限</h3><ul>
-<li>管理员权限限定，不允许远程root</li>
-<li>定期更换管理员密码</li>
-<li>应用权限最小化，专人管理</li>
-<li>手动查询权限可审计</li>
-</ul>
-<h3 id="数据库审计设备"><a href="#数据库审计设备" class="headerlink" title="数据库审计设备"></a>数据库审计设备</h3><ul>
-<li>数据库主库不能开一般查询日志（为了性能）</li>
-<li>交换机上镜像流量，接入审计设备，实现实时审计</li>
-<li>不要设计串行在系统里，形成单点和瓶颈</li>
-</ul>
-<h3 id="数据库脱敏"><a href="#数据库脱敏" class="headerlink" title="数据库脱敏"></a>数据库脱敏</h3><ul>
-<li>姓名、身份证、手机号、银行卡号等敏感信息应脱敏处理</li>
-<li>对程序脱敏协同系统架构部共同出规范</li>
-<li>对手动查询权限脱敏，按列授权，录屏</li>
-</ul>
-<h3 id="备份策略"><a href="#备份策略" class="headerlink" title="备份策略"></a>备份策略</h3><ul>
-<li>每周全备，每天增备</li>
-<li>备份文件要每天利用内网流量低谷时间，推送到远程主机，有条件的应跨机房备份</li>
-<li>一定要规划定期恢复测试，保证备份的可用性</li>
-</ul>
-<h2 id="应用安全"><a href="#应用安全" class="headerlink" title="应用安全"></a>应用安全</h2><h3 id="操作系统安全"><a href="#操作系统安全" class="headerlink" title="操作系统安全"></a>操作系统安全</h3><ul>
-<li>系统基础优化（内核优化，优化工具）</li>
-<li>日期，时区同步</li>
-<li>root密码复杂度足够高，需要在操作系统里做定时过期策略</li>
-<li>每三个月使用脚本更新服务器的root密码和iDrac密码，并将更换后的密码加密打包发送给指定管理员邮箱，同时提交gitlab</li>
-<li>对系统关键文件进行md5监控，例如&#x2F;etc&#x2F;passwd，~&#x2F;.ssh&#x2F;authorized_keys文件等，如有变更，触发报警</li>
-<li>定期查毒，漏扫，定期安排更新操作系统</li>
-<li>&#x2F;etc&#x2F;ssh&#x2F;sshd_config里配置：<ul>
-<li>PasswordAuthentication no</li>
-<li>PermitRootLogin without-password</li>
-</ul>
-</li>
-<li>使用saltstack等批量管理软件进行特权命令执行和备份脚本执行（避开ssh协议）</li>
-</ul>
-<h3 id="应用系统安全"><a href="#应用系统安全" class="headerlink" title="应用系统安全"></a>应用系统安全</h3><h4 id="WEB应用防火墙（WAF）"><a href="#WEB应用防火墙（WAF）" class="headerlink" title="WEB应用防火墙（WAF）"></a>WEB应用防火墙（WAF）</h4><ul>
-<li>防SQL注入</li>
-<li>防CC攻击</li>
-<li>防XSS跨站脚本</li>
-</ul>
-<h4 id="应用系统漏洞"><a href="#应用系统漏洞" class="headerlink" title="应用系统漏洞"></a>应用系统漏洞</h4><ul>
-<li>关注0day漏洞新闻</li>
-<li>及时整改并上线投产</li>
-<li>组织技术力量测试，复现</li>
-</ul>
-<h4 id="日志收集和分析"><a href="#日志收集和分析" class="headerlink" title="日志收集和分析"></a>日志收集和分析</h4><ul>
-<li>完善日志收集方案，集中转储</li>
-<li>通过应用系统日志分析，进行安全预警</li>
-</ul>
-<h4 id="DNS劫持"><a href="#DNS劫持" class="headerlink" title="DNS劫持"></a>DNS劫持</h4><ul>
-<li>全站https，购买泛域名证书</li>
-<li>有条件的可以自己维护公网DNS，上dnssec数字签名</li>
-<li>采购基调、听云等第三方拨测服务，分布式监控网站质量</li>
-<li>向ISP投诉，工信部举报</li>
-</ul>
-<h4 id="Basic-Auth"><a href="#Basic-Auth" class="headerlink" title="Basic Auth"></a>Basic Auth</h4><ul>
-<li>在nginx上做，非常简单</li>
-<li>对防脚本攻击有奇效</li>
-</ul>
-<h3 id="企业邮箱服务器安全"><a href="#企业邮箱服务器安全" class="headerlink" title="企业邮箱服务器安全"></a>企业邮箱服务器安全</h3><h4 id="推荐使用微软的Exchange"><a href="#推荐使用微软的Exchange" class="headerlink" title="推荐使用微软的Exchange"></a>推荐使用微软的Exchange</h4><p>功能强大，维护相对简单</p>
-<h4 id="投产反垃圾邮件网关"><a href="#投产反垃圾邮件网关" class="headerlink" title="投产反垃圾邮件网关"></a>投产反垃圾邮件网关</h4><p>投产梭子鱼反垃圾邮件网关，防伪造发信人</p>
-<h4 id="群发审核管控"><a href="#群发审核管控" class="headerlink" title="群发审核管控"></a>群发审核管控</h4><h4 id="用好邮件组"><a href="#用好邮件组" class="headerlink" title="用好邮件组"></a>用好邮件组</h4><h4 id="接入AD域控"><a href="#接入AD域控" class="headerlink" title="接入AD域控"></a>接入AD域控</h4><h3 id="域名安全管理"><a href="#域名安全管理" class="headerlink" title="域名安全管理"></a>域名安全管理</h3><h4 id="做好ICP备案"><a href="#做好ICP备案" class="headerlink" title="做好ICP备案"></a>做好ICP备案</h4><ul>
-<li>域名证书</li>
-<li>域名实名认证（公司模板）</li>
-<li>接入商处蓝色幕布拍照</li>
-<li>法人身份证、管理员身份证</li>
-<li>网站真实性核验单</li>
-</ul>
-<h4 id="公网解析"><a href="#公网解析" class="headerlink" title="公网解析"></a>公网解析</h4><ul>
-<li>专人管理，邮件申请，审批</li>
-<li>将业务解析至不同公网IP出口，双活机房</li>
-<li>智能解析，解析至不同线路</li>
-<li>如有条件，可购买公网解析套餐服务，安全服务等</li>
-</ul>
-<h2 id="内网安全"><a href="#内网安全" class="headerlink" title="内网安全"></a>内网安全</h2><p>80%以上的企业IT安全问题出自内网安全</p>
-<h3 id="堡垒机"><a href="#堡垒机" class="headerlink" title="堡垒机"></a>堡垒机</h3><ul>
-<li>一定要强制使用堡垒机登录服务器</li>
-<li>ssh私钥通行短语机制，避免密钥失窃</li>
-<li>定期审计堡垒机操作日志</li>
-<li>如果有必要，可以上2FA（双因子验证）</li>
-</ul>
-<h3 id="AD域控"><a href="#AD域控" class="headerlink" title="AD域控"></a>AD域控</h3><p>有条件一定要接入windows域控，要求密码复杂度和定期过期</p>
-<ul>
-<li>邮箱</li>
-<li>wifi</li>
-<li>vpn账号密码</li>
-<li>内网系统账号</li>
-<li>业务系统账号</li>
-<li>网络设备等</li>
-</ul>
-<h3 id="办公网安全"><a href="#办公网安全" class="headerlink" title="办公网安全"></a>办公网安全</h3><ul>
-<li>专业的HelpDesk团队</li>
-<li>企业级杀毒软件</li>
-<li>办公电脑接入域控</li>
-<li>上网行为管理</li>
-<li>流量监控，mac地址绑定</li>
-<li>有条件的可以在办公环境上一个小型的业务机房</li>
-<li>wifi管控，单做guest接入点，不能访问业务核心网络</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>运维安全</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>利用Spring的Resource类读写中文Properties</title>
-    <url>/2017/05/09/spring-resource-properties/</url>
-    <content><![CDATA[<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>Spring对Properties的读取进行了完善而全面的封装，对于写则仍需配合FileOutputStream进行。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.oolong.common.util;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.PathMatchingResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.ResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserVar</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">configFile</span> <span class="operator">=</span> <span class="string">&quot;classpath*:param.properties&quot;</span>;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> org.springframework.core.io.Resource resourceWritable;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Properties p;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 注意事项:</span></span><br><span class="line"><span class="comment">   * 1、properties放在source目录下</span></span><br><span class="line"><span class="comment">   * 2、param.properties至少有一对键值对</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">static</span> &#123;</span><br><span class="line">    p = <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">    org.springframework.core.io.Resource[] resources = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="type">ResourcePatternResolver</span> <span class="variable">resolver</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PathMatchingResourcePatternResolver</span>();</span><br><span class="line">      resources = resolver.getResources(configFile);</span><br><span class="line">      <span class="keyword">if</span> (resources != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (org.springframework.core.io.Resource r : resources) &#123;</span><br><span class="line">          <span class="keyword">if</span> (r != <span class="literal">null</span>) &#123;</span><br><span class="line">            p.load(r.getInputStream());</span><br><span class="line">            resourceWritable = r;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e1) &#123;</span><br><span class="line">      e1.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">get</span><span class="params">(String key)</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">v</span> <span class="operator">=</span> (String) p.get(key);</span><br><span class="line">    <span class="keyword">if</span> (v != <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">String</span>(v.getBytes(<span class="string">&quot;ISO-8859-1&quot;</span>), <span class="string">&quot;GBK&quot;</span>);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(String key,String value)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">null</span> != resourceWritable) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">OutputStream</span> <span class="variable">fos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(resourceWritable.getFile());</span><br><span class="line">        <span class="type">Properties</span> <span class="variable">p</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">        p.load(resourceWritable.getInputStream());</span><br><span class="line">        value = <span class="keyword">new</span> <span class="title class_">String</span>(value.getBytes(<span class="string">&quot;GBK&quot;</span>),<span class="string">&quot;ISO-8859-1&quot;</span>);</span><br><span class="line">        p.setProperty(key, value);</span><br><span class="line">        p.store(fos, <span class="literal">null</span>);</span><br><span class="line">        fos.close();</span><br><span class="line">      &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Spring</category>
-      </categories>
-      <tags>
-        <tag>Spring</tag>
       </tags>
   </entry>
 </search>

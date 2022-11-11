@@ -19,18 +19,21 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"javabk.com","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="帮助命令 docker version  检查docker版本  镜像命令容器命令小结">
+    <meta name="description" content="仓库，镜像，容器的关系Docker包括三个基本概念：  镜像（Image）：Docker 镜像是一个特殊的文件系统，除了提供容器运行时所需的程序、库、资源、配置等文件外，还包含了一些为运行时准备的一些配置参数（如匿名卷、环境变量、用户等）。镜像不包含任何动态数据，其内容在构建之后也不会被改变。  容器（Container）：镜像（Image）和容器（Container）的关系，就像是面向对象程序设">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Docker常见命令">
 <meta property="og:url" content="https://javabk.com/2022/11/11/Docker%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4/index.html">
 <meta property="og:site_name" content="JAVABK">
-<meta property="og:description" content="帮助命令 docker version  检查docker版本  镜像命令容器命令小结">
+<meta property="og:description" content="仓库，镜像，容器的关系Docker包括三个基本概念：  镜像（Image）：Docker 镜像是一个特殊的文件系统，除了提供容器运行时所需的程序、库、资源、配置等文件外，还包含了一些为运行时准备的一些配置参数（如匿名卷、环境变量、用户等）。镜像不包含任何动态数据，其内容在构建之后也不会被改变。  容器（Container）：镜像（Image）和容器（Container）的关系，就像是面向对象程序设">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/docker-architecture.svg">
+<meta property="og:image" content="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/docker_commands.png">
 <meta property="article:published_time" content="2022-11-11T08:50:14.000Z">
-<meta property="article:modified_time" content="2022-11-11T09:02:09.698Z">
+<meta property="article:modified_time" content="2022-11-11T10:37:29.188Z">
 <meta property="article:author" content="DylanPeng">
 <meta property="article:tag" content="Docker命令">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/docker-architecture.svg">
 
 
 <link rel="canonical" href="https://javabk.com/2022/11/11/Docker%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4/">
@@ -149,7 +152,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%AE%E5%8A%A9%E5%91%BD%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">帮助命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E5%91%BD%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">镜像命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">容器命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%93%E5%BA%93%EF%BC%8C%E9%95%9C%E5%83%8F%EF%BC%8C%E5%AE%B9%E5%99%A8%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.</span> <span class="nav-text">仓库，镜像，容器的关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker%E5%91%BD%E4%BB%A4%E6%A6%82%E8%A7%88"><span class="nav-number">2.</span> <span class="nav-text">Docker命令概览</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -247,7 +250,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2022-11-11 16:50:14 / 修改时间：17:02:09" itemprop="dateCreated datePublished" datetime="2022-11-11T16:50:14+08:00">2022-11-11</time>
+      <time title="创建时间：2022-11-11 16:50:14 / 修改时间：18:37:29" itemprop="dateCreated datePublished" datetime="2022-11-11T16:50:14+08:00">2022-11-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -269,10 +272,26 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h1 id="帮助命令"><a href="#帮助命令" class="headerlink" title="帮助命令"></a>帮助命令</h1><ul>
-<li>docker version<br>  检查docker版本</li>
+        <h1 id="仓库，镜像，容器的关系"><a href="#仓库，镜像，容器的关系" class="headerlink" title="仓库，镜像，容器的关系"></a>仓库，镜像，容器的关系</h1><p>Docker包括三个基本概念：</p>
+<ul>
+<li>镜像（<code>Image</code>）：Docker 镜像是一个特殊的文件系统，除了提供容器运行时所需的程序、库、资源、配置等文件外，还包含了一些为运行时准备的一些配置参数（如匿名卷、环境变量、用户等）。镜像不包含任何动态数据，其内容在构建之后也不会被改变。 </li>
+<li>容器（<code>Container</code>）：镜像（<code>Image</code>）和容器（<code>Container</code>）的关系，就像是面向对象程序设计中的 <code>类</code> 和 <code>实例</code> 一样，镜像是静态的定义，容器是镜像运行时的实体。容器可以被创建、启动、停止、删除、暂停等。 </li>
+<li>仓库（<code>Repository</code>）：仓库（<code>Repository</code>）类似Git的远程仓库，集中存放镜像文件。</li>
 </ul>
-<h1 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h1><h1 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h1><h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1>
+<p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/docker-architecture.svg"></p>
+<h1 id="Docker命令概览"><a href="#Docker命令概览" class="headerlink" title="Docker命令概览"></a>Docker命令概览</h1><ul>
+<li>Docker帮助命令—<code>docker --help</code></li>
+<li>Docker环境信息 — <code>docker [info|version]</code></li>
+<li>容器生命周期管理 — <code>docker  [create|exec|run|start|stop|restart|kill|rm|pause|unpause]</code></li>
+<li>容器操作管理 — <code>docker [ps|inspect|top|attach|wait|export|port|rename|stat]</code></li>
+<li>容器rootfs命令 — <code>docker [commit|cp|diff]</code></li>
+<li>镜像仓库 — <code>docker [login|pull|push|search]</code></li>
+<li>本地镜像管理 — <code>docker [build|images|rmi|tag|save|import|load]</code></li>
+<li>容器资源管理 — <code>docker [volume|network]</code></li>
+<li>系统日志信息 — <code>docker [events|history|logs]</code></li>
+</ul>
+<p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/docker_commands.png"></p>
+
     </div>
 
     
