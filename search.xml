@@ -103,6 +103,51 @@
       </tags>
   </entry>
   <entry>
+    <title>MySQL部署和操作规范</title>
+    <url>/2022/11/10/MySQL%E9%83%A8%E7%BD%B2%E5%92%8C%E6%93%8D%E4%BD%9C%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<p>规范的部署和操作可以让MySQL更加安全，并且可以提高数据库的性能。</p>
+<h1 id="选择合适的MySQL版本"><a href="#选择合适的MySQL版本" class="headerlink" title="选择合适的MySQL版本"></a>选择合适的MySQL版本</h1><p>不建议使用太旧的版本<br>因为很多特性旧版本都没有，并且性能也没有新版本的好<br>线上环境建议使用 GA （General Availability，正式发布的版本）</p>
+<h1 id="必须开启-Binlog"><a href="#必须开启-Binlog" class="headerlink" title="必须开启 Binlog"></a>必须开启 Binlog</h1><p>Binlog 的两个主要作用：复制和灾备<br>在通常情况下，必须开启 Binlog</p>
+<h1 id="对数据安全要求较高的场景，建议设置为“双-1”"><a href="#对数据安全要求较高的场景，建议设置为“双-1”" class="headerlink" title="对数据安全要求较高的场景，建议设置为“双 1”"></a>对数据安全要求较高的场景，建议设置为“双 1”</h1><p>innodb_flush_log_at_trx_commit 参数和 sync_binlog 参数都设置为 1</p>
+<h1 id="配置不区分大小写"><a href="#配置不区分大小写" class="headerlink" title="配置不区分大小写"></a>配置不区分大小写</h1><p>可以将 lower_case_table_names 参数设置为 1，表示表名以小写形式存储在磁盘上，并且不区分大小写</p>
+<h1 id="如无特殊说明，设置业务用户只有增、删、查、改的权限"><a href="#如无特殊说明，设置业务用户只有增、删、查、改的权限" class="headerlink" title="如无特殊说明，设置业务用户只有增、删、查、改的权限"></a>如无特殊说明，设置业务用户只有增、删、查、改的权限</h1><p>权限最小化可以大大降低误删数据库的风险</p>
+<h1 id="合理设置缓冲池"><a href="#合理设置缓冲池" class="headerlink" title="合理设置缓冲池"></a>合理设置缓冲池</h1><p>将 innodb_buffer_pool_size 参数设置为机器内存的 60%~75%</p>
+<h1 id="批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察"><a href="#批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察" class="headerlink" title="批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察"></a>批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察</h1><p>批量导入、导出、更新、删除操作以及会导致主从延迟和磁盘空间增加的操作（如碎片整理、增减字段等）建议在业务低峰进行。防止这些操作对线上业务影响。例如，批量删除数据可能会导致主从延迟，如果有从库提供业务查询，可能会导致读取延迟。碎片整理、增减字段等操作，短时间需要大量的磁盘空间，可能会导致数据库磁盘跑满</p>
+<h1 id="如果有可能导致-MySQL-QPS-上升，应提前告知-DBA"><a href="#如果有可能导致-MySQL-QPS-上升，应提前告知-DBA" class="headerlink" title="如果有可能导致 MySQL QPS 上升，应提前告知 DBA"></a>如果有可能导致 MySQL QPS 上升，应提前告知 DBA</h1><p>如果超过现有数据库配置所能承载的最大 QPS，则需要考虑扩容</p>
+<h1 id="删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表"><a href="#删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表" class="headerlink" title="删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表"></a>删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表</h1>]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL规范</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL建表规范</title>
+    <url>/2022/11/09/MySQL%E5%BB%BA%E8%A1%A8%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<h2 id="MySQL规范–建表规范"><a href="#MySQL规范–建表规范" class="headerlink" title="MySQL规范–建表规范"></a>MySQL规范–建表规范</h2><p>规范的表结构能降低MySQL出现问题的概率，下面总结一些MySQL的建表规范</p>
+<h3 id="1、库名、表名、字段名全部采用小写格式。"><a href="#1、库名、表名、字段名全部采用小写格式。" class="headerlink" title="1、库名、表名、字段名全部采用小写格式。"></a>1、库名、表名、字段名全部采用小写格式。</h3><p>这是防止出现大小写不一致导致找不到对应表的情况。</p>
+<h3 id="2、避免使用MySQL的保留字。"><a href="#2、避免使用MySQL的保留字。" class="headerlink" title="2、避免使用MySQL的保留字。"></a>2、避免使用MySQL的保留字。</h3><p>使用mysql时一定要注意，尽量不要使用它的保留字作为表名或者列名，否则会出现莫名其妙的错误。如果之前用了，在sql语句中就用&#96;&#96;包括起来。</p>
+<h3 id="3、表名、列名建议不要超过30个字符。"><a href="#3、表名、列名建议不要超过30个字符。" class="headerlink" title="3、表名、列名建议不要超过30个字符。"></a>3、表名、列名建议不要超过30个字符。</h3><h3 id="4、临时库表、备份库表的命名"><a href="#4、临时库表、备份库表的命名" class="headerlink" title="4、临时库表、备份库表的命名"></a>4、临时库表、备份库表的命名</h3><p>临时库表必须以tmp加上日期为后缀，比如user_info_tmp_20221109。<br>备份库表必须以bak加上日期为后缀，比如user_info_bak_20221109。</p>
+<h3 id="5、索引命名"><a href="#5、索引命名" class="headerlink" title="5、索引命名"></a>5、索引命名</h3><p>非唯一索引建议按照”idx字段名”进行命名。<br>唯一索引建议按照 “uniq_字段名”进行命名。</p>
+<h3 id="6、主键的建议"><a href="#6、主键的建议" class="headerlink" title="6、主键的建议"></a>6、主键的建议</h3><p>表必须有主键。<br>不使用有业务意义的的列作为主键，以免收到业务变化的影响。<br>不使用更新频繁的列作为主键。<br>不使用UUID、MD5等作为主键，因为它们可能会导致数据过于离散。<br>建议使用非空的唯一键作为主键，并配置自增或者发号器。</p>
+<h3 id="7、建议使用-InnoDB"><a href="#7、建议使用-InnoDB" class="headerlink" title="7、建议使用 InnoDB"></a>7、建议使用 InnoDB</h3><p>InnoDB 具有支持事务、行锁设计、在高并发场景下性能更好等特性。因此在绝大多数业务场景下，InnoDB 都是唯一选择。</p>
+<h3 id="8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci"><a href="#8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci" class="headerlink" title="8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci"></a>8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci</h3><p>utf8mb4 为万国码，无乱码风险；与 utf8 编码相比，utf8mb4 支持 Emoji 表情。</p>
+<h3 id="9、所有表、字段都需要增加-comment-来描述此表、字段的含义"><a href="#9、所有表、字段都需要增加-comment-来描述此表、字段的含义" class="headerlink" title="9、所有表、字段都需要增加 comment 来描述此表、字段的含义"></a>9、所有表、字段都需要增加 comment 来描述此表、字段的含义</h3><h3 id="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"><a href="#10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段" class="headerlink" title="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"></a>10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段</h3><h3 id="11、用尽量少的存储空间来存储一个字段的数据"><a href="#11、用尽量少的存储空间来存储一个字段的数据" class="headerlink" title="11、用尽量少的存储空间来存储一个字段的数据"></a>11、用尽量少的存储空间来存储一个字段的数据</h3><p>能用 int 的就不用 char 或 varchar<br>能用 tinyint 的就不用 int<br>使用 unsigned 存储非负数值</p>
+<h3 id="12、尽可能不使用-text-和-blob-类型"><a href="#12、尽可能不使用-text-和-blob-类型" class="headerlink" title="12、尽可能不使用 text 和 blob 类型"></a>12、尽可能不使用 text 和 blob 类型</h3><p>使用 text 或 blob 类型，会浪费更多的磁盘空间和内存空间。如无法避免使用 text 或 blob 类型，则建议独立出一张表，使用主键或其他唯一的字段来对应，以避免影响原有表的查询效率。</p>
+<h3 id="13、禁止在数据库中存储明文密码"><a href="#13、禁止在数据库中存储明文密码" class="headerlink" title="13、禁止在数据库中存储明文密码"></a>13、禁止在数据库中存储明文密码</h3><p>数据安全第一，防止密码泄露</p>
+<h3 id="14、索引设计"><a href="#14、索引设计" class="headerlink" title="14、索引设计"></a>14、索引设计</h3><p>在设计索引时，建议考虑以下因素：<br>经常作为条件、排序、join关联的字段，建议加上索引。<br>单表索引数不建议过多，因为索引也会占用空间。<br>如果可以使用覆盖索引，或者几个字段经常同时作为条件，则可以考虑使用联合索引。<br>不在低基数的列上创建索引，如性别字段。</p>
+<h3 id="15、不建议使用外键"><a href="#15、不建议使用外键" class="headerlink" title="15、不建议使用外键"></a>15、不建议使用外键</h3><p>在有外键的情况下，update 操作和 delete 操作都会涉及相关联的表，不仅会影响 SQL 的性能，还会大大增加死锁出现的概率</p>
+<h3 id="16、线上业务禁止使用存储过程、视图、触发器、Event-等"><a href="#16、线上业务禁止使用存储过程、视图、触发器、Event-等" class="headerlink" title="16、线上业务禁止使用存储过程、视图、触发器、Event 等"></a>16、线上业务禁止使用存储过程、视图、触发器、Event 等</h3><p>在高并发的情况下，这些功能很可能会影响数据库的性能，如果有类似的需求，则建议把这些逻辑放到服务层实现</p>
+<h3 id="17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定"><a href="#17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定" class="headerlink" title="17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定"></a>17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定</h3>]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL规范</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL数据库开发设计规范</title>
     <url>/2022/11/09/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/</url>
     <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>本规范由四部分组成：表结构设计、索引设计、高可用设计、分布式架构设计。</p>
@@ -213,51 +258,6 @@
 <h1 id="在-SQL-中不建议使用-sleep"><a href="#在-SQL-中不建议使用-sleep" class="headerlink" title="在 SQL 中不建议使用 sleep()"></a>在 SQL 中不建议使用 sleep()</h1><p>使用 sleep() 可能会增加 SQL 加锁的时间，从而影响并发性能</p>
 <h1 id="避免大表的-join"><a href="#避免大表的-join" class="headerlink" title="避免大表的 join"></a>避免大表的 join</h1><p>可能会导致数据库高负载，从而影响其他查询</p>
 <h1 id="同一张表的多条-alter-语句要合成一次操作"><a href="#同一张表的多条-alter-语句要合成一次操作" class="headerlink" title="同一张表的多条 alter 语句要合成一次操作"></a>同一张表的多条 alter 语句要合成一次操作</h1>]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>MySQL规范</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MySQL建表规范</title>
-    <url>/2022/11/09/MySQL%E5%BB%BA%E8%A1%A8%E8%A7%84%E8%8C%83/</url>
-    <content><![CDATA[<h2 id="MySQL规范–建表规范"><a href="#MySQL规范–建表规范" class="headerlink" title="MySQL规范–建表规范"></a>MySQL规范–建表规范</h2><p>规范的表结构能降低MySQL出现问题的概率，下面总结一些MySQL的建表规范</p>
-<h3 id="1、库名、表名、字段名全部采用小写格式。"><a href="#1、库名、表名、字段名全部采用小写格式。" class="headerlink" title="1、库名、表名、字段名全部采用小写格式。"></a>1、库名、表名、字段名全部采用小写格式。</h3><p>这是防止出现大小写不一致导致找不到对应表的情况。</p>
-<h3 id="2、避免使用MySQL的保留字。"><a href="#2、避免使用MySQL的保留字。" class="headerlink" title="2、避免使用MySQL的保留字。"></a>2、避免使用MySQL的保留字。</h3><p>使用mysql时一定要注意，尽量不要使用它的保留字作为表名或者列名，否则会出现莫名其妙的错误。如果之前用了，在sql语句中就用&#96;&#96;包括起来。</p>
-<h3 id="3、表名、列名建议不要超过30个字符。"><a href="#3、表名、列名建议不要超过30个字符。" class="headerlink" title="3、表名、列名建议不要超过30个字符。"></a>3、表名、列名建议不要超过30个字符。</h3><h3 id="4、临时库表、备份库表的命名"><a href="#4、临时库表、备份库表的命名" class="headerlink" title="4、临时库表、备份库表的命名"></a>4、临时库表、备份库表的命名</h3><p>临时库表必须以tmp加上日期为后缀，比如user_info_tmp_20221109。<br>备份库表必须以bak加上日期为后缀，比如user_info_bak_20221109。</p>
-<h3 id="5、索引命名"><a href="#5、索引命名" class="headerlink" title="5、索引命名"></a>5、索引命名</h3><p>非唯一索引建议按照”idx字段名”进行命名。<br>唯一索引建议按照 “uniq_字段名”进行命名。</p>
-<h3 id="6、主键的建议"><a href="#6、主键的建议" class="headerlink" title="6、主键的建议"></a>6、主键的建议</h3><p>表必须有主键。<br>不使用有业务意义的的列作为主键，以免收到业务变化的影响。<br>不使用更新频繁的列作为主键。<br>不使用UUID、MD5等作为主键，因为它们可能会导致数据过于离散。<br>建议使用非空的唯一键作为主键，并配置自增或者发号器。</p>
-<h3 id="7、建议使用-InnoDB"><a href="#7、建议使用-InnoDB" class="headerlink" title="7、建议使用 InnoDB"></a>7、建议使用 InnoDB</h3><p>InnoDB 具有支持事务、行锁设计、在高并发场景下性能更好等特性。因此在绝大多数业务场景下，InnoDB 都是唯一选择。</p>
-<h3 id="8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci"><a href="#8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci" class="headerlink" title="8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci"></a>8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci</h3><p>utf8mb4 为万国码，无乱码风险；与 utf8 编码相比，utf8mb4 支持 Emoji 表情。</p>
-<h3 id="9、所有表、字段都需要增加-comment-来描述此表、字段的含义"><a href="#9、所有表、字段都需要增加-comment-来描述此表、字段的含义" class="headerlink" title="9、所有表、字段都需要增加 comment 来描述此表、字段的含义"></a>9、所有表、字段都需要增加 comment 来描述此表、字段的含义</h3><h3 id="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"><a href="#10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段" class="headerlink" title="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"></a>10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段</h3><h3 id="11、用尽量少的存储空间来存储一个字段的数据"><a href="#11、用尽量少的存储空间来存储一个字段的数据" class="headerlink" title="11、用尽量少的存储空间来存储一个字段的数据"></a>11、用尽量少的存储空间来存储一个字段的数据</h3><p>能用 int 的就不用 char 或 varchar<br>能用 tinyint 的就不用 int<br>使用 unsigned 存储非负数值</p>
-<h3 id="12、尽可能不使用-text-和-blob-类型"><a href="#12、尽可能不使用-text-和-blob-类型" class="headerlink" title="12、尽可能不使用 text 和 blob 类型"></a>12、尽可能不使用 text 和 blob 类型</h3><p>使用 text 或 blob 类型，会浪费更多的磁盘空间和内存空间。如无法避免使用 text 或 blob 类型，则建议独立出一张表，使用主键或其他唯一的字段来对应，以避免影响原有表的查询效率。</p>
-<h3 id="13、禁止在数据库中存储明文密码"><a href="#13、禁止在数据库中存储明文密码" class="headerlink" title="13、禁止在数据库中存储明文密码"></a>13、禁止在数据库中存储明文密码</h3><p>数据安全第一，防止密码泄露</p>
-<h3 id="14、索引设计"><a href="#14、索引设计" class="headerlink" title="14、索引设计"></a>14、索引设计</h3><p>在设计索引时，建议考虑以下因素：<br>经常作为条件、排序、join关联的字段，建议加上索引。<br>单表索引数不建议过多，因为索引也会占用空间。<br>如果可以使用覆盖索引，或者几个字段经常同时作为条件，则可以考虑使用联合索引。<br>不在低基数的列上创建索引，如性别字段。</p>
-<h3 id="15、不建议使用外键"><a href="#15、不建议使用外键" class="headerlink" title="15、不建议使用外键"></a>15、不建议使用外键</h3><p>在有外键的情况下，update 操作和 delete 操作都会涉及相关联的表，不仅会影响 SQL 的性能，还会大大增加死锁出现的概率</p>
-<h3 id="16、线上业务禁止使用存储过程、视图、触发器、Event-等"><a href="#16、线上业务禁止使用存储过程、视图、触发器、Event-等" class="headerlink" title="16、线上业务禁止使用存储过程、视图、触发器、Event 等"></a>16、线上业务禁止使用存储过程、视图、触发器、Event 等</h3><p>在高并发的情况下，这些功能很可能会影响数据库的性能，如果有类似的需求，则建议把这些逻辑放到服务层实现</p>
-<h3 id="17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定"><a href="#17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定" class="headerlink" title="17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定"></a>17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定</h3>]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>MySQL规范</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MySQL部署和操作规范</title>
-    <url>/2022/11/10/MySQL%E9%83%A8%E7%BD%B2%E5%92%8C%E6%93%8D%E4%BD%9C%E8%A7%84%E8%8C%83/</url>
-    <content><![CDATA[<p>规范的部署和操作可以让MySQL更加安全，并且可以提高数据库的性能。</p>
-<h1 id="选择合适的MySQL版本"><a href="#选择合适的MySQL版本" class="headerlink" title="选择合适的MySQL版本"></a>选择合适的MySQL版本</h1><p>不建议使用太旧的版本<br>因为很多特性旧版本都没有，并且性能也没有新版本的好<br>线上环境建议使用 GA （General Availability，正式发布的版本）</p>
-<h1 id="必须开启-Binlog"><a href="#必须开启-Binlog" class="headerlink" title="必须开启 Binlog"></a>必须开启 Binlog</h1><p>Binlog 的两个主要作用：复制和灾备<br>在通常情况下，必须开启 Binlog</p>
-<h1 id="对数据安全要求较高的场景，建议设置为“双-1”"><a href="#对数据安全要求较高的场景，建议设置为“双-1”" class="headerlink" title="对数据安全要求较高的场景，建议设置为“双 1”"></a>对数据安全要求较高的场景，建议设置为“双 1”</h1><p>innodb_flush_log_at_trx_commit 参数和 sync_binlog 参数都设置为 1</p>
-<h1 id="配置不区分大小写"><a href="#配置不区分大小写" class="headerlink" title="配置不区分大小写"></a>配置不区分大小写</h1><p>可以将 lower_case_table_names 参数设置为 1，表示表名以小写形式存储在磁盘上，并且不区分大小写</p>
-<h1 id="如无特殊说明，设置业务用户只有增、删、查、改的权限"><a href="#如无特殊说明，设置业务用户只有增、删、查、改的权限" class="headerlink" title="如无特殊说明，设置业务用户只有增、删、查、改的权限"></a>如无特殊说明，设置业务用户只有增、删、查、改的权限</h1><p>权限最小化可以大大降低误删数据库的风险</p>
-<h1 id="合理设置缓冲池"><a href="#合理设置缓冲池" class="headerlink" title="合理设置缓冲池"></a>合理设置缓冲池</h1><p>将 innodb_buffer_pool_size 参数设置为机器内存的 60%~75%</p>
-<h1 id="批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察"><a href="#批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察" class="headerlink" title="批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察"></a>批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察</h1><p>批量导入、导出、更新、删除操作以及会导致主从延迟和磁盘空间增加的操作（如碎片整理、增减字段等）建议在业务低峰进行。防止这些操作对线上业务影响。例如，批量删除数据可能会导致主从延迟，如果有从库提供业务查询，可能会导致读取延迟。碎片整理、增减字段等操作，短时间需要大量的磁盘空间，可能会导致数据库磁盘跑满</p>
-<h1 id="如果有可能导致-MySQL-QPS-上升，应提前告知-DBA"><a href="#如果有可能导致-MySQL-QPS-上升，应提前告知-DBA" class="headerlink" title="如果有可能导致 MySQL QPS 上升，应提前告知 DBA"></a>如果有可能导致 MySQL QPS 上升，应提前告知 DBA</h1><p>如果超过现有数据库配置所能承载的最大 QPS，则需要考虑扩容</p>
-<h1 id="删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表"><a href="#删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表" class="headerlink" title="删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表"></a>删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表</h1>]]></content>
       <categories>
         <category>MySQL</category>
       </categories>
@@ -428,6 +428,41 @@
       </categories>
       <tags>
         <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>常用的磁盘分区形式</title>
+    <url>/2020/05/07/linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%BD%A2%E5%BC%8F/</url>
+    <content><![CDATA[<p>常用的磁盘分区形式如表1所示，并且针对Linux操作系统，不同的磁盘分区形式需要选择不同的分区工具。</p>
+<table>
+<thead>
+<tr>
+<th>磁盘分区形式</th>
+<th>支持最大磁盘容量</th>
+<th>支持分区数量</th>
+<th>Linux分区工具</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主启动记录分区（MBR）</td>
+<td>2 TB</td>
+<td>4个主分区 <br />3个主分区和1个扩展分区<br />MBR分区包含主分区和扩展分区，其中扩展分区里面可以包含若干个逻辑分区。扩展分区不可以直接使用，需要划分成若干个逻辑分区才可以使用。以创建6个分区为例，以下两种分区情况供参考：<br />3个主分区，1个扩展分区，其中扩展分区中包含3个逻辑分区。<br />1个主分区，1个扩展分区，其中扩展分区中包含5个逻辑分区。</td>
+<td>以下两种工具均可以使用：fdisk工具parted工具</td>
+</tr>
+<tr>
+<td>全局分区表（GPT, Guid Partition Table）</td>
+<td>18 EB1 EB &#x3D; 1048576 TB</td>
+<td>不限制分区数量GPT格式下没有主分区、扩展分区以及逻辑分区之分。</td>
+<td>parted工具</td>
+</tr>
+</tbody></table>
+<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，如果您需要使用大于2 TB的磁盘容量，分区形式请采用GPT。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux磁盘分区</tag>
       </tags>
   </entry>
   <entry>
@@ -666,41 +701,6 @@
       </tags>
   </entry>
   <entry>
-    <title>常用的磁盘分区形式</title>
-    <url>/2020/05/07/linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%BD%A2%E5%BC%8F/</url>
-    <content><![CDATA[<p>常用的磁盘分区形式如表1所示，并且针对Linux操作系统，不同的磁盘分区形式需要选择不同的分区工具。</p>
-<table>
-<thead>
-<tr>
-<th>磁盘分区形式</th>
-<th>支持最大磁盘容量</th>
-<th>支持分区数量</th>
-<th>Linux分区工具</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>主启动记录分区（MBR）</td>
-<td>2 TB</td>
-<td>4个主分区 <br />3个主分区和1个扩展分区<br />MBR分区包含主分区和扩展分区，其中扩展分区里面可以包含若干个逻辑分区。扩展分区不可以直接使用，需要划分成若干个逻辑分区才可以使用。以创建6个分区为例，以下两种分区情况供参考：<br />3个主分区，1个扩展分区，其中扩展分区中包含3个逻辑分区。<br />1个主分区，1个扩展分区，其中扩展分区中包含5个逻辑分区。</td>
-<td>以下两种工具均可以使用：fdisk工具parted工具</td>
-</tr>
-<tr>
-<td>全局分区表（GPT, Guid Partition Table）</td>
-<td>18 EB1 EB &#x3D; 1048576 TB</td>
-<td>不限制分区数量GPT格式下没有主分区、扩展分区以及逻辑分区之分。</td>
-<td>parted工具</td>
-</tr>
-</tbody></table>
-<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，如果您需要使用大于2 TB的磁盘容量，分区形式请采用GPT。</p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux磁盘分区</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>CentOS逻辑卷调整分区大小</title>
     <url>/2018/05/04/lvreduce-lvextend/</url>
     <content><![CDATA[<h1 id="CentOS逻辑卷调整分区大小目的"><a href="#CentOS逻辑卷调整分区大小目的" class="headerlink" title="CentOS逻辑卷调整分区大小目的"></a>CentOS逻辑卷调整分区大小目的</h1><p>因为系统使用的是逻辑卷分区（LVM），且分区大小不合理</p>
@@ -916,138 +916,6 @@
       </tags>
   </entry>
   <entry>
-    <title>运维安全的四个层次</title>
-    <url>/2020/05/07/%E8%BF%90%E7%BB%B4%E5%AE%89%E5%85%A8%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%B1%82%E6%AC%A1/</url>
-    <content><![CDATA[<h1 id="运维安全的四个层次"><a href="#运维安全的四个层次" class="headerlink" title="运维安全的四个层次"></a>运维安全的四个层次</h1><h2 id="网络安全"><a href="#网络安全" class="headerlink" title="网络安全"></a>网络安全</h2><h3 id="网络设备的安全"><a href="#网络设备的安全" class="headerlink" title="网络设备的安全"></a>网络设备的安全</h3><ul>
-<li>思科、华为等网络设备定期升级，修复bug和曝出的漏洞</li>
-<li>公网防火墙，核心交换机等核心网络设备的管理</li>
-</ul>
-<h3 id="外网安全策略"><a href="#外网安全策略" class="headerlink" title="外网安全策略"></a>外网安全策略</h3><ul>
-<li>IDC，防火墙策略，严把上行端口开放</li>
-<li>公网上下行流量监控</li>
-<li>对DDos攻击提高警惕，提前准备应急预案<ul>
-<li>临时提高流量，硬抗</li>
-<li>启动流量清洗，将攻击流量引入黑洞，有可能误杀正常用户</li>
-</ul>
-</li>
-</ul>
-<h3 id="专线安全策略"><a href="#专线安全策略" class="headerlink" title="专线安全策略"></a>专线安全策略</h3><ul>
-<li>对涉及金融、支付等项目设立专线</li>
-</ul>
-<h3 id="VPN安全策略"><a href="#VPN安全策略" class="headerlink" title="VPN安全策略"></a>VPN安全策略</h3><ul>
-<li>IPsec VPN：site to site</li>
-<li>OpenVPN： peer to site</li>
-<li>摒弃PPTP等不含加密算法的vpn服务</li>
-<li>端口全禁止，需要通信的申请审批后，再由管理员开放</li>
-</ul>
-<h2 id="数据安全"><a href="#数据安全" class="headerlink" title="数据安全"></a>数据安全</h2><h3 id="数据库用户权限"><a href="#数据库用户权限" class="headerlink" title="数据库用户权限"></a>数据库用户权限</h3><ul>
-<li>管理员权限限定，不允许远程root</li>
-<li>定期更换管理员密码</li>
-<li>应用权限最小化，专人管理</li>
-<li>手动查询权限可审计</li>
-</ul>
-<h3 id="数据库审计设备"><a href="#数据库审计设备" class="headerlink" title="数据库审计设备"></a>数据库审计设备</h3><ul>
-<li>数据库主库不能开一般查询日志（为了性能）</li>
-<li>交换机上镜像流量，接入审计设备，实现实时审计</li>
-<li>不要设计串行在系统里，形成单点和瓶颈</li>
-</ul>
-<h3 id="数据库脱敏"><a href="#数据库脱敏" class="headerlink" title="数据库脱敏"></a>数据库脱敏</h3><ul>
-<li>姓名、身份证、手机号、银行卡号等敏感信息应脱敏处理</li>
-<li>对程序脱敏协同系统架构部共同出规范</li>
-<li>对手动查询权限脱敏，按列授权，录屏</li>
-</ul>
-<h3 id="备份策略"><a href="#备份策略" class="headerlink" title="备份策略"></a>备份策略</h3><ul>
-<li>每周全备，每天增备</li>
-<li>备份文件要每天利用内网流量低谷时间，推送到远程主机，有条件的应跨机房备份</li>
-<li>一定要规划定期恢复测试，保证备份的可用性</li>
-</ul>
-<h2 id="应用安全"><a href="#应用安全" class="headerlink" title="应用安全"></a>应用安全</h2><h3 id="操作系统安全"><a href="#操作系统安全" class="headerlink" title="操作系统安全"></a>操作系统安全</h3><ul>
-<li>系统基础优化（内核优化，优化工具）</li>
-<li>日期，时区同步</li>
-<li>root密码复杂度足够高，需要在操作系统里做定时过期策略</li>
-<li>每三个月使用脚本更新服务器的root密码和iDrac密码，并将更换后的密码加密打包发送给指定管理员邮箱，同时提交gitlab</li>
-<li>对系统关键文件进行md5监控，例如&#x2F;etc&#x2F;passwd，~&#x2F;.ssh&#x2F;authorized_keys文件等，如有变更，触发报警</li>
-<li>定期查毒，漏扫，定期安排更新操作系统</li>
-<li>&#x2F;etc&#x2F;ssh&#x2F;sshd_config里配置：<ul>
-<li>PasswordAuthentication no</li>
-<li>PermitRootLogin without-password</li>
-</ul>
-</li>
-<li>使用saltstack等批量管理软件进行特权命令执行和备份脚本执行（避开ssh协议）</li>
-</ul>
-<h3 id="应用系统安全"><a href="#应用系统安全" class="headerlink" title="应用系统安全"></a>应用系统安全</h3><h4 id="WEB应用防火墙（WAF）"><a href="#WEB应用防火墙（WAF）" class="headerlink" title="WEB应用防火墙（WAF）"></a>WEB应用防火墙（WAF）</h4><ul>
-<li>防SQL注入</li>
-<li>防CC攻击</li>
-<li>防XSS跨站脚本</li>
-</ul>
-<h4 id="应用系统漏洞"><a href="#应用系统漏洞" class="headerlink" title="应用系统漏洞"></a>应用系统漏洞</h4><ul>
-<li>关注0day漏洞新闻</li>
-<li>及时整改并上线投产</li>
-<li>组织技术力量测试，复现</li>
-</ul>
-<h4 id="日志收集和分析"><a href="#日志收集和分析" class="headerlink" title="日志收集和分析"></a>日志收集和分析</h4><ul>
-<li>完善日志收集方案，集中转储</li>
-<li>通过应用系统日志分析，进行安全预警</li>
-</ul>
-<h4 id="DNS劫持"><a href="#DNS劫持" class="headerlink" title="DNS劫持"></a>DNS劫持</h4><ul>
-<li>全站https，购买泛域名证书</li>
-<li>有条件的可以自己维护公网DNS，上dnssec数字签名</li>
-<li>采购基调、听云等第三方拨测服务，分布式监控网站质量</li>
-<li>向ISP投诉，工信部举报</li>
-</ul>
-<h4 id="Basic-Auth"><a href="#Basic-Auth" class="headerlink" title="Basic Auth"></a>Basic Auth</h4><ul>
-<li>在nginx上做，非常简单</li>
-<li>对防脚本攻击有奇效</li>
-</ul>
-<h3 id="企业邮箱服务器安全"><a href="#企业邮箱服务器安全" class="headerlink" title="企业邮箱服务器安全"></a>企业邮箱服务器安全</h3><h4 id="推荐使用微软的Exchange"><a href="#推荐使用微软的Exchange" class="headerlink" title="推荐使用微软的Exchange"></a>推荐使用微软的Exchange</h4><p>功能强大，维护相对简单</p>
-<h4 id="投产反垃圾邮件网关"><a href="#投产反垃圾邮件网关" class="headerlink" title="投产反垃圾邮件网关"></a>投产反垃圾邮件网关</h4><p>投产梭子鱼反垃圾邮件网关，防伪造发信人</p>
-<h4 id="群发审核管控"><a href="#群发审核管控" class="headerlink" title="群发审核管控"></a>群发审核管控</h4><h4 id="用好邮件组"><a href="#用好邮件组" class="headerlink" title="用好邮件组"></a>用好邮件组</h4><h4 id="接入AD域控"><a href="#接入AD域控" class="headerlink" title="接入AD域控"></a>接入AD域控</h4><h3 id="域名安全管理"><a href="#域名安全管理" class="headerlink" title="域名安全管理"></a>域名安全管理</h3><h4 id="做好ICP备案"><a href="#做好ICP备案" class="headerlink" title="做好ICP备案"></a>做好ICP备案</h4><ul>
-<li>域名证书</li>
-<li>域名实名认证（公司模板）</li>
-<li>接入商处蓝色幕布拍照</li>
-<li>法人身份证、管理员身份证</li>
-<li>网站真实性核验单</li>
-</ul>
-<h4 id="公网解析"><a href="#公网解析" class="headerlink" title="公网解析"></a>公网解析</h4><ul>
-<li>专人管理，邮件申请，审批</li>
-<li>将业务解析至不同公网IP出口，双活机房</li>
-<li>智能解析，解析至不同线路</li>
-<li>如有条件，可购买公网解析套餐服务，安全服务等</li>
-</ul>
-<h2 id="内网安全"><a href="#内网安全" class="headerlink" title="内网安全"></a>内网安全</h2><p>80%以上的企业IT安全问题出自内网安全</p>
-<h3 id="堡垒机"><a href="#堡垒机" class="headerlink" title="堡垒机"></a>堡垒机</h3><ul>
-<li>一定要强制使用堡垒机登录服务器</li>
-<li>ssh私钥通行短语机制，避免密钥失窃</li>
-<li>定期审计堡垒机操作日志</li>
-<li>如果有必要，可以上2FA（双因子验证）</li>
-</ul>
-<h3 id="AD域控"><a href="#AD域控" class="headerlink" title="AD域控"></a>AD域控</h3><p>有条件一定要接入windows域控，要求密码复杂度和定期过期</p>
-<ul>
-<li>邮箱</li>
-<li>wifi</li>
-<li>vpn账号密码</li>
-<li>内网系统账号</li>
-<li>业务系统账号</li>
-<li>网络设备等</li>
-</ul>
-<h3 id="办公网安全"><a href="#办公网安全" class="headerlink" title="办公网安全"></a>办公网安全</h3><ul>
-<li>专业的HelpDesk团队</li>
-<li>企业级杀毒软件</li>
-<li>办公电脑接入域控</li>
-<li>上网行为管理</li>
-<li>流量监控，mac地址绑定</li>
-<li>有条件的可以在办公环境上一个小型的业务机房</li>
-<li>wifi管控，单做guest接入点，不能访问业务核心网络</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>运维安全</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>初始化Linux数据盘（parted）</title>
     <url>/2020/05/10/%E5%88%9D%E5%A7%8B%E5%8C%96Linux%E6%95%B0%E6%8D%AE%E7%9B%98%EF%BC%88parted%EF%BC%89/</url>
     <content><![CDATA[<h4 id="操作场景"><a href="#操作场景" class="headerlink" title="操作场景"></a>操作场景</h4><p>本文以云服务器的操作系统为“CentOS 7.4 64位”为例，采用Parted分区工具为数据盘设置分区。</p>
@@ -1252,6 +1120,138 @@
       </categories>
       <tags>
         <tag>Linux磁盘分区</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>运维安全的四个层次</title>
+    <url>/2020/05/07/%E8%BF%90%E7%BB%B4%E5%AE%89%E5%85%A8%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%B1%82%E6%AC%A1/</url>
+    <content><![CDATA[<h1 id="运维安全的四个层次"><a href="#运维安全的四个层次" class="headerlink" title="运维安全的四个层次"></a>运维安全的四个层次</h1><h2 id="网络安全"><a href="#网络安全" class="headerlink" title="网络安全"></a>网络安全</h2><h3 id="网络设备的安全"><a href="#网络设备的安全" class="headerlink" title="网络设备的安全"></a>网络设备的安全</h3><ul>
+<li>思科、华为等网络设备定期升级，修复bug和曝出的漏洞</li>
+<li>公网防火墙，核心交换机等核心网络设备的管理</li>
+</ul>
+<h3 id="外网安全策略"><a href="#外网安全策略" class="headerlink" title="外网安全策略"></a>外网安全策略</h3><ul>
+<li>IDC，防火墙策略，严把上行端口开放</li>
+<li>公网上下行流量监控</li>
+<li>对DDos攻击提高警惕，提前准备应急预案<ul>
+<li>临时提高流量，硬抗</li>
+<li>启动流量清洗，将攻击流量引入黑洞，有可能误杀正常用户</li>
+</ul>
+</li>
+</ul>
+<h3 id="专线安全策略"><a href="#专线安全策略" class="headerlink" title="专线安全策略"></a>专线安全策略</h3><ul>
+<li>对涉及金融、支付等项目设立专线</li>
+</ul>
+<h3 id="VPN安全策略"><a href="#VPN安全策略" class="headerlink" title="VPN安全策略"></a>VPN安全策略</h3><ul>
+<li>IPsec VPN：site to site</li>
+<li>OpenVPN： peer to site</li>
+<li>摒弃PPTP等不含加密算法的vpn服务</li>
+<li>端口全禁止，需要通信的申请审批后，再由管理员开放</li>
+</ul>
+<h2 id="数据安全"><a href="#数据安全" class="headerlink" title="数据安全"></a>数据安全</h2><h3 id="数据库用户权限"><a href="#数据库用户权限" class="headerlink" title="数据库用户权限"></a>数据库用户权限</h3><ul>
+<li>管理员权限限定，不允许远程root</li>
+<li>定期更换管理员密码</li>
+<li>应用权限最小化，专人管理</li>
+<li>手动查询权限可审计</li>
+</ul>
+<h3 id="数据库审计设备"><a href="#数据库审计设备" class="headerlink" title="数据库审计设备"></a>数据库审计设备</h3><ul>
+<li>数据库主库不能开一般查询日志（为了性能）</li>
+<li>交换机上镜像流量，接入审计设备，实现实时审计</li>
+<li>不要设计串行在系统里，形成单点和瓶颈</li>
+</ul>
+<h3 id="数据库脱敏"><a href="#数据库脱敏" class="headerlink" title="数据库脱敏"></a>数据库脱敏</h3><ul>
+<li>姓名、身份证、手机号、银行卡号等敏感信息应脱敏处理</li>
+<li>对程序脱敏协同系统架构部共同出规范</li>
+<li>对手动查询权限脱敏，按列授权，录屏</li>
+</ul>
+<h3 id="备份策略"><a href="#备份策略" class="headerlink" title="备份策略"></a>备份策略</h3><ul>
+<li>每周全备，每天增备</li>
+<li>备份文件要每天利用内网流量低谷时间，推送到远程主机，有条件的应跨机房备份</li>
+<li>一定要规划定期恢复测试，保证备份的可用性</li>
+</ul>
+<h2 id="应用安全"><a href="#应用安全" class="headerlink" title="应用安全"></a>应用安全</h2><h3 id="操作系统安全"><a href="#操作系统安全" class="headerlink" title="操作系统安全"></a>操作系统安全</h3><ul>
+<li>系统基础优化（内核优化，优化工具）</li>
+<li>日期，时区同步</li>
+<li>root密码复杂度足够高，需要在操作系统里做定时过期策略</li>
+<li>每三个月使用脚本更新服务器的root密码和iDrac密码，并将更换后的密码加密打包发送给指定管理员邮箱，同时提交gitlab</li>
+<li>对系统关键文件进行md5监控，例如&#x2F;etc&#x2F;passwd，~&#x2F;.ssh&#x2F;authorized_keys文件等，如有变更，触发报警</li>
+<li>定期查毒，漏扫，定期安排更新操作系统</li>
+<li>&#x2F;etc&#x2F;ssh&#x2F;sshd_config里配置：<ul>
+<li>PasswordAuthentication no</li>
+<li>PermitRootLogin without-password</li>
+</ul>
+</li>
+<li>使用saltstack等批量管理软件进行特权命令执行和备份脚本执行（避开ssh协议）</li>
+</ul>
+<h3 id="应用系统安全"><a href="#应用系统安全" class="headerlink" title="应用系统安全"></a>应用系统安全</h3><h4 id="WEB应用防火墙（WAF）"><a href="#WEB应用防火墙（WAF）" class="headerlink" title="WEB应用防火墙（WAF）"></a>WEB应用防火墙（WAF）</h4><ul>
+<li>防SQL注入</li>
+<li>防CC攻击</li>
+<li>防XSS跨站脚本</li>
+</ul>
+<h4 id="应用系统漏洞"><a href="#应用系统漏洞" class="headerlink" title="应用系统漏洞"></a>应用系统漏洞</h4><ul>
+<li>关注0day漏洞新闻</li>
+<li>及时整改并上线投产</li>
+<li>组织技术力量测试，复现</li>
+</ul>
+<h4 id="日志收集和分析"><a href="#日志收集和分析" class="headerlink" title="日志收集和分析"></a>日志收集和分析</h4><ul>
+<li>完善日志收集方案，集中转储</li>
+<li>通过应用系统日志分析，进行安全预警</li>
+</ul>
+<h4 id="DNS劫持"><a href="#DNS劫持" class="headerlink" title="DNS劫持"></a>DNS劫持</h4><ul>
+<li>全站https，购买泛域名证书</li>
+<li>有条件的可以自己维护公网DNS，上dnssec数字签名</li>
+<li>采购基调、听云等第三方拨测服务，分布式监控网站质量</li>
+<li>向ISP投诉，工信部举报</li>
+</ul>
+<h4 id="Basic-Auth"><a href="#Basic-Auth" class="headerlink" title="Basic Auth"></a>Basic Auth</h4><ul>
+<li>在nginx上做，非常简单</li>
+<li>对防脚本攻击有奇效</li>
+</ul>
+<h3 id="企业邮箱服务器安全"><a href="#企业邮箱服务器安全" class="headerlink" title="企业邮箱服务器安全"></a>企业邮箱服务器安全</h3><h4 id="推荐使用微软的Exchange"><a href="#推荐使用微软的Exchange" class="headerlink" title="推荐使用微软的Exchange"></a>推荐使用微软的Exchange</h4><p>功能强大，维护相对简单</p>
+<h4 id="投产反垃圾邮件网关"><a href="#投产反垃圾邮件网关" class="headerlink" title="投产反垃圾邮件网关"></a>投产反垃圾邮件网关</h4><p>投产梭子鱼反垃圾邮件网关，防伪造发信人</p>
+<h4 id="群发审核管控"><a href="#群发审核管控" class="headerlink" title="群发审核管控"></a>群发审核管控</h4><h4 id="用好邮件组"><a href="#用好邮件组" class="headerlink" title="用好邮件组"></a>用好邮件组</h4><h4 id="接入AD域控"><a href="#接入AD域控" class="headerlink" title="接入AD域控"></a>接入AD域控</h4><h3 id="域名安全管理"><a href="#域名安全管理" class="headerlink" title="域名安全管理"></a>域名安全管理</h3><h4 id="做好ICP备案"><a href="#做好ICP备案" class="headerlink" title="做好ICP备案"></a>做好ICP备案</h4><ul>
+<li>域名证书</li>
+<li>域名实名认证（公司模板）</li>
+<li>接入商处蓝色幕布拍照</li>
+<li>法人身份证、管理员身份证</li>
+<li>网站真实性核验单</li>
+</ul>
+<h4 id="公网解析"><a href="#公网解析" class="headerlink" title="公网解析"></a>公网解析</h4><ul>
+<li>专人管理，邮件申请，审批</li>
+<li>将业务解析至不同公网IP出口，双活机房</li>
+<li>智能解析，解析至不同线路</li>
+<li>如有条件，可购买公网解析套餐服务，安全服务等</li>
+</ul>
+<h2 id="内网安全"><a href="#内网安全" class="headerlink" title="内网安全"></a>内网安全</h2><p>80%以上的企业IT安全问题出自内网安全</p>
+<h3 id="堡垒机"><a href="#堡垒机" class="headerlink" title="堡垒机"></a>堡垒机</h3><ul>
+<li>一定要强制使用堡垒机登录服务器</li>
+<li>ssh私钥通行短语机制，避免密钥失窃</li>
+<li>定期审计堡垒机操作日志</li>
+<li>如果有必要，可以上2FA（双因子验证）</li>
+</ul>
+<h3 id="AD域控"><a href="#AD域控" class="headerlink" title="AD域控"></a>AD域控</h3><p>有条件一定要接入windows域控，要求密码复杂度和定期过期</p>
+<ul>
+<li>邮箱</li>
+<li>wifi</li>
+<li>vpn账号密码</li>
+<li>内网系统账号</li>
+<li>业务系统账号</li>
+<li>网络设备等</li>
+</ul>
+<h3 id="办公网安全"><a href="#办公网安全" class="headerlink" title="办公网安全"></a>办公网安全</h3><ul>
+<li>专业的HelpDesk团队</li>
+<li>企业级杀毒软件</li>
+<li>办公电脑接入域控</li>
+<li>上网行为管理</li>
+<li>流量监控，mac地址绑定</li>
+<li>有条件的可以在办公环境上一个小型的业务机房</li>
+<li>wifi管控，单做guest接入点，不能访问业务核心网络</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>运维安全</tag>
       </tags>
   </entry>
 </search>
