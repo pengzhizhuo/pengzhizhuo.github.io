@@ -1,31 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>MySQL建表规范</title>
-    <url>/2022/11/09/MySQL%E5%BB%BA%E8%A1%A8%E8%A7%84%E8%8C%83/</url>
-    <content><![CDATA[<h2 id="MySQL规范–建表规范"><a href="#MySQL规范–建表规范" class="headerlink" title="MySQL规范–建表规范"></a>MySQL规范–建表规范</h2><p>规范的表结构能降低MySQL出现问题的概率，下面总结一些MySQL的建表规范</p>
-<h3 id="1、库名、表名、字段名全部采用小写格式。"><a href="#1、库名、表名、字段名全部采用小写格式。" class="headerlink" title="1、库名、表名、字段名全部采用小写格式。"></a>1、库名、表名、字段名全部采用小写格式。</h3><p>这是防止出现大小写不一致导致找不到对应表的情况。</p>
-<h3 id="2、避免使用MySQL的保留字。"><a href="#2、避免使用MySQL的保留字。" class="headerlink" title="2、避免使用MySQL的保留字。"></a>2、避免使用MySQL的保留字。</h3><p>使用mysql时一定要注意，尽量不要使用它的保留字作为表名或者列名，否则会出现莫名其妙的错误。如果之前用了，在sql语句中就用&#96;&#96;包括起来。</p>
-<h3 id="3、表名、列名建议不要超过30个字符。"><a href="#3、表名、列名建议不要超过30个字符。" class="headerlink" title="3、表名、列名建议不要超过30个字符。"></a>3、表名、列名建议不要超过30个字符。</h3><h3 id="4、临时库表、备份库表的命名"><a href="#4、临时库表、备份库表的命名" class="headerlink" title="4、临时库表、备份库表的命名"></a>4、临时库表、备份库表的命名</h3><p>临时库表必须以tmp加上日期为后缀，比如user_info_tmp_20221109。<br>备份库表必须以bak加上日期为后缀，比如user_info_bak_20221109。</p>
-<h3 id="5、索引命名"><a href="#5、索引命名" class="headerlink" title="5、索引命名"></a>5、索引命名</h3><p>非唯一索引建议按照”idx字段名”进行命名。<br>唯一索引建议按照 “uniq_字段名”进行命名。</p>
-<h3 id="6、主键的建议"><a href="#6、主键的建议" class="headerlink" title="6、主键的建议"></a>6、主键的建议</h3><p>表必须有主键。<br>不使用有业务意义的的列作为主键，以免收到业务变化的影响。<br>不使用更新频繁的列作为主键。<br>不使用UUID、MD5等作为主键，因为它们可能会导致数据过于离散。<br>建议使用非空的唯一键作为主键，并配置自增或者发号器。</p>
-<h3 id="7、建议使用-InnoDB"><a href="#7、建议使用-InnoDB" class="headerlink" title="7、建议使用 InnoDB"></a>7、建议使用 InnoDB</h3><p>InnoDB 具有支持事务、行锁设计、在高并发场景下性能更好等特性。因此在绝大多数业务场景下，InnoDB 都是唯一选择。</p>
-<h3 id="8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci"><a href="#8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci" class="headerlink" title="8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci"></a>8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci</h3><p>utf8mb4 为万国码，无乱码风险；与 utf8 编码相比，utf8mb4 支持 Emoji 表情。</p>
-<h3 id="9、所有表、字段都需要增加-comment-来描述此表、字段的含义"><a href="#9、所有表、字段都需要增加-comment-来描述此表、字段的含义" class="headerlink" title="9、所有表、字段都需要增加 comment 来描述此表、字段的含义"></a>9、所有表、字段都需要增加 comment 来描述此表、字段的含义</h3><h3 id="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"><a href="#10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段" class="headerlink" title="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"></a>10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段</h3><h3 id="11、用尽量少的存储空间来存储一个字段的数据"><a href="#11、用尽量少的存储空间来存储一个字段的数据" class="headerlink" title="11、用尽量少的存储空间来存储一个字段的数据"></a>11、用尽量少的存储空间来存储一个字段的数据</h3><p>能用 int 的就不用 char 或 varchar<br>能用 tinyint 的就不用 int<br>使用 unsigned 存储非负数值</p>
-<h3 id="12、尽可能不使用-text-和-blob-类型"><a href="#12、尽可能不使用-text-和-blob-类型" class="headerlink" title="12、尽可能不使用 text 和 blob 类型"></a>12、尽可能不使用 text 和 blob 类型</h3><p>使用 text 或 blob 类型，会浪费更多的磁盘空间和内存空间。如无法避免使用 text 或 blob 类型，则建议独立出一张表，使用主键或其他唯一的字段来对应，以避免影响原有表的查询效率。</p>
-<h3 id="13、禁止在数据库中存储明文密码"><a href="#13、禁止在数据库中存储明文密码" class="headerlink" title="13、禁止在数据库中存储明文密码"></a>13、禁止在数据库中存储明文密码</h3><p>数据安全第一，防止密码泄露</p>
-<h3 id="14、索引设计"><a href="#14、索引设计" class="headerlink" title="14、索引设计"></a>14、索引设计</h3><p>在设计索引时，建议考虑以下因素：<br>经常作为条件、排序、join关联的字段，建议加上索引。<br>单表索引数不建议过多，因为索引也会占用空间。<br>如果可以使用覆盖索引，或者几个字段经常同时作为条件，则可以考虑使用联合索引。<br>不在低基数的列上创建索引，如性别字段。</p>
-<h3 id="15、不建议使用外键"><a href="#15、不建议使用外键" class="headerlink" title="15、不建议使用外键"></a>15、不建议使用外键</h3><p>在有外键的情况下，update 操作和 delete 操作都会涉及相关联的表，不仅会影响 SQL 的性能，还会大大增加死锁出现的概率</p>
-<h3 id="16、线上业务禁止使用存储过程、视图、触发器、Event-等"><a href="#16、线上业务禁止使用存储过程、视图、触发器、Event-等" class="headerlink" title="16、线上业务禁止使用存储过程、视图、触发器、Event 等"></a>16、线上业务禁止使用存储过程、视图、触发器、Event 等</h3><p>在高并发的情况下，这些功能很可能会影响数据库的性能，如果有类似的需求，则建议把这些逻辑放到服务层实现</p>
-<h3 id="17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定"><a href="#17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定" class="headerlink" title="17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定"></a>17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定</h3>]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>MySQL规范</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Docker安装</title>
     <url>/2022/11/11/Docker%E5%AE%89%E8%A3%85/</url>
     <content><![CDATA[<h2 id="Docker安装"><a href="#Docker安装" class="headerlink" title="Docker安装"></a>Docker安装</h2><h3 id="前提说明"><a href="#前提说明" class="headerlink" title="前提说明"></a>前提说明</h3><blockquote>
@@ -259,7 +234,7 @@
 <li><p>之前的虚拟机技术</p>
 <ul>
 <li>虚拟机是带环境安装的一种解决方案</li>
-<li>它可以在一种操作系统里面运行另一种操作系统，应用程序对此毫无感知。虚拟机看上去跟真实系统完全一样，对于底层系统来说，虚拟机就是一个普通文件，不需要就可以删除。<br>这类虚拟机完美地运行了另一套系统，能够使应用程序、操作系统和硬件三者之间的逻辑不变</li>
+<li>它可以在一种操作系统里面运行另一种操作系统，应用程序对此毫无感知。虚拟机看上去跟真实系统完全一样，对于底层系统来说，虚拟机就是一个普通文件，不需要就可以删除。<br>  这类虚拟机完美地运行了另一套系统，能够使应用程序、操作系统和硬件三者之间的逻辑不变</li>
 <li>缺点：<ul>
 <li>资源占用多</li>
 <li>冗余步骤多</li>
@@ -272,7 +247,7 @@
 <ul>
 <li><p>Linux发展了另一种虚拟化技术，LXC</p>
 </li>
-<li><p>Linux容器不是模拟一个完整地操作系统，而是对进程进行隔离<br>容器和虚拟机不同，不需要捆绑一个完整的操作系统，只需要软件工作所需要的库资源和设置</p>
+<li><p>Linux容器不是模拟一个完整地操作系统，而是对进程进行隔离<br>  容器和虚拟机不同，不需要捆绑一个完整的操作系统，只需要软件工作所需要的库资源和设置</p>
 </li>
 <li><p><strong>重点就是容器是共用操作系统内核的，不进行硬件虚拟</strong></p>
 </li>
@@ -283,7 +258,7 @@
 <li><p>开发&#x2F;运维(DevOps)</p>
 <ul>
 <li>开发自运维</li>
-<li>一次构建，随处运行<br>一次构建是指开发工程师做一次构建<br>无需运维工程师再做构建<br>随处运行是指对于这个构建的交付物，可以随处运行<ul>
+<li>一次构建，随处运行<br>  一次构建是指开发工程师做一次构建<br>  无需运维工程师再做构建<br>  随处运行是指对于这个构建的交付物，可以随处运行<ul>
 <li>更快捷的应用交付和部署</li>
 <li>更便捷的升级和扩缩容</li>
 <li>更简单的系统运维</li>
@@ -317,20 +292,42 @@
       </tags>
   </entry>
   <entry>
-    <title>MySQL的SQL规范</title>
-    <url>/2022/11/10/MySQL%E7%9A%84SQL%E8%A7%84%E8%8C%83/</url>
-    <content><![CDATA[<p>良好的 SQL 习惯能大大降低慢查询出现的概率，下面主要介绍一些 SQL 规范</p>
-<h1 id="避免隐式转换"><a href="#避免隐式转换" class="headerlink" title="避免隐式转换"></a>避免隐式转换</h1><p>当操作符与不同类型的操作数一起使用时，会发生类型转换以使操作数兼容。则会发生转换隐式<br>隐式转换的类型主要有字段类型不一致、in参数包含多个类型、字符集类型或校对规则不一致等<br>隐式类型转换可能导致无法使用索引、查询结果不准确等</p>
-<h1 id="尽量不使用-select-，只选择需要的字段"><a href="#尽量不使用-select-，只选择需要的字段" class="headerlink" title="尽量不使用 select * ，只选择需要的字段"></a>尽量不使用 select * ，只选择需要的字段</h1><p>因为使用 selec * 会读取不需要的列，会增加 CPU 负载、磁盘 I&#x2F;O、网络流量的消耗，并且容易在增加或者删除字段后导致程序报错</p>
-<h1 id="禁止单条-SQL-语句同时更新多张表"><a href="#禁止单条-SQL-语句同时更新多张表" class="headerlink" title="禁止单条 SQL 语句同时更新多张表"></a>禁止单条 SQL 语句同时更新多张表</h1><h1 id="禁止使用以-“-”-开头的模糊查询"><a href="#禁止使用以-“-”-开头的模糊查询" class="headerlink" title="禁止使用以 “%” 开头的模糊查询"></a>禁止使用以 “%” 开头的模糊查询</h1><p>以 “%” 开头的模糊查询大都是不能使用索引的</p>
-<h1 id="在-SQL-中不建议使用-sleep"><a href="#在-SQL-中不建议使用-sleep" class="headerlink" title="在 SQL 中不建议使用 sleep()"></a>在 SQL 中不建议使用 sleep()</h1><p>使用 sleep() 可能会增加 SQL 加锁的时间，从而影响并发性能</p>
-<h1 id="避免大表的-join"><a href="#避免大表的-join" class="headerlink" title="避免大表的 join"></a>避免大表的 join</h1><p>可能会导致数据库高负载，从而影响其他查询</p>
-<h1 id="同一张表的多条-alter-语句要合成一次操作"><a href="#同一张表的多条-alter-语句要合成一次操作" class="headerlink" title="同一张表的多条 alter 语句要合成一次操作"></a>同一张表的多条 alter 语句要合成一次操作</h1>]]></content>
+    <title>MySQL建表规范</title>
+    <url>/2022/11/09/MySQL%E5%BB%BA%E8%A1%A8%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<h2 id="MySQL规范–建表规范"><a href="#MySQL规范–建表规范" class="headerlink" title="MySQL规范–建表规范"></a>MySQL规范–建表规范</h2><p>规范的表结构能降低MySQL出现问题的概率，下面总结一些MySQL的建表规范</p>
+<h3 id="1、库名、表名、字段名全部采用小写格式。"><a href="#1、库名、表名、字段名全部采用小写格式。" class="headerlink" title="1、库名、表名、字段名全部采用小写格式。"></a>1、库名、表名、字段名全部采用小写格式。</h3><p>这是防止出现大小写不一致导致找不到对应表的情况。</p>
+<h3 id="2、避免使用MySQL的保留字。"><a href="#2、避免使用MySQL的保留字。" class="headerlink" title="2、避免使用MySQL的保留字。"></a>2、避免使用MySQL的保留字。</h3><p>使用mysql时一定要注意，尽量不要使用它的保留字作为表名或者列名，否则会出现莫名其妙的错误。如果之前用了，在sql语句中就用&#96;&#96;包括起来。</p>
+<h3 id="3、表名、列名建议不要超过30个字符。"><a href="#3、表名、列名建议不要超过30个字符。" class="headerlink" title="3、表名、列名建议不要超过30个字符。"></a>3、表名、列名建议不要超过30个字符。</h3><h3 id="4、临时库表、备份库表的命名"><a href="#4、临时库表、备份库表的命名" class="headerlink" title="4、临时库表、备份库表的命名"></a>4、临时库表、备份库表的命名</h3><p>临时库表必须以tmp加上日期为后缀，比如user_info_tmp_20221109。<br>备份库表必须以bak加上日期为后缀，比如user_info_bak_20221109。</p>
+<h3 id="5、索引命名"><a href="#5、索引命名" class="headerlink" title="5、索引命名"></a>5、索引命名</h3><p>非唯一索引建议按照”idx字段名”进行命名。<br>唯一索引建议按照 “uniq_字段名”进行命名。</p>
+<h3 id="6、主键的建议"><a href="#6、主键的建议" class="headerlink" title="6、主键的建议"></a>6、主键的建议</h3><p>表必须有主键。<br>不使用有业务意义的的列作为主键，以免收到业务变化的影响。<br>不使用更新频繁的列作为主键。<br>不使用UUID、MD5等作为主键，因为它们可能会导致数据过于离散。<br>建议使用非空的唯一键作为主键，并配置自增或者发号器。</p>
+<h3 id="7、建议使用-InnoDB"><a href="#7、建议使用-InnoDB" class="headerlink" title="7、建议使用 InnoDB"></a>7、建议使用 InnoDB</h3><p>InnoDB 具有支持事务、行锁设计、在高并发场景下性能更好等特性。因此在绝大多数业务场景下，InnoDB 都是唯一选择。</p>
+<h3 id="8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci"><a href="#8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci" class="headerlink" title="8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci"></a>8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci</h3><p>utf8mb4 为万国码，无乱码风险；与 utf8 编码相比，utf8mb4 支持 Emoji 表情。</p>
+<h3 id="9、所有表、字段都需要增加-comment-来描述此表、字段的含义"><a href="#9、所有表、字段都需要增加-comment-来描述此表、字段的含义" class="headerlink" title="9、所有表、字段都需要增加 comment 来描述此表、字段的含义"></a>9、所有表、字段都需要增加 comment 来描述此表、字段的含义</h3><h3 id="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"><a href="#10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段" class="headerlink" title="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"></a>10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段</h3><h3 id="11、用尽量少的存储空间来存储一个字段的数据"><a href="#11、用尽量少的存储空间来存储一个字段的数据" class="headerlink" title="11、用尽量少的存储空间来存储一个字段的数据"></a>11、用尽量少的存储空间来存储一个字段的数据</h3><p>能用 int 的就不用 char 或 varchar<br>能用 tinyint 的就不用 int<br>使用 unsigned 存储非负数值</p>
+<h3 id="12、尽可能不使用-text-和-blob-类型"><a href="#12、尽可能不使用-text-和-blob-类型" class="headerlink" title="12、尽可能不使用 text 和 blob 类型"></a>12、尽可能不使用 text 和 blob 类型</h3><p>使用 text 或 blob 类型，会浪费更多的磁盘空间和内存空间。如无法避免使用 text 或 blob 类型，则建议独立出一张表，使用主键或其他唯一的字段来对应，以避免影响原有表的查询效率。</p>
+<h3 id="13、禁止在数据库中存储明文密码"><a href="#13、禁止在数据库中存储明文密码" class="headerlink" title="13、禁止在数据库中存储明文密码"></a>13、禁止在数据库中存储明文密码</h3><p>数据安全第一，防止密码泄露</p>
+<h3 id="14、索引设计"><a href="#14、索引设计" class="headerlink" title="14、索引设计"></a>14、索引设计</h3><p>在设计索引时，建议考虑以下因素：<br>经常作为条件、排序、join关联的字段，建议加上索引。<br>单表索引数不建议过多，因为索引也会占用空间。<br>如果可以使用覆盖索引，或者几个字段经常同时作为条件，则可以考虑使用联合索引。<br>不在低基数的列上创建索引，如性别字段。</p>
+<h3 id="15、不建议使用外键"><a href="#15、不建议使用外键" class="headerlink" title="15、不建议使用外键"></a>15、不建议使用外键</h3><p>在有外键的情况下，update 操作和 delete 操作都会涉及相关联的表，不仅会影响 SQL 的性能，还会大大增加死锁出现的概率</p>
+<h3 id="16、线上业务禁止使用存储过程、视图、触发器、Event-等"><a href="#16、线上业务禁止使用存储过程、视图、触发器、Event-等" class="headerlink" title="16、线上业务禁止使用存储过程、视图、触发器、Event 等"></a>16、线上业务禁止使用存储过程、视图、触发器、Event 等</h3><p>在高并发的情况下，这些功能很可能会影响数据库的性能，如果有类似的需求，则建议把这些逻辑放到服务层实现</p>
+<h3 id="17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定"><a href="#17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定" class="headerlink" title="17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定"></a>17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定</h3>]]></content>
       <categories>
         <category>MySQL</category>
       </categories>
       <tags>
         <tag>MySQL规范</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Docker常见命令</title>
+    <url>/2022/11/11/Docker%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<h1 id="帮助命令"><a href="#帮助命令" class="headerlink" title="帮助命令"></a>帮助命令</h1><ul>
+<li>docker version<br>  检查docker版本</li>
+</ul>
+<h1 id="镜像命令"><a href="#镜像命令" class="headerlink" title="镜像命令"></a>镜像命令</h1><h1 id="容器命令"><a href="#容器命令" class="headerlink" title="容器命令"></a>容器命令</h1><h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1>]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Docker命令</tag>
       </tags>
   </entry>
   <entry>
@@ -346,6 +343,23 @@
 <h1 id="批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察"><a href="#批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察" class="headerlink" title="批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察"></a>批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察</h1><p>批量导入、导出、更新、删除操作以及会导致主从延迟和磁盘空间增加的操作（如碎片整理、增减字段等）建议在业务低峰进行。防止这些操作对线上业务影响。例如，批量删除数据可能会导致主从延迟，如果有从库提供业务查询，可能会导致读取延迟。碎片整理、增减字段等操作，短时间需要大量的磁盘空间，可能会导致数据库磁盘跑满</p>
 <h1 id="如果有可能导致-MySQL-QPS-上升，应提前告知-DBA"><a href="#如果有可能导致-MySQL-QPS-上升，应提前告知-DBA" class="headerlink" title="如果有可能导致 MySQL QPS 上升，应提前告知 DBA"></a>如果有可能导致 MySQL QPS 上升，应提前告知 DBA</h1><p>如果超过现有数据库配置所能承载的最大 QPS，则需要考虑扩容</p>
 <h1 id="删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表"><a href="#删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表" class="headerlink" title="删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表"></a>删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表</h1>]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL规范</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL的SQL规范</title>
+    <url>/2022/11/10/MySQL%E7%9A%84SQL%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<p>良好的 SQL 习惯能大大降低慢查询出现的概率，下面主要介绍一些 SQL 规范</p>
+<h1 id="避免隐式转换"><a href="#避免隐式转换" class="headerlink" title="避免隐式转换"></a>避免隐式转换</h1><p>当操作符与不同类型的操作数一起使用时，会发生类型转换以使操作数兼容。则会发生转换隐式<br>隐式转换的类型主要有字段类型不一致、in参数包含多个类型、字符集类型或校对规则不一致等<br>隐式类型转换可能导致无法使用索引、查询结果不准确等</p>
+<h1 id="尽量不使用-select-，只选择需要的字段"><a href="#尽量不使用-select-，只选择需要的字段" class="headerlink" title="尽量不使用 select * ，只选择需要的字段"></a>尽量不使用 select * ，只选择需要的字段</h1><p>因为使用 selec * 会读取不需要的列，会增加 CPU 负载、磁盘 I&#x2F;O、网络流量的消耗，并且容易在增加或者删除字段后导致程序报错</p>
+<h1 id="禁止单条-SQL-语句同时更新多张表"><a href="#禁止单条-SQL-语句同时更新多张表" class="headerlink" title="禁止单条 SQL 语句同时更新多张表"></a>禁止单条 SQL 语句同时更新多张表</h1><h1 id="禁止使用以-“-”-开头的模糊查询"><a href="#禁止使用以-“-”-开头的模糊查询" class="headerlink" title="禁止使用以 “%” 开头的模糊查询"></a>禁止使用以 “%” 开头的模糊查询</h1><p>以 “%” 开头的模糊查询大都是不能使用索引的</p>
+<h1 id="在-SQL-中不建议使用-sleep"><a href="#在-SQL-中不建议使用-sleep" class="headerlink" title="在 SQL 中不建议使用 sleep()"></a>在 SQL 中不建议使用 sleep()</h1><p>使用 sleep() 可能会增加 SQL 加锁的时间，从而影响并发性能</p>
+<h1 id="避免大表的-join"><a href="#避免大表的-join" class="headerlink" title="避免大表的 join"></a>避免大表的 join</h1><p>可能会导致数据库高负载，从而影响其他查询</p>
+<h1 id="同一张表的多条-alter-语句要合成一次操作"><a href="#同一张表的多条-alter-语句要合成一次操作" class="headerlink" title="同一张表的多条 alter 语句要合成一次操作"></a>同一张表的多条 alter 语句要合成一次操作</h1>]]></content>
       <categories>
         <category>MySQL</category>
       </categories>
@@ -519,38 +533,104 @@
       </tags>
   </entry>
   <entry>
-    <title>常用的磁盘分区形式</title>
-    <url>/2020/05/07/linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%BD%A2%E5%BC%8F/</url>
-    <content><![CDATA[<p>常用的磁盘分区形式如表1所示，并且针对Linux操作系统，不同的磁盘分区形式需要选择不同的分区工具。</p>
-<table>
-<thead>
-<tr>
-<th>磁盘分区形式</th>
-<th>支持最大磁盘容量</th>
-<th>支持分区数量</th>
-<th>Linux分区工具</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>主启动记录分区（MBR）</td>
-<td>2 TB</td>
-<td>4个主分区 <br />3个主分区和1个扩展分区<br />MBR分区包含主分区和扩展分区，其中扩展分区里面可以包含若干个逻辑分区。扩展分区不可以直接使用，需要划分成若干个逻辑分区才可以使用。以创建6个分区为例，以下两种分区情况供参考：<br />3个主分区，1个扩展分区，其中扩展分区中包含3个逻辑分区。<br />1个主分区，1个扩展分区，其中扩展分区中包含5个逻辑分区。</td>
-<td>以下两种工具均可以使用：fdisk工具parted工具</td>
-</tr>
-<tr>
-<td>全局分区表（GPT, Guid Partition Table）</td>
-<td>18 EB1 EB &#x3D; 1048576 TB</td>
-<td>不限制分区数量GPT格式下没有主分区、扩展分区以及逻辑分区之分。</td>
-<td>parted工具</td>
-</tr>
-</tbody></table>
-<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，如果您需要使用大于2 TB的磁盘容量，分区形式请采用GPT。</p>
+    <title>MySQL数据库开发设计规范</title>
+    <url>/2022/11/09/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>本规范由四部分组成：表结构设计、索引设计、高可用设计、分布式架构设计。</p>
+<p>四大规范，每个规范10条准则。</p>
+<h1 id="表结构设计规范"><a href="#表结构设计规范" class="headerlink" title="表结构设计规范"></a>表结构设计规范</h1><ol>
+<li><p>INT 类型<strong>不使用</strong> unsigned     无符号属性，容易引入额外的计算问题。</p>
+</li>
+<li><p>自增用 8 字节 BIG INT，<strong>不要使用</strong> 4 字节 INT，且自增在 MySQL     8.0 版本前有回溯问题，请考虑是否业务有影响。</p>
+</li>
+<li><p>字符集使用 UTF8MB4 字符编码，<strong>不推荐</strong> GBK、UTF-8 等其他字符集。</p>
+</li>
+<li><p>日期类型用 DATETIME     类型，需要精确到毫秒用 DATETIME(6)，<strong>不要使用</strong> INT、TIMESTAMP。</p>
+</li>
+<li><p>类型 JSON     可用于存储非结构化数据，典型场景为用户标签，<strong>不要</strong>将 JSON 用于频繁更新的字段场景。</p>
+</li>
+<li><p>每张表<strong>一定</strong>要有一个主键，这样至少满足一范式的要求，<strong>核心业务表</strong>用全局唯一字段（雪花算法、有序UUID）做主键，<strong>不要</strong>使用自增做主键。</p>
+</li>
+<li><p>对于日志类的流水表、报警表、日志表，可以使用压缩设计，提升存储效率。MySQL     5.7 版本开始推荐使用透明页压缩，<strong>不要</strong>使用传统的 KEY_BLOCK_SIZE 的页压缩。</p>
+</li>
+<li><p>类别设计，用 ENUM+CHECK 约束，<strong>不要</strong>使用 INT 类型的设计。</p>
+</li>
+<li><p>敏感字段需加密，如账户密码、信用卡号等存储使用：动态盐     + 非固定加密算法（MD5&#x2F;AES256等） + 多轮加密，<strong>不要</strong>简单使用 MD5 算法加密，容易被暴力破解。</p>
+</li>
+<li><p>MySQL 可以通过 KV     的方式访问表中的数据，若业务只是简单的 SET、GET 请求，可考虑将其转化为 Memcached 的 KV 访问方式，减少 SQL     解析的开销，性能可以有至少 50% 的提升。</p>
+</li>
+</ol>
+<h1 id="索引设计规范"><a href="#索引设计规范" class="headerlink" title="索引设计规范"></a>索引设计规范</h1><ol>
+<li><p><strong>不要陷入</strong>设置单表行数、列数限制的固有印象，其他关系型数据库没有行数、列数限制，MySQL     也没有，大表的缺点不是性能，而是后续的 DDL 管理问题，随着 MySQL 8.0 快速加列功能的上线，大表 DDL 问题基本已解决。</p>
+</li>
+<li><p>MySQL 是索引组织表，表中的数据以 B+ 树索引结构，根据主键逻辑排序，由于 B+ 树索引的特点是树的高度为     3~4 层，所以从数十亿的记录中，通过主键查询一条记录只需要 3、4 次 I&#x2F;O，当前的 SSD 存储设备设置每秒至少能完成 10000 次的     I&#x2F;O 查询，<strong>不要</strong>担心通过索引查询一条或几条记录的性能，每秒百万次查询并不难。</p>
+</li>
+<li><p>MySQL     是索引组织表，二级索引只存储（键值、主键值），因此需要再通过一次主键索引查询得到记录，这种方式成为回表。在核心业务中，<strong>使用</strong>索引覆盖技术，提升索引查询性能，对于回表记录数比较大的场景，甚至可以有 10 倍的性能提升；</p>
+</li>
+<li><p>对类似 WHERE a &#x3D; ? ORDER     BY b 这样的查询，<strong>一定</strong>要创建（a、b）组合索引，这样可以避免一次额外排序，提升查询性能。</p>
+</li>
+<li><p>MySQL 优化器是     CBO（Cost-based Optimizer），所有查询基于成本而不是规则，若发现 SQL 执行计划发生变化，<strong>不要怀疑     MySQL 出错，请先分析数据特点、索引创建是否合理，是否可以通过直方图校准数据</strong>。</p>
+</li>
+<li><p>MySQL JOIN 支持     NLJ（Nested Loop Join）和 NHJ（Nested Hash Join）两种方式。对于 OLTP 业务，放心大胆使用 JOIN，但<strong>一定</strong>要做好索引的设计和索引覆盖的考虑（不考虑分布式数据库场景）；对于     OLAP 业务，MySQL 8.0 版本开始，支持 Hash Join，对于大数据量的关联，性能提升非常多，<strong>可以</strong>在不超过 10T 的数仓场景中考虑使用，超过     10T数据量，请<strong>一定</strong>使用大数据产品，如 Hive、Spark、麒麟等产品。</p>
+</li>
+<li><p>MySQL 5.7     版本开始子查询优化已经做得不错，但是编写的子查询<strong>不能</strong>是关联子查询，上线前<strong>一定</strong>需要确认，若发现关联子查询，请改写子查询为     JOIN 或其他方式。</p>
+</li>
+<li><p><strong>不要</strong>因为数据量大，使用分区表，MySQL 是索引组织表，数据量再大，定位记录也只需要3、4 次     I&#x2F;O。可以考虑分区表<strong>唯一</strong>的应用场景是：需要定期清理历史流水类数据，但如果业务可以按月、按天做分表，那么当前     MySQL 8.0 版本，分区表也不推荐使用。</p>
+</li>
+<li><p>业务上线或新版本发布前，DBA <strong>一定</strong>要进行所有 SQL     Review，确保 SQL 走索引，否则不予上线，或由业务以邮件等正式方式，通知 DBA 该 SQL 不会引起线上事故，业务方承担后续责任。</p>
+</li>
+<li><p>DBA <strong>每天</strong>要对数据库进行巡检，及早发现慢查询或潜在数据库风险，将任何潜在问题<strong>尽早</strong>抛出，否则后续自己承担相关责任。</p>
+</li>
+</ol>
+<h1 id="高可用设计规范"><a href="#高可用设计规范" class="headerlink" title="高可用设计规范"></a>高可用设计规范</h1><ol>
+<li><p>MySQL 高可用的基石是利用二进制日志的复制技术，核心业务<strong>一定</strong>要使用无损半同步方式，但凡不使用无损半同步的高可用架构，请业务方业务以邮件等正式方式回复，数据丢失等后续问题自己承担相关责任。</p>
+</li>
+<li><p>MySQL 5.7 版本开始，<strong>一定</strong>要使用基于 WRITESET     的从机回放，避免主从延迟。</p>
+</li>
+<li><p>当前 MySQL     发生主从延迟的可能性主要是存在大事务，比如定期计算收益等操作，这类大事务，<strong>一定</strong>要通知业务方将大事务拆成小事务，否则不予上线；若要上线，请业务方以邮件等方式回复，自己承担后续主从延迟带来的后续一系列问题。</p>
+</li>
+<li><p>MySQL 8.0 版本开始<strong>推荐</strong>金融业务使用 MGR(MySQL Group     Replication），通过 Paxos 协议保证数据一致性，并自己完成选主的逻辑，也可以使用多主模式，数据不冲突的情况下，可以大幅提升写入性能。</p>
+</li>
+<li><p>对于核心业务，<strong>必须</strong>遵循互不信任原则，数据一致性不单单依赖     MySQL 复制本身，DBA 这里需要通过逻辑的方式，对主从数据进行核对，业务这里也需要一套业务层的逻辑进行“对账”。</p>
+</li>
+<li><p>核心业务，<strong>务必</strong>使用一地三中心，两地三中心的跨机房复制架构，这样发生机房级故障，可以切换到另一个机房，保证业务可用性。</p>
+</li>
+<li><p>同城容灾架构<strong>一定</strong>要评估切换到另一个机房后业务访问的性能，多次跨机房访问     DB，虽然每次只多了 2~3ms，但也存在业务雪崩问题，推荐 DB 切换机房，上层业务跟着一起联动切换。</p>
+</li>
+<li><p>对于有跨城容灾需求的业务，<strong>可以</strong>考虑使用三地五中心架构，但是由于 30ms     延迟，业务需要进行评估，对于核心业务，<strong>务必</strong>使用业务层的跨城机制，将数据层的多次网络耗时合并为一次，这样能大大提升业务的性能。</p>
+</li>
+<li><p>业界的 MHA、Ochestrator     等高可用套件都是基于 ssh 访问 MySQL，稳定性、安全性不高，<strong>不推荐</strong>大厂使用；自己开发一个数据库管理平台，通过     agent 的模式管理高可用和 MySQL 数据库的日常操作更为安全、有效。</p>
+</li>
+<li><p><strong>一定</strong>做好数据备份架构的设计，全备 + 增量备份 +     延迟备机（可选），做到可以基于任何一点恢复和回滚，同时，遵循互不信任原则，备份文件一定要进行检查，确保需要时一定能够进行恢复。</p>
+</li>
+</ol>
+<h1 id="分布式架构设计规范"><a href="#分布式架构设计规范" class="headerlink" title="分布式架构设计规范"></a>分布式架构设计规范</h1><ol>
+<li><p>分布式数据库的本质就是根据某几个列的规则，将数据水平打散，存在不同的实例中。数据拆分的列称为分区键（Shard     Key），分区键<strong>一定</strong>是业务大部分访问（超过 80%）的表都会使用的列。若选不出合适的分区键，那就<strong>一定不要</strong>进行分布式数据库架构的设计；互联网业务绝大部分分区键的选择是用户维度。</p>
+</li>
+<li><p>分区算法<strong>绝大部分</strong>场景使用     Hash算法，这样数据的存储和访问可以平均到下面多个实例，真正的做到可扩展性，Range 算法通常无法解决热点问题，会是灾难，但 Range     算法可以在单实例中使用，作为二级拆分数据的规则。</p>
+</li>
+<li><p>分布式数据库分片时，一开始就设计为<strong>不少于</strong> 1000     个分片的规则，不用担心分片过多的问题，管理 1 个分片和 1000 个分片的成本是一样的，但为后续的扩容做好了充足的准备。</p>
+</li>
+<li><p>分布式数据库扩缩容就是通过部分过滤的复制技术，按库或按表进行数据同步，分库分表设计<strong>推荐</strong>库名、表都不同，做到全局唯一，方便后续拆分。</p>
+</li>
+<li><p>分布式数据库索引设计中，非分区键的唯一索引<strong>一定</strong>带入分区键信息，这样业务查询时可以直接定位到数据所在分片，提升查询效率。</p>
+</li>
+<li><p>分布式数据库索引设计中，数据库层的唯一约束只在单个实例中保证，若要保证全局唯一，<strong>一定</strong>要使用全局唯一的索引设计。</p>
+</li>
+<li><p>直接使用 JOIN 请确认<strong>一定</strong>可以单元化在一个分片中完成，如果涉及跨分片的     JOIN，请通知业务修改成多条 SQL 的访问方式，只访问指定分片而不是所有分片。</p>
+</li>
+<li><p>分布式数据库可以进行业务层的分库分表访问，和通过数据库中间件的访问，对于业务耗时敏感的业务，<strong>推荐</strong>业务层直接根据路由规则访问数据，否则使用数据库中间件，简单易用。</p>
+</li>
+<li><p>对于耗时敏感的核心业务，<strong>推荐</strong>使用最终一致的业务层柔性事务，数据库层的     2PC 分布式事务耗时较大，性能较为一般，但是 2PC 使用简单，能满足大部分业务的使用。</p>
+</li>
+<li><p><strong>一定</strong>要利用好分布式数据库架构的特点，设计多活架构，每个机房都可以有写入流量，提升资源使用率和业务连续性，请 DBA     和业务方一起做好全链路的架构设计。</p>
+</li>
+</ol>
 ]]></content>
       <categories>
-        <category>Linux</category>
+        <category>MySQL</category>
       </categories>
       <tags>
-        <tag>Linux磁盘分区</tag>
+        <tag>MySQL规范</tag>
       </tags>
   </entry>
   <entry>
@@ -789,6 +869,41 @@
       </tags>
   </entry>
   <entry>
+    <title>常用的磁盘分区形式</title>
+    <url>/2020/05/07/linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%BD%A2%E5%BC%8F/</url>
+    <content><![CDATA[<p>常用的磁盘分区形式如表1所示，并且针对Linux操作系统，不同的磁盘分区形式需要选择不同的分区工具。</p>
+<table>
+<thead>
+<tr>
+<th>磁盘分区形式</th>
+<th>支持最大磁盘容量</th>
+<th>支持分区数量</th>
+<th>Linux分区工具</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主启动记录分区（MBR）</td>
+<td>2 TB</td>
+<td>4个主分区 <br />3个主分区和1个扩展分区<br />MBR分区包含主分区和扩展分区，其中扩展分区里面可以包含若干个逻辑分区。扩展分区不可以直接使用，需要划分成若干个逻辑分区才可以使用。以创建6个分区为例，以下两种分区情况供参考：<br />3个主分区，1个扩展分区，其中扩展分区中包含3个逻辑分区。<br />1个主分区，1个扩展分区，其中扩展分区中包含5个逻辑分区。</td>
+<td>以下两种工具均可以使用：fdisk工具parted工具</td>
+</tr>
+<tr>
+<td>全局分区表（GPT, Guid Partition Table）</td>
+<td>18 EB1 EB &#x3D; 1048576 TB</td>
+<td>不限制分区数量GPT格式下没有主分区、扩展分区以及逻辑分区之分。</td>
+<td>parted工具</td>
+</tr>
+</tbody></table>
+<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，如果您需要使用大于2 TB的磁盘容量，分区形式请采用GPT。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux磁盘分区</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>CentOS逻辑卷调整分区大小</title>
     <url>/2018/05/04/lvreduce-lvextend/</url>
     <content><![CDATA[<h1 id="CentOS逻辑卷调整分区大小目的"><a href="#CentOS逻辑卷调整分区大小目的" class="headerlink" title="CentOS逻辑卷调整分区大小目的"></a>CentOS逻辑卷调整分区大小目的</h1><p>因为系统使用的是逻辑卷分区（LVM），且分区大小不合理</p>
@@ -813,107 +928,6 @@
       </categories>
       <tags>
         <tag>Linux逻辑卷</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MySQL数据库开发设计规范</title>
-    <url>/2022/11/09/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/</url>
-    <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>本规范由四部分组成：表结构设计、索引设计、高可用设计、分布式架构设计。</p>
-<p>四大规范，每个规范10条准则。</p>
-<h1 id="表结构设计规范"><a href="#表结构设计规范" class="headerlink" title="表结构设计规范"></a>表结构设计规范</h1><ol>
-<li><p>INT 类型<strong>不使用</strong> unsigned     无符号属性，容易引入额外的计算问题。</p>
-</li>
-<li><p>自增用 8 字节 BIG INT，<strong>不要使用</strong> 4 字节 INT，且自增在 MySQL     8.0 版本前有回溯问题，请考虑是否业务有影响。</p>
-</li>
-<li><p>字符集使用 UTF8MB4 字符编码，<strong>不推荐</strong> GBK、UTF-8 等其他字符集。</p>
-</li>
-<li><p>日期类型用 DATETIME     类型，需要精确到毫秒用 DATETIME(6)，<strong>不要使用</strong> INT、TIMESTAMP。</p>
-</li>
-<li><p>类型 JSON     可用于存储非结构化数据，典型场景为用户标签，<strong>不要</strong>将 JSON 用于频繁更新的字段场景。</p>
-</li>
-<li><p>每张表<strong>一定</strong>要有一个主键，这样至少满足一范式的要求，<strong>核心业务表</strong>用全局唯一字段（雪花算法、有序UUID）做主键，<strong>不要</strong>使用自增做主键。</p>
-</li>
-<li><p>对于日志类的流水表、报警表、日志表，可以使用压缩设计，提升存储效率。MySQL     5.7 版本开始推荐使用透明页压缩，<strong>不要</strong>使用传统的 KEY_BLOCK_SIZE 的页压缩。</p>
-</li>
-<li><p>类别设计，用 ENUM+CHECK 约束，<strong>不要</strong>使用 INT 类型的设计。</p>
-</li>
-<li><p>敏感字段需加密，如账户密码、信用卡号等存储使用：动态盐     + 非固定加密算法（MD5&#x2F;AES256等） + 多轮加密，<strong>不要</strong>简单使用 MD5 算法加密，容易被暴力破解。</p>
-</li>
-<li><p>MySQL 可以通过 KV     的方式访问表中的数据，若业务只是简单的 SET、GET 请求，可考虑将其转化为 Memcached 的 KV 访问方式，减少 SQL     解析的开销，性能可以有至少 50% 的提升。</p>
-</li>
-</ol>
-<h1 id="索引设计规范"><a href="#索引设计规范" class="headerlink" title="索引设计规范"></a>索引设计规范</h1><ol>
-<li><p><strong>不要陷入</strong>设置单表行数、列数限制的固有印象，其他关系型数据库没有行数、列数限制，MySQL     也没有，大表的缺点不是性能，而是后续的 DDL 管理问题，随着 MySQL 8.0 快速加列功能的上线，大表 DDL 问题基本已解决。</p>
-</li>
-<li><p>MySQL 是索引组织表，表中的数据以 B+ 树索引结构，根据主键逻辑排序，由于 B+ 树索引的特点是树的高度为     3~4 层，所以从数十亿的记录中，通过主键查询一条记录只需要 3、4 次 I&#x2F;O，当前的 SSD 存储设备设置每秒至少能完成 10000 次的     I&#x2F;O 查询，<strong>不要</strong>担心通过索引查询一条或几条记录的性能，每秒百万次查询并不难。</p>
-</li>
-<li><p>MySQL     是索引组织表，二级索引只存储（键值、主键值），因此需要再通过一次主键索引查询得到记录，这种方式成为回表。在核心业务中，<strong>使用</strong>索引覆盖技术，提升索引查询性能，对于回表记录数比较大的场景，甚至可以有 10 倍的性能提升；</p>
-</li>
-<li><p>对类似 WHERE a &#x3D; ? ORDER     BY b 这样的查询，<strong>一定</strong>要创建（a、b）组合索引，这样可以避免一次额外排序，提升查询性能。</p>
-</li>
-<li><p>MySQL 优化器是     CBO（Cost-based Optimizer），所有查询基于成本而不是规则，若发现 SQL 执行计划发生变化，<strong>不要怀疑     MySQL 出错，请先分析数据特点、索引创建是否合理，是否可以通过直方图校准数据</strong>。</p>
-</li>
-<li><p>MySQL JOIN 支持     NLJ（Nested Loop Join）和 NHJ（Nested Hash Join）两种方式。对于 OLTP 业务，放心大胆使用 JOIN，但<strong>一定</strong>要做好索引的设计和索引覆盖的考虑（不考虑分布式数据库场景）；对于     OLAP 业务，MySQL 8.0 版本开始，支持 Hash Join，对于大数据量的关联，性能提升非常多，<strong>可以</strong>在不超过 10T 的数仓场景中考虑使用，超过     10T数据量，请<strong>一定</strong>使用大数据产品，如 Hive、Spark、麒麟等产品。</p>
-</li>
-<li><p>MySQL 5.7     版本开始子查询优化已经做得不错，但是编写的子查询<strong>不能</strong>是关联子查询，上线前<strong>一定</strong>需要确认，若发现关联子查询，请改写子查询为     JOIN 或其他方式。</p>
-</li>
-<li><p><strong>不要</strong>因为数据量大，使用分区表，MySQL 是索引组织表，数据量再大，定位记录也只需要3、4 次     I&#x2F;O。可以考虑分区表<strong>唯一</strong>的应用场景是：需要定期清理历史流水类数据，但如果业务可以按月、按天做分表，那么当前     MySQL 8.0 版本，分区表也不推荐使用。</p>
-</li>
-<li><p>业务上线或新版本发布前，DBA <strong>一定</strong>要进行所有 SQL     Review，确保 SQL 走索引，否则不予上线，或由业务以邮件等正式方式，通知 DBA 该 SQL 不会引起线上事故，业务方承担后续责任。</p>
-</li>
-<li><p>DBA <strong>每天</strong>要对数据库进行巡检，及早发现慢查询或潜在数据库风险，将任何潜在问题<strong>尽早</strong>抛出，否则后续自己承担相关责任。</p>
-</li>
-</ol>
-<h1 id="高可用设计规范"><a href="#高可用设计规范" class="headerlink" title="高可用设计规范"></a>高可用设计规范</h1><ol>
-<li><p>MySQL 高可用的基石是利用二进制日志的复制技术，核心业务<strong>一定</strong>要使用无损半同步方式，但凡不使用无损半同步的高可用架构，请业务方业务以邮件等正式方式回复，数据丢失等后续问题自己承担相关责任。</p>
-</li>
-<li><p>MySQL 5.7 版本开始，<strong>一定</strong>要使用基于 WRITESET     的从机回放，避免主从延迟。</p>
-</li>
-<li><p>当前 MySQL     发生主从延迟的可能性主要是存在大事务，比如定期计算收益等操作，这类大事务，<strong>一定</strong>要通知业务方将大事务拆成小事务，否则不予上线；若要上线，请业务方以邮件等方式回复，自己承担后续主从延迟带来的后续一系列问题。</p>
-</li>
-<li><p>MySQL 8.0 版本开始<strong>推荐</strong>金融业务使用 MGR(MySQL Group     Replication），通过 Paxos 协议保证数据一致性，并自己完成选主的逻辑，也可以使用多主模式，数据不冲突的情况下，可以大幅提升写入性能。</p>
-</li>
-<li><p>对于核心业务，<strong>必须</strong>遵循互不信任原则，数据一致性不单单依赖     MySQL 复制本身，DBA 这里需要通过逻辑的方式，对主从数据进行核对，业务这里也需要一套业务层的逻辑进行“对账”。</p>
-</li>
-<li><p>核心业务，<strong>务必</strong>使用一地三中心，两地三中心的跨机房复制架构，这样发生机房级故障，可以切换到另一个机房，保证业务可用性。</p>
-</li>
-<li><p>同城容灾架构<strong>一定</strong>要评估切换到另一个机房后业务访问的性能，多次跨机房访问     DB，虽然每次只多了 2~3ms，但也存在业务雪崩问题，推荐 DB 切换机房，上层业务跟着一起联动切换。</p>
-</li>
-<li><p>对于有跨城容灾需求的业务，<strong>可以</strong>考虑使用三地五中心架构，但是由于 30ms     延迟，业务需要进行评估，对于核心业务，<strong>务必</strong>使用业务层的跨城机制，将数据层的多次网络耗时合并为一次，这样能大大提升业务的性能。</p>
-</li>
-<li><p>业界的 MHA、Ochestrator     等高可用套件都是基于 ssh 访问 MySQL，稳定性、安全性不高，<strong>不推荐</strong>大厂使用；自己开发一个数据库管理平台，通过     agent 的模式管理高可用和 MySQL 数据库的日常操作更为安全、有效。</p>
-</li>
-<li><p><strong>一定</strong>做好数据备份架构的设计，全备 + 增量备份 +     延迟备机（可选），做到可以基于任何一点恢复和回滚，同时，遵循互不信任原则，备份文件一定要进行检查，确保需要时一定能够进行恢复。</p>
-</li>
-</ol>
-<h1 id="分布式架构设计规范"><a href="#分布式架构设计规范" class="headerlink" title="分布式架构设计规范"></a>分布式架构设计规范</h1><ol>
-<li><p>分布式数据库的本质就是根据某几个列的规则，将数据水平打散，存在不同的实例中。数据拆分的列称为分区键（Shard     Key），分区键<strong>一定</strong>是业务大部分访问（超过 80%）的表都会使用的列。若选不出合适的分区键，那就<strong>一定不要</strong>进行分布式数据库架构的设计；互联网业务绝大部分分区键的选择是用户维度。</p>
-</li>
-<li><p>分区算法<strong>绝大部分</strong>场景使用     Hash算法，这样数据的存储和访问可以平均到下面多个实例，真正的做到可扩展性，Range 算法通常无法解决热点问题，会是灾难，但 Range     算法可以在单实例中使用，作为二级拆分数据的规则。</p>
-</li>
-<li><p>分布式数据库分片时，一开始就设计为<strong>不少于</strong> 1000     个分片的规则，不用担心分片过多的问题，管理 1 个分片和 1000 个分片的成本是一样的，但为后续的扩容做好了充足的准备。</p>
-</li>
-<li><p>分布式数据库扩缩容就是通过部分过滤的复制技术，按库或按表进行数据同步，分库分表设计<strong>推荐</strong>库名、表都不同，做到全局唯一，方便后续拆分。</p>
-</li>
-<li><p>分布式数据库索引设计中，非分区键的唯一索引<strong>一定</strong>带入分区键信息，这样业务查询时可以直接定位到数据所在分片，提升查询效率。</p>
-</li>
-<li><p>分布式数据库索引设计中，数据库层的唯一约束只在单个实例中保证，若要保证全局唯一，<strong>一定</strong>要使用全局唯一的索引设计。</p>
-</li>
-<li><p>直接使用 JOIN 请确认<strong>一定</strong>可以单元化在一个分片中完成，如果涉及跨分片的     JOIN，请通知业务修改成多条 SQL 的访问方式，只访问指定分片而不是所有分片。</p>
-</li>
-<li><p>分布式数据库可以进行业务层的分库分表访问，和通过数据库中间件的访问，对于业务耗时敏感的业务，<strong>推荐</strong>业务层直接根据路由规则访问数据，否则使用数据库中间件，简单易用。</p>
-</li>
-<li><p>对于耗时敏感的核心业务，<strong>推荐</strong>使用最终一致的业务层柔性事务，数据库层的     2PC 分布式事务耗时较大，性能较为一般，但是 2PC 使用简单，能满足大部分业务的使用。</p>
-</li>
-<li><p><strong>一定</strong>要利用好分布式数据库架构的特点，设计多活架构，每个机房都可以有写入流量，提升资源使用率和业务连续性，请 DBA     和业务方一起做好全链路的架构设计。</p>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>MySQL规范</tag>
       </tags>
   </entry>
   <entry>
@@ -1101,7 +1115,7 @@
         <category>Tomcat</category>
       </categories>
       <tags>
-        <tag>Tomcat</tag>
+        <tag>tomcat</tag>
       </tags>
   </entry>
   <entry>
