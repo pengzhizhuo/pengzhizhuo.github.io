@@ -1,6 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Docker安装</title>
+    <url>/2022/11/11/Docker%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[<h2 id="Docker安装"><a href="#Docker安装" class="headerlink" title="Docker安装"></a>Docker安装</h2><h3 id="前提说明"><a href="#前提说明" class="headerlink" title="前提说明"></a>前提说明</h3><blockquote>
+<p>从 2017 年 3 月开始 docker 在原来的基础上分为两个分支版本: Docker CE 和 Docker EE：Docker CE 即社区免费版；Docker EE 即企业版，强调安全，但需付费使用；按照官网上Docker Engine - Community包现在就是叫做Docker CE。这里将展示在CentOS上安装Docker。</p>
+</blockquote>
+<h3 id="CentOS-版本要求"><a href="#CentOS-版本要求" class="headerlink" title="CentOS 版本要求"></a>CentOS 版本要求</h3><ul>
+<li><p>Centos Docker安装</p>
+<ul>
+<li>Centos7 (64bit)</li>
+</ul>
+</li>
+<li><p>前提条件</p>
+<ul>
+<li>Centos7 系统为64位，内核版本为3.10以上</li>
+<li>启用<code>centos-extras</code></li>
+<li>推荐使用<code>overlay2</code>存储驱动</li>
+</ul>
+</li>
+<li><p>查看自己的内核版本</p>
+<ul>
+<li><p>Centos 7</p>
+<p>cat &#x2F;etc&#x2F;redhat-release</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Docker的基本组成"><a href="#Docker的基本组成" class="headerlink" title="Docker的基本组成"></a>Docker的基本组成</h3><ul>
+<li><p>镜像</p>
+<ul>
+<li>就是一个只读的模板，java中的Class。镜像可以用来创建Docker容器，一个镜像可以创建很多的容器</li>
+</ul>
+</li>
+<li><p>容器</p>
+<ul>
+<li><p>镜像的实例，java中的instance</p>
+</li>
+<li><p>Docker利用容器独立运行的一个或者一组应用<br>容器可以被启动、开始、停止、删除。<br>每一个容器都是相互隔离的、保证安全的平台</p>
+</li>
+<li><p>可以把容器看作是简易版的Linux环境（包括root用户权限、进程空间、用户控件和网络空间）和运行在其中的应用程序</p>
+</li>
+<li><p>容器的定义和镜像几乎是一样的，也是一堆层的统一视角，唯一却别在与容器的最上层是可读可写的</p>
+</li>
+</ul>
+</li>
+<li><p>仓库</p>
+<ul>
+<li><p>仓库是集中存放镜像文件的场所</p>
+</li>
+<li><p>仓库和仓库注册服务器是有区别的</p>
+<ul>
+<li>仓库注册服务器上往往存放着多个仓库,每个仓库又包含了多个镜像，每个镜像有不同的标签(tag)</li>
+</ul>
+</li>
+<li><p>仓库分为公开仓库和私有仓库两种形式</p>
+</li>
+<li><p>最大的公开仓库是Docker Hub (<a href="https://hub.docker.com),它存放了数量庞大的镜像供用户下载/">https://hub.docker.com)，它存放了数量庞大的镜像供用户下载</a><br>国内的公开仓库包括阿里云、网易云等</p>
+</li>
+</ul>
+</li>
+<li><p>小结</p>
+<ul>
+<li>Docker本身是一个容器运行载体或者称之为管理引擎<br>我们把应用程序和配置依赖打包好形成一个可交付的运行环境，这个环境就称之为image镜像文件。只有通过这个镜像文件才能生成Docker容器，image文件可以看作是容器的模板。Docker根据image文件生成容器的实例。同一个image文件，可以生成多个同时运行的容器实例</li>
+<li>imags文件生成的容器实例，本身也是一个文件，称之为镜像文件</li>
+<li>一个容器运行一种服务，当我们需要的时候，就可以通过docker客户端创建一个对应的运行实例，也就是容器</li>
+<li>仓储就是存放一堆镜像文件的地方，我们可以把镜像发布到仓储中，需要的时候从仓储中拉下来就可以了</li>
+</ul>
+</li>
+</ul>
+<h3 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h3><ul>
+<li><p>官网安装参考手册<br><a href="https://docs.docker.com/engine/install/centos/">https://docs.docker.com/engine/install/centos/</a></p>
+</li>
+<li><p>卸载老的Docker及依赖 </p>
+<blockquote>
+<p>为什么你可能还需要删除较低的Docker安装？因为较旧版本的Docker被称为docker或docker-engine（它是一个简化Docker安装的命令行工具，通过一个简单的命令行即可在相应的平台上安装Docker，比如VirtualBox、 Digital Ocean、Microsoft Azure）</p>
+</blockquote>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum remove docker \</span><br><span class="line">                  docker-client \</span><br><span class="line">                  docker-client-latest \</span><br><span class="line">                  docker-common \</span><br><span class="line">                  docker-latest \</span><br><span class="line">                  docker-latest-logrotate \</span><br><span class="line">                  docker-logrotate \</span><br><span class="line">                  docker-selinux \</span><br><span class="line">                  docker-engine-selinux \</span><br><span class="line">                  docker-engine</span><br></pre></td></tr></table></figure>
+
+
+
+
+<ul>
+<li>安装依赖库<ul>
+<li>yum-utils 提供 yum-config-manager 类库</li>
+<li>device-mapper-persistent-data 和 lvm2 被devicemapper 存储驱动依赖</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum install -y yum-utils \</span><br><span class="line">  device-mapper-persistent-data \</span><br><span class="line">  lvm2</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><p>设置stable镜像仓库</p>
+<ul>
+<li><p>非常慢的方式</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>比较快的方式(使用镜像地址)</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum-config-manager --add-repo http://mirror.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>更新yum软件包索引</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum makecache fast</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装社区版docker</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum -y install docker-ce</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动docker</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo systemctl start docker</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>确认docker安装成功</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@<span class="built_in">test</span> ~]<span class="comment"># systemctl status docker</span></span><br><span class="line">● docker.service - Docker Application Container Engine</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/docker.service; disabled; vendor preset: disabled)</span><br><span class="line">   Active: active (running) since Sat 2022-11-05 20:34:14 CST; 5 days ago</span><br><span class="line">     Docs: https://docs.docker.com</span><br><span class="line"> Main PID: 24058 (dockerd)</span><br><span class="line">    Tasks: 9</span><br><span class="line">   Memory: 70.7M</span><br><span class="line">   CGroup: /system.slice/docker.service</span><br><span class="line">           └─24058 /usr/bin/dockerd --graph=/data/docker -H fd:// --containerd=/run/containerd/containerd.sock</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@<span class="built_in">test</span> ~]<span class="comment"># docker run hello-world</span></span><br><span class="line"></span><br><span class="line">Hello from Docker!</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took the following steps:</span><br><span class="line"></span><br><span class="line">  1. The Docker client contacted the Docker daemon.</span><br><span class="line">  2. The Docker daemon pulled the <span class="string">&quot;hello-world&quot;</span> image from the Docker Hub.</span><br><span class="line">     (amd64)</span><br><span class="line">  3. The Docker daemon created a new container from that image <span class="built_in">which</span> runs the</span><br><span class="line">     executable that produces the output you are currently reading.</span><br><span class="line">  4. The Docker daemon streamed that output to the Docker client, <span class="built_in">which</span> sent it</span><br><span class="line">     to your terminal.</span><br><span class="line"></span><br><span class="line">To try something more ambitious, you can run an Ubuntu container with:</span><br><span class="line"> $ docker run -it ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, and more with a free Docker ID:</span><br><span class="line"> https://hub.docker.com/</span><br><span class="line"></span><br><span class="line">For more examples and ideas, visit:</span><br><span class="line"> https://docs.docker.com/get-started/</span><br></pre></td></tr></table></figure>
+
+
+
+
+</li>
+<li><p>配置镜像加速</p>
+<blockquote>
+<p>Docker 安装好以后，我们就要开始为拉取镜像准备了；国内从 DockerHub 拉取镜像有时会特别慢，此时可以<strong>配置镜像加速器</strong>。</p>
+</blockquote>
+<ul>
+<li><p>Docker 官方和国内很多云服务商都提供了国内加速器服务，比如：</p>
+</li>
+<li><p>阿里云的加速器：<a href="https://help.aliyun.com/document_detail/60750.html">https://help.aliyun.com/document_detail/60750.html</a></p>
+</li>
+<li><p>网易加速器：<a href="http://hub-mirror.c.163.com/">http://hub-mirror.c.163.com</a></p>
+</li>
+<li><p>Docker官方中国加速器：<a href="https://registry.docker-cn.com/">https://registry.docker-cn.com</a></p>
+</li>
+<li><p>ustc 的镜像：<a href="https://docker.mirrors.ustc.edu.cn/">https://docker.mirrors.ustc.edu.cn</a></p>
+</li>
+<li><p>daocloud：<a href="https://www.daocloud.io/mirror#accelerator-doc%EF%BC%88%E6%B3%A8%E5%86%8C%E5%90%8E%E4%BD%BF%E7%94%A8%EF%BC%89">https://www.daocloud.io/mirror#accelerator-doc（注册后使用）</a></p>
+</li>
+</ul>
+</li>
+</ul>
+<p>​			<strong>这里配置 Docker官方中国的加速器</strong>：</p>
+<p>​			对于使用 systemd 的系统，请在 &#x2F;etc&#x2F;docker&#x2F;daemon.json 中写入如下内容（如果文件不存在请新建该文件）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo <span class="built_in">mkdir</span> -p /etc/docker</span><br><span class="line"></span><br><span class="line">sudo <span class="built_in">tee</span> /etc/docker/daemon.json &lt;&lt;-<span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="string">&quot;registry-mirrors&quot;</span>: [<span class="string">&quot;https://registry.docker-cn.com&quot;</span>]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>​		配置完后重启docker服务</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><p>启动Docker后台容器(测试运行hello world)</p>
+<ul>
+<li>docker run helloworld<ul>
+<li>相当于docker run helloworld:latest</li>
+</ul>
+</li>
+<li>run干了什么 <ul>
+<li>先在本地找helloworld这个镜像</li>
+<li>如果找不到，就去仓库中去找，找到后pull到本地</li>
+<li>根据这个镜像启动一个容器</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>卸载</p>
+<ul>
+<li><pre><code class="bash">systemctl stop docker
+yum -y remove docker-ce
+rm -rf /var/lib/docker
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="底层原理"><a href="#底层原理" class="headerlink" title="底层原理"></a>底层原理</h3><ul>
+<li><p>Docker是怎么工作的</p>
+<ul>
+<li>Docker是一个CS结构的系统，Docker守护进程运行在主机上，然后通过socket连接从客户端访问，守护进程从客户端接收命令并管理运行在主机上的容器。容器，是一个运行时环境</li>
+</ul>
+</li>
+<li><p>Docker为什么比vm快</p>
+<ul>
+<li><strong>docker有着比虚拟机更少的抽象层。docker不需要实现硬件资源虚拟化，docker上的程序直接使用的是实际物理机的硬件资源，因此在cpu、内存利用率上docker有明显的优势</strong></li>
+<li><strong>docker利用的是宿主机的内核，而不是vm的内核，所以加载docker容器会很快。那这就是说，centos上的容器只能跑在centos的机器上</strong></li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Docker</category>
+      </categories>
+      <tags>
+        <tag>Docker安装</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Docker简介</title>
     <url>/2022/11/10/Docker%E7%AE%80%E4%BB%8B/</url>
     <content><![CDATA[<h1 id="Docker核心技术基础"><a href="#Docker核心技术基础" class="headerlink" title="Docker核心技术基础"></a>Docker核心技术基础</h1><h2 id="docker简介"><a href="#docker简介" class="headerlink" title="docker简介"></a>docker简介</h2><h3 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h3><ul>
@@ -100,51 +301,6 @@
       </categories>
       <tags>
         <tag>Docker</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MySQL部署和操作规范</title>
-    <url>/2022/11/10/MySQL%E9%83%A8%E7%BD%B2%E5%92%8C%E6%93%8D%E4%BD%9C%E8%A7%84%E8%8C%83/</url>
-    <content><![CDATA[<p>规范的部署和操作可以让MySQL更加安全，并且可以提高数据库的性能。</p>
-<h1 id="选择合适的MySQL版本"><a href="#选择合适的MySQL版本" class="headerlink" title="选择合适的MySQL版本"></a>选择合适的MySQL版本</h1><p>不建议使用太旧的版本<br>因为很多特性旧版本都没有，并且性能也没有新版本的好<br>线上环境建议使用 GA （General Availability，正式发布的版本）</p>
-<h1 id="必须开启-Binlog"><a href="#必须开启-Binlog" class="headerlink" title="必须开启 Binlog"></a>必须开启 Binlog</h1><p>Binlog 的两个主要作用：复制和灾备<br>在通常情况下，必须开启 Binlog</p>
-<h1 id="对数据安全要求较高的场景，建议设置为“双-1”"><a href="#对数据安全要求较高的场景，建议设置为“双-1”" class="headerlink" title="对数据安全要求较高的场景，建议设置为“双 1”"></a>对数据安全要求较高的场景，建议设置为“双 1”</h1><p>innodb_flush_log_at_trx_commit 参数和 sync_binlog 参数都设置为 1</p>
-<h1 id="配置不区分大小写"><a href="#配置不区分大小写" class="headerlink" title="配置不区分大小写"></a>配置不区分大小写</h1><p>可以将 lower_case_table_names 参数设置为 1，表示表名以小写形式存储在磁盘上，并且不区分大小写</p>
-<h1 id="如无特殊说明，设置业务用户只有增、删、查、改的权限"><a href="#如无特殊说明，设置业务用户只有增、删、查、改的权限" class="headerlink" title="如无特殊说明，设置业务用户只有增、删、查、改的权限"></a>如无特殊说明，设置业务用户只有增、删、查、改的权限</h1><p>权限最小化可以大大降低误删数据库的风险</p>
-<h1 id="合理设置缓冲池"><a href="#合理设置缓冲池" class="headerlink" title="合理设置缓冲池"></a>合理设置缓冲池</h1><p>将 innodb_buffer_pool_size 参数设置为机器内存的 60%~75%</p>
-<h1 id="批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察"><a href="#批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察" class="headerlink" title="批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察"></a>批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察</h1><p>批量导入、导出、更新、删除操作以及会导致主从延迟和磁盘空间增加的操作（如碎片整理、增减字段等）建议在业务低峰进行。防止这些操作对线上业务影响。例如，批量删除数据可能会导致主从延迟，如果有从库提供业务查询，可能会导致读取延迟。碎片整理、增减字段等操作，短时间需要大量的磁盘空间，可能会导致数据库磁盘跑满</p>
-<h1 id="如果有可能导致-MySQL-QPS-上升，应提前告知-DBA"><a href="#如果有可能导致-MySQL-QPS-上升，应提前告知-DBA" class="headerlink" title="如果有可能导致 MySQL QPS 上升，应提前告知 DBA"></a>如果有可能导致 MySQL QPS 上升，应提前告知 DBA</h1><p>如果超过现有数据库配置所能承载的最大 QPS，则需要考虑扩容</p>
-<h1 id="删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表"><a href="#删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表" class="headerlink" title="删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表"></a>删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表</h1>]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>MySQL规范</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MySQL建表规范</title>
-    <url>/2022/11/09/MySQL%E5%BB%BA%E8%A1%A8%E8%A7%84%E8%8C%83/</url>
-    <content><![CDATA[<h2 id="MySQL规范–建表规范"><a href="#MySQL规范–建表规范" class="headerlink" title="MySQL规范–建表规范"></a>MySQL规范–建表规范</h2><p>规范的表结构能降低MySQL出现问题的概率，下面总结一些MySQL的建表规范</p>
-<h3 id="1、库名、表名、字段名全部采用小写格式。"><a href="#1、库名、表名、字段名全部采用小写格式。" class="headerlink" title="1、库名、表名、字段名全部采用小写格式。"></a>1、库名、表名、字段名全部采用小写格式。</h3><p>这是防止出现大小写不一致导致找不到对应表的情况。</p>
-<h3 id="2、避免使用MySQL的保留字。"><a href="#2、避免使用MySQL的保留字。" class="headerlink" title="2、避免使用MySQL的保留字。"></a>2、避免使用MySQL的保留字。</h3><p>使用mysql时一定要注意，尽量不要使用它的保留字作为表名或者列名，否则会出现莫名其妙的错误。如果之前用了，在sql语句中就用&#96;&#96;包括起来。</p>
-<h3 id="3、表名、列名建议不要超过30个字符。"><a href="#3、表名、列名建议不要超过30个字符。" class="headerlink" title="3、表名、列名建议不要超过30个字符。"></a>3、表名、列名建议不要超过30个字符。</h3><h3 id="4、临时库表、备份库表的命名"><a href="#4、临时库表、备份库表的命名" class="headerlink" title="4、临时库表、备份库表的命名"></a>4、临时库表、备份库表的命名</h3><p>临时库表必须以tmp加上日期为后缀，比如user_info_tmp_20221109。<br>备份库表必须以bak加上日期为后缀，比如user_info_bak_20221109。</p>
-<h3 id="5、索引命名"><a href="#5、索引命名" class="headerlink" title="5、索引命名"></a>5、索引命名</h3><p>非唯一索引建议按照”idx字段名”进行命名。<br>唯一索引建议按照 “uniq_字段名”进行命名。</p>
-<h3 id="6、主键的建议"><a href="#6、主键的建议" class="headerlink" title="6、主键的建议"></a>6、主键的建议</h3><p>表必须有主键。<br>不使用有业务意义的的列作为主键，以免收到业务变化的影响。<br>不使用更新频繁的列作为主键。<br>不使用UUID、MD5等作为主键，因为它们可能会导致数据过于离散。<br>建议使用非空的唯一键作为主键，并配置自增或者发号器。</p>
-<h3 id="7、建议使用-InnoDB"><a href="#7、建议使用-InnoDB" class="headerlink" title="7、建议使用 InnoDB"></a>7、建议使用 InnoDB</h3><p>InnoDB 具有支持事务、行锁设计、在高并发场景下性能更好等特性。因此在绝大多数业务场景下，InnoDB 都是唯一选择。</p>
-<h3 id="8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci"><a href="#8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci" class="headerlink" title="8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci"></a>8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci</h3><p>utf8mb4 为万国码，无乱码风险；与 utf8 编码相比，utf8mb4 支持 Emoji 表情。</p>
-<h3 id="9、所有表、字段都需要增加-comment-来描述此表、字段的含义"><a href="#9、所有表、字段都需要增加-comment-来描述此表、字段的含义" class="headerlink" title="9、所有表、字段都需要增加 comment 来描述此表、字段的含义"></a>9、所有表、字段都需要增加 comment 来描述此表、字段的含义</h3><h3 id="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"><a href="#10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段" class="headerlink" title="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"></a>10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段</h3><h3 id="11、用尽量少的存储空间来存储一个字段的数据"><a href="#11、用尽量少的存储空间来存储一个字段的数据" class="headerlink" title="11、用尽量少的存储空间来存储一个字段的数据"></a>11、用尽量少的存储空间来存储一个字段的数据</h3><p>能用 int 的就不用 char 或 varchar<br>能用 tinyint 的就不用 int<br>使用 unsigned 存储非负数值</p>
-<h3 id="12、尽可能不使用-text-和-blob-类型"><a href="#12、尽可能不使用-text-和-blob-类型" class="headerlink" title="12、尽可能不使用 text 和 blob 类型"></a>12、尽可能不使用 text 和 blob 类型</h3><p>使用 text 或 blob 类型，会浪费更多的磁盘空间和内存空间。如无法避免使用 text 或 blob 类型，则建议独立出一张表，使用主键或其他唯一的字段来对应，以避免影响原有表的查询效率。</p>
-<h3 id="13、禁止在数据库中存储明文密码"><a href="#13、禁止在数据库中存储明文密码" class="headerlink" title="13、禁止在数据库中存储明文密码"></a>13、禁止在数据库中存储明文密码</h3><p>数据安全第一，防止密码泄露</p>
-<h3 id="14、索引设计"><a href="#14、索引设计" class="headerlink" title="14、索引设计"></a>14、索引设计</h3><p>在设计索引时，建议考虑以下因素：<br>经常作为条件、排序、join关联的字段，建议加上索引。<br>单表索引数不建议过多，因为索引也会占用空间。<br>如果可以使用覆盖索引，或者几个字段经常同时作为条件，则可以考虑使用联合索引。<br>不在低基数的列上创建索引，如性别字段。</p>
-<h3 id="15、不建议使用外键"><a href="#15、不建议使用外键" class="headerlink" title="15、不建议使用外键"></a>15、不建议使用外键</h3><p>在有外键的情况下，update 操作和 delete 操作都会涉及相关联的表，不仅会影响 SQL 的性能，还会大大增加死锁出现的概率</p>
-<h3 id="16、线上业务禁止使用存储过程、视图、触发器、Event-等"><a href="#16、线上业务禁止使用存储过程、视图、触发器、Event-等" class="headerlink" title="16、线上业务禁止使用存储过程、视图、触发器、Event 等"></a>16、线上业务禁止使用存储过程、视图、触发器、Event 等</h3><p>在高并发的情况下，这些功能很可能会影响数据库的性能，如果有类似的需求，则建议把这些逻辑放到服务层实现</p>
-<h3 id="17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定"><a href="#17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定" class="headerlink" title="17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定"></a>17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定</h3>]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>MySQL规范</tag>
       </tags>
   </entry>
   <entry>
@@ -249,6 +405,31 @@
       </tags>
   </entry>
   <entry>
+    <title>MySQL建表规范</title>
+    <url>/2022/11/09/MySQL%E5%BB%BA%E8%A1%A8%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<h2 id="MySQL规范–建表规范"><a href="#MySQL规范–建表规范" class="headerlink" title="MySQL规范–建表规范"></a>MySQL规范–建表规范</h2><p>规范的表结构能降低MySQL出现问题的概率，下面总结一些MySQL的建表规范</p>
+<h3 id="1、库名、表名、字段名全部采用小写格式。"><a href="#1、库名、表名、字段名全部采用小写格式。" class="headerlink" title="1、库名、表名、字段名全部采用小写格式。"></a>1、库名、表名、字段名全部采用小写格式。</h3><p>这是防止出现大小写不一致导致找不到对应表的情况。</p>
+<h3 id="2、避免使用MySQL的保留字。"><a href="#2、避免使用MySQL的保留字。" class="headerlink" title="2、避免使用MySQL的保留字。"></a>2、避免使用MySQL的保留字。</h3><p>使用mysql时一定要注意，尽量不要使用它的保留字作为表名或者列名，否则会出现莫名其妙的错误。如果之前用了，在sql语句中就用&#96;&#96;包括起来。</p>
+<h3 id="3、表名、列名建议不要超过30个字符。"><a href="#3、表名、列名建议不要超过30个字符。" class="headerlink" title="3、表名、列名建议不要超过30个字符。"></a>3、表名、列名建议不要超过30个字符。</h3><h3 id="4、临时库表、备份库表的命名"><a href="#4、临时库表、备份库表的命名" class="headerlink" title="4、临时库表、备份库表的命名"></a>4、临时库表、备份库表的命名</h3><p>临时库表必须以tmp加上日期为后缀，比如user_info_tmp_20221109。<br>备份库表必须以bak加上日期为后缀，比如user_info_bak_20221109。</p>
+<h3 id="5、索引命名"><a href="#5、索引命名" class="headerlink" title="5、索引命名"></a>5、索引命名</h3><p>非唯一索引建议按照”idx字段名”进行命名。<br>唯一索引建议按照 “uniq_字段名”进行命名。</p>
+<h3 id="6、主键的建议"><a href="#6、主键的建议" class="headerlink" title="6、主键的建议"></a>6、主键的建议</h3><p>表必须有主键。<br>不使用有业务意义的的列作为主键，以免收到业务变化的影响。<br>不使用更新频繁的列作为主键。<br>不使用UUID、MD5等作为主键，因为它们可能会导致数据过于离散。<br>建议使用非空的唯一键作为主键，并配置自增或者发号器。</p>
+<h3 id="7、建议使用-InnoDB"><a href="#7、建议使用-InnoDB" class="headerlink" title="7、建议使用 InnoDB"></a>7、建议使用 InnoDB</h3><p>InnoDB 具有支持事务、行锁设计、在高并发场景下性能更好等特性。因此在绝大多数业务场景下，InnoDB 都是唯一选择。</p>
+<h3 id="8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci"><a href="#8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci" class="headerlink" title="8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci"></a>8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci</h3><p>utf8mb4 为万国码，无乱码风险；与 utf8 编码相比，utf8mb4 支持 Emoji 表情。</p>
+<h3 id="9、所有表、字段都需要增加-comment-来描述此表、字段的含义"><a href="#9、所有表、字段都需要增加-comment-来描述此表、字段的含义" class="headerlink" title="9、所有表、字段都需要增加 comment 来描述此表、字段的含义"></a>9、所有表、字段都需要增加 comment 来描述此表、字段的含义</h3><h3 id="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"><a href="#10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段" class="headerlink" title="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"></a>10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段</h3><h3 id="11、用尽量少的存储空间来存储一个字段的数据"><a href="#11、用尽量少的存储空间来存储一个字段的数据" class="headerlink" title="11、用尽量少的存储空间来存储一个字段的数据"></a>11、用尽量少的存储空间来存储一个字段的数据</h3><p>能用 int 的就不用 char 或 varchar<br>能用 tinyint 的就不用 int<br>使用 unsigned 存储非负数值</p>
+<h3 id="12、尽可能不使用-text-和-blob-类型"><a href="#12、尽可能不使用-text-和-blob-类型" class="headerlink" title="12、尽可能不使用 text 和 blob 类型"></a>12、尽可能不使用 text 和 blob 类型</h3><p>使用 text 或 blob 类型，会浪费更多的磁盘空间和内存空间。如无法避免使用 text 或 blob 类型，则建议独立出一张表，使用主键或其他唯一的字段来对应，以避免影响原有表的查询效率。</p>
+<h3 id="13、禁止在数据库中存储明文密码"><a href="#13、禁止在数据库中存储明文密码" class="headerlink" title="13、禁止在数据库中存储明文密码"></a>13、禁止在数据库中存储明文密码</h3><p>数据安全第一，防止密码泄露</p>
+<h3 id="14、索引设计"><a href="#14、索引设计" class="headerlink" title="14、索引设计"></a>14、索引设计</h3><p>在设计索引时，建议考虑以下因素：<br>经常作为条件、排序、join关联的字段，建议加上索引。<br>单表索引数不建议过多，因为索引也会占用空间。<br>如果可以使用覆盖索引，或者几个字段经常同时作为条件，则可以考虑使用联合索引。<br>不在低基数的列上创建索引，如性别字段。</p>
+<h3 id="15、不建议使用外键"><a href="#15、不建议使用外键" class="headerlink" title="15、不建议使用外键"></a>15、不建议使用外键</h3><p>在有外键的情况下，update 操作和 delete 操作都会涉及相关联的表，不仅会影响 SQL 的性能，还会大大增加死锁出现的概率</p>
+<h3 id="16、线上业务禁止使用存储过程、视图、触发器、Event-等"><a href="#16、线上业务禁止使用存储过程、视图、触发器、Event-等" class="headerlink" title="16、线上业务禁止使用存储过程、视图、触发器、Event 等"></a>16、线上业务禁止使用存储过程、视图、触发器、Event 等</h3><p>在高并发的情况下，这些功能很可能会影响数据库的性能，如果有类似的需求，则建议把这些逻辑放到服务层实现</p>
+<h3 id="17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定"><a href="#17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定" class="headerlink" title="17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定"></a>17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定</h3>]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL规范</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL的SQL规范</title>
     <url>/2022/11/10/MySQL%E7%9A%84SQL%E8%A7%84%E8%8C%83/</url>
     <content><![CDATA[<p>良好的 SQL 习惯能大大降低慢查询出现的概率，下面主要介绍一些 SQL 规范</p>
@@ -258,6 +439,26 @@
 <h1 id="在-SQL-中不建议使用-sleep"><a href="#在-SQL-中不建议使用-sleep" class="headerlink" title="在 SQL 中不建议使用 sleep()"></a>在 SQL 中不建议使用 sleep()</h1><p>使用 sleep() 可能会增加 SQL 加锁的时间，从而影响并发性能</p>
 <h1 id="避免大表的-join"><a href="#避免大表的-join" class="headerlink" title="避免大表的 join"></a>避免大表的 join</h1><p>可能会导致数据库高负载，从而影响其他查询</p>
 <h1 id="同一张表的多条-alter-语句要合成一次操作"><a href="#同一张表的多条-alter-语句要合成一次操作" class="headerlink" title="同一张表的多条 alter 语句要合成一次操作"></a>同一张表的多条 alter 语句要合成一次操作</h1>]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL规范</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL部署和操作规范</title>
+    <url>/2022/11/10/MySQL%E9%83%A8%E7%BD%B2%E5%92%8C%E6%93%8D%E4%BD%9C%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<p>规范的部署和操作可以让MySQL更加安全，并且可以提高数据库的性能。</p>
+<h1 id="选择合适的MySQL版本"><a href="#选择合适的MySQL版本" class="headerlink" title="选择合适的MySQL版本"></a>选择合适的MySQL版本</h1><p>不建议使用太旧的版本<br>因为很多特性旧版本都没有，并且性能也没有新版本的好<br>线上环境建议使用 GA （General Availability，正式发布的版本）</p>
+<h1 id="必须开启-Binlog"><a href="#必须开启-Binlog" class="headerlink" title="必须开启 Binlog"></a>必须开启 Binlog</h1><p>Binlog 的两个主要作用：复制和灾备<br>在通常情况下，必须开启 Binlog</p>
+<h1 id="对数据安全要求较高的场景，建议设置为“双-1”"><a href="#对数据安全要求较高的场景，建议设置为“双-1”" class="headerlink" title="对数据安全要求较高的场景，建议设置为“双 1”"></a>对数据安全要求较高的场景，建议设置为“双 1”</h1><p>innodb_flush_log_at_trx_commit 参数和 sync_binlog 参数都设置为 1</p>
+<h1 id="配置不区分大小写"><a href="#配置不区分大小写" class="headerlink" title="配置不区分大小写"></a>配置不区分大小写</h1><p>可以将 lower_case_table_names 参数设置为 1，表示表名以小写形式存储在磁盘上，并且不区分大小写</p>
+<h1 id="如无特殊说明，设置业务用户只有增、删、查、改的权限"><a href="#如无特殊说明，设置业务用户只有增、删、查、改的权限" class="headerlink" title="如无特殊说明，设置业务用户只有增、删、查、改的权限"></a>如无特殊说明，设置业务用户只有增、删、查、改的权限</h1><p>权限最小化可以大大降低误删数据库的风险</p>
+<h1 id="合理设置缓冲池"><a href="#合理设置缓冲池" class="headerlink" title="合理设置缓冲池"></a>合理设置缓冲池</h1><p>将 innodb_buffer_pool_size 参数设置为机器内存的 60%~75%</p>
+<h1 id="批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察"><a href="#批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察" class="headerlink" title="批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察"></a>批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察</h1><p>批量导入、导出、更新、删除操作以及会导致主从延迟和磁盘空间增加的操作（如碎片整理、增减字段等）建议在业务低峰进行。防止这些操作对线上业务影响。例如，批量删除数据可能会导致主从延迟，如果有从库提供业务查询，可能会导致读取延迟。碎片整理、增减字段等操作，短时间需要大量的磁盘空间，可能会导致数据库磁盘跑满</p>
+<h1 id="如果有可能导致-MySQL-QPS-上升，应提前告知-DBA"><a href="#如果有可能导致-MySQL-QPS-上升，应提前告知-DBA" class="headerlink" title="如果有可能导致 MySQL QPS 上升，应提前告知 DBA"></a>如果有可能导致 MySQL QPS 上升，应提前告知 DBA</h1><p>如果超过现有数据库配置所能承载的最大 QPS，则需要考虑扩容</p>
+<h1 id="删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表"><a href="#删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表" class="headerlink" title="删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表"></a>删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表</h1>]]></content>
       <categories>
         <category>MySQL</category>
       </categories>
@@ -428,41 +629,6 @@
       </categories>
       <tags>
         <tag>Git</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>常用的磁盘分区形式</title>
-    <url>/2020/05/07/linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%BD%A2%E5%BC%8F/</url>
-    <content><![CDATA[<p>常用的磁盘分区形式如表1所示，并且针对Linux操作系统，不同的磁盘分区形式需要选择不同的分区工具。</p>
-<table>
-<thead>
-<tr>
-<th>磁盘分区形式</th>
-<th>支持最大磁盘容量</th>
-<th>支持分区数量</th>
-<th>Linux分区工具</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>主启动记录分区（MBR）</td>
-<td>2 TB</td>
-<td>4个主分区 <br />3个主分区和1个扩展分区<br />MBR分区包含主分区和扩展分区，其中扩展分区里面可以包含若干个逻辑分区。扩展分区不可以直接使用，需要划分成若干个逻辑分区才可以使用。以创建6个分区为例，以下两种分区情况供参考：<br />3个主分区，1个扩展分区，其中扩展分区中包含3个逻辑分区。<br />1个主分区，1个扩展分区，其中扩展分区中包含5个逻辑分区。</td>
-<td>以下两种工具均可以使用：fdisk工具parted工具</td>
-</tr>
-<tr>
-<td>全局分区表（GPT, Guid Partition Table）</td>
-<td>18 EB1 EB &#x3D; 1048576 TB</td>
-<td>不限制分区数量GPT格式下没有主分区、扩展分区以及逻辑分区之分。</td>
-<td>parted工具</td>
-</tr>
-</tbody></table>
-<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，如果您需要使用大于2 TB的磁盘容量，分区形式请采用GPT。</p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux磁盘分区</tag>
       </tags>
   </entry>
   <entry>
@@ -698,6 +864,41 @@
       </categories>
       <tags>
         <tag>Linux fdisk</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>常用的磁盘分区形式</title>
+    <url>/2020/05/07/linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%BD%A2%E5%BC%8F/</url>
+    <content><![CDATA[<p>常用的磁盘分区形式如表1所示，并且针对Linux操作系统，不同的磁盘分区形式需要选择不同的分区工具。</p>
+<table>
+<thead>
+<tr>
+<th>磁盘分区形式</th>
+<th>支持最大磁盘容量</th>
+<th>支持分区数量</th>
+<th>Linux分区工具</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主启动记录分区（MBR）</td>
+<td>2 TB</td>
+<td>4个主分区 <br />3个主分区和1个扩展分区<br />MBR分区包含主分区和扩展分区，其中扩展分区里面可以包含若干个逻辑分区。扩展分区不可以直接使用，需要划分成若干个逻辑分区才可以使用。以创建6个分区为例，以下两种分区情况供参考：<br />3个主分区，1个扩展分区，其中扩展分区中包含3个逻辑分区。<br />1个主分区，1个扩展分区，其中扩展分区中包含5个逻辑分区。</td>
+<td>以下两种工具均可以使用：fdisk工具parted工具</td>
+</tr>
+<tr>
+<td>全局分区表（GPT, Guid Partition Table）</td>
+<td>18 EB1 EB &#x3D; 1048576 TB</td>
+<td>不限制分区数量GPT格式下没有主分区、扩展分区以及逻辑分区之分。</td>
+<td>parted工具</td>
+</tr>
+</tbody></table>
+<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，如果您需要使用大于2 TB的磁盘容量，分区形式请采用GPT。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux磁盘分区</tag>
       </tags>
   </entry>
   <entry>
