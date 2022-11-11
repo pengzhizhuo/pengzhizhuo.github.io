@@ -20,12 +20,7 @@
 </ul>
 </li>
 <li><p>查看自己的内核版本</p>
-<ul>
-<li><p>Centos 7</p>
-<p>cat &#x2F;etc&#x2F;redhat-release</p>
-</li>
-</ul>
-</li>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/redhat-release</span><br></pre></td></tr></table></figure></li>
 </ul>
 <h3 id="Docker的基本组成"><a href="#Docker的基本组成" class="headerlink" title="Docker的基本组成"></a>Docker的基本组成</h3><ul>
 <li><p>镜像</p>
@@ -171,14 +166,7 @@
 </ul>
 </li>
 <li><p>卸载</p>
-<ul>
-<li><pre><code class="bash">systemctl stop docker
-yum -y remove docker-ce
-rm -rf /var/lib/docker
-</code></pre>
-</li>
-</ul>
-</li>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl stop docker</span><br><span class="line">yum -y remove docker-ce</span><br><span class="line"><span class="built_in">rm</span> -rf /var/lib/docker</span><br></pre></td></tr></table></figure></li>
 </ul>
 <h3 id="底层原理"><a href="#底层原理" class="headerlink" title="底层原理"></a>底层原理</h3><ul>
 <li><p>Docker是怎么工作的</p>
@@ -304,6 +292,48 @@ rm -rf /var/lib/docker
       </tags>
   </entry>
   <entry>
+    <title>MySQL建表规范</title>
+    <url>/2022/11/09/MySQL%E5%BB%BA%E8%A1%A8%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<h2 id="MySQL规范–建表规范"><a href="#MySQL规范–建表规范" class="headerlink" title="MySQL规范–建表规范"></a>MySQL规范–建表规范</h2><p>规范的表结构能降低MySQL出现问题的概率，下面总结一些MySQL的建表规范</p>
+<h3 id="1、库名、表名、字段名全部采用小写格式。"><a href="#1、库名、表名、字段名全部采用小写格式。" class="headerlink" title="1、库名、表名、字段名全部采用小写格式。"></a>1、库名、表名、字段名全部采用小写格式。</h3><p>这是防止出现大小写不一致导致找不到对应表的情况。</p>
+<h3 id="2、避免使用MySQL的保留字。"><a href="#2、避免使用MySQL的保留字。" class="headerlink" title="2、避免使用MySQL的保留字。"></a>2、避免使用MySQL的保留字。</h3><p>使用mysql时一定要注意，尽量不要使用它的保留字作为表名或者列名，否则会出现莫名其妙的错误。如果之前用了，在sql语句中就用&#96;&#96;包括起来。</p>
+<h3 id="3、表名、列名建议不要超过30个字符。"><a href="#3、表名、列名建议不要超过30个字符。" class="headerlink" title="3、表名、列名建议不要超过30个字符。"></a>3、表名、列名建议不要超过30个字符。</h3><h3 id="4、临时库表、备份库表的命名"><a href="#4、临时库表、备份库表的命名" class="headerlink" title="4、临时库表、备份库表的命名"></a>4、临时库表、备份库表的命名</h3><p>临时库表必须以tmp加上日期为后缀，比如user_info_tmp_20221109。<br>备份库表必须以bak加上日期为后缀，比如user_info_bak_20221109。</p>
+<h3 id="5、索引命名"><a href="#5、索引命名" class="headerlink" title="5、索引命名"></a>5、索引命名</h3><p>非唯一索引建议按照”idx字段名”进行命名。<br>唯一索引建议按照 “uniq_字段名”进行命名。</p>
+<h3 id="6、主键的建议"><a href="#6、主键的建议" class="headerlink" title="6、主键的建议"></a>6、主键的建议</h3><p>表必须有主键。<br>不使用有业务意义的的列作为主键，以免收到业务变化的影响。<br>不使用更新频繁的列作为主键。<br>不使用UUID、MD5等作为主键，因为它们可能会导致数据过于离散。<br>建议使用非空的唯一键作为主键，并配置自增或者发号器。</p>
+<h3 id="7、建议使用-InnoDB"><a href="#7、建议使用-InnoDB" class="headerlink" title="7、建议使用 InnoDB"></a>7、建议使用 InnoDB</h3><p>InnoDB 具有支持事务、行锁设计、在高并发场景下性能更好等特性。因此在绝大多数业务场景下，InnoDB 都是唯一选择。</p>
+<h3 id="8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci"><a href="#8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci" class="headerlink" title="8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci"></a>8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci</h3><p>utf8mb4 为万国码，无乱码风险；与 utf8 编码相比，utf8mb4 支持 Emoji 表情。</p>
+<h3 id="9、所有表、字段都需要增加-comment-来描述此表、字段的含义"><a href="#9、所有表、字段都需要增加-comment-来描述此表、字段的含义" class="headerlink" title="9、所有表、字段都需要增加 comment 来描述此表、字段的含义"></a>9、所有表、字段都需要增加 comment 来描述此表、字段的含义</h3><h3 id="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"><a href="#10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段" class="headerlink" title="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"></a>10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段</h3><h3 id="11、用尽量少的存储空间来存储一个字段的数据"><a href="#11、用尽量少的存储空间来存储一个字段的数据" class="headerlink" title="11、用尽量少的存储空间来存储一个字段的数据"></a>11、用尽量少的存储空间来存储一个字段的数据</h3><p>能用 int 的就不用 char 或 varchar<br>能用 tinyint 的就不用 int<br>使用 unsigned 存储非负数值</p>
+<h3 id="12、尽可能不使用-text-和-blob-类型"><a href="#12、尽可能不使用-text-和-blob-类型" class="headerlink" title="12、尽可能不使用 text 和 blob 类型"></a>12、尽可能不使用 text 和 blob 类型</h3><p>使用 text 或 blob 类型，会浪费更多的磁盘空间和内存空间。如无法避免使用 text 或 blob 类型，则建议独立出一张表，使用主键或其他唯一的字段来对应，以避免影响原有表的查询效率。</p>
+<h3 id="13、禁止在数据库中存储明文密码"><a href="#13、禁止在数据库中存储明文密码" class="headerlink" title="13、禁止在数据库中存储明文密码"></a>13、禁止在数据库中存储明文密码</h3><p>数据安全第一，防止密码泄露</p>
+<h3 id="14、索引设计"><a href="#14、索引设计" class="headerlink" title="14、索引设计"></a>14、索引设计</h3><p>在设计索引时，建议考虑以下因素：<br>经常作为条件、排序、join关联的字段，建议加上索引。<br>单表索引数不建议过多，因为索引也会占用空间。<br>如果可以使用覆盖索引，或者几个字段经常同时作为条件，则可以考虑使用联合索引。<br>不在低基数的列上创建索引，如性别字段。</p>
+<h3 id="15、不建议使用外键"><a href="#15、不建议使用外键" class="headerlink" title="15、不建议使用外键"></a>15、不建议使用外键</h3><p>在有外键的情况下，update 操作和 delete 操作都会涉及相关联的表，不仅会影响 SQL 的性能，还会大大增加死锁出现的概率</p>
+<h3 id="16、线上业务禁止使用存储过程、视图、触发器、Event-等"><a href="#16、线上业务禁止使用存储过程、视图、触发器、Event-等" class="headerlink" title="16、线上业务禁止使用存储过程、视图、触发器、Event 等"></a>16、线上业务禁止使用存储过程、视图、触发器、Event 等</h3><p>在高并发的情况下，这些功能很可能会影响数据库的性能，如果有类似的需求，则建议把这些逻辑放到服务层实现</p>
+<h3 id="17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定"><a href="#17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定" class="headerlink" title="17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定"></a>17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定</h3>]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL规范</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL的SQL规范</title>
+    <url>/2022/11/10/MySQL%E7%9A%84SQL%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<p>良好的 SQL 习惯能大大降低慢查询出现的概率，下面主要介绍一些 SQL 规范</p>
+<h1 id="避免隐式转换"><a href="#避免隐式转换" class="headerlink" title="避免隐式转换"></a>避免隐式转换</h1><p>当操作符与不同类型的操作数一起使用时，会发生类型转换以使操作数兼容。则会发生转换隐式<br>隐式转换的类型主要有字段类型不一致、in参数包含多个类型、字符集类型或校对规则不一致等<br>隐式类型转换可能导致无法使用索引、查询结果不准确等</p>
+<h1 id="尽量不使用-select-，只选择需要的字段"><a href="#尽量不使用-select-，只选择需要的字段" class="headerlink" title="尽量不使用 select * ，只选择需要的字段"></a>尽量不使用 select * ，只选择需要的字段</h1><p>因为使用 selec * 会读取不需要的列，会增加 CPU 负载、磁盘 I&#x2F;O、网络流量的消耗，并且容易在增加或者删除字段后导致程序报错</p>
+<h1 id="禁止单条-SQL-语句同时更新多张表"><a href="#禁止单条-SQL-语句同时更新多张表" class="headerlink" title="禁止单条 SQL 语句同时更新多张表"></a>禁止单条 SQL 语句同时更新多张表</h1><h1 id="禁止使用以-“-”-开头的模糊查询"><a href="#禁止使用以-“-”-开头的模糊查询" class="headerlink" title="禁止使用以 “%” 开头的模糊查询"></a>禁止使用以 “%” 开头的模糊查询</h1><p>以 “%” 开头的模糊查询大都是不能使用索引的</p>
+<h1 id="在-SQL-中不建议使用-sleep"><a href="#在-SQL-中不建议使用-sleep" class="headerlink" title="在 SQL 中不建议使用 sleep()"></a>在 SQL 中不建议使用 sleep()</h1><p>使用 sleep() 可能会增加 SQL 加锁的时间，从而影响并发性能</p>
+<h1 id="避免大表的-join"><a href="#避免大表的-join" class="headerlink" title="避免大表的 join"></a>避免大表的 join</h1><p>可能会导致数据库高负载，从而影响其他查询</p>
+<h1 id="同一张表的多条-alter-语句要合成一次操作"><a href="#同一张表的多条-alter-语句要合成一次操作" class="headerlink" title="同一张表的多条 alter 语句要合成一次操作"></a>同一张表的多条 alter 语句要合成一次操作</h1>]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL规范</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL数据库开发设计规范</title>
     <url>/2022/11/09/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/</url>
     <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>本规范由四部分组成：表结构设计、索引设计、高可用设计、分布式架构设计。</p>
@@ -397,68 +427,6 @@ rm -rf /var/lib/docker
 </li>
 </ol>
 ]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>MySQL规范</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MySQL建表规范</title>
-    <url>/2022/11/09/MySQL%E5%BB%BA%E8%A1%A8%E8%A7%84%E8%8C%83/</url>
-    <content><![CDATA[<h2 id="MySQL规范–建表规范"><a href="#MySQL规范–建表规范" class="headerlink" title="MySQL规范–建表规范"></a>MySQL规范–建表规范</h2><p>规范的表结构能降低MySQL出现问题的概率，下面总结一些MySQL的建表规范</p>
-<h3 id="1、库名、表名、字段名全部采用小写格式。"><a href="#1、库名、表名、字段名全部采用小写格式。" class="headerlink" title="1、库名、表名、字段名全部采用小写格式。"></a>1、库名、表名、字段名全部采用小写格式。</h3><p>这是防止出现大小写不一致导致找不到对应表的情况。</p>
-<h3 id="2、避免使用MySQL的保留字。"><a href="#2、避免使用MySQL的保留字。" class="headerlink" title="2、避免使用MySQL的保留字。"></a>2、避免使用MySQL的保留字。</h3><p>使用mysql时一定要注意，尽量不要使用它的保留字作为表名或者列名，否则会出现莫名其妙的错误。如果之前用了，在sql语句中就用&#96;&#96;包括起来。</p>
-<h3 id="3、表名、列名建议不要超过30个字符。"><a href="#3、表名、列名建议不要超过30个字符。" class="headerlink" title="3、表名、列名建议不要超过30个字符。"></a>3、表名、列名建议不要超过30个字符。</h3><h3 id="4、临时库表、备份库表的命名"><a href="#4、临时库表、备份库表的命名" class="headerlink" title="4、临时库表、备份库表的命名"></a>4、临时库表、备份库表的命名</h3><p>临时库表必须以tmp加上日期为后缀，比如user_info_tmp_20221109。<br>备份库表必须以bak加上日期为后缀，比如user_info_bak_20221109。</p>
-<h3 id="5、索引命名"><a href="#5、索引命名" class="headerlink" title="5、索引命名"></a>5、索引命名</h3><p>非唯一索引建议按照”idx字段名”进行命名。<br>唯一索引建议按照 “uniq_字段名”进行命名。</p>
-<h3 id="6、主键的建议"><a href="#6、主键的建议" class="headerlink" title="6、主键的建议"></a>6、主键的建议</h3><p>表必须有主键。<br>不使用有业务意义的的列作为主键，以免收到业务变化的影响。<br>不使用更新频繁的列作为主键。<br>不使用UUID、MD5等作为主键，因为它们可能会导致数据过于离散。<br>建议使用非空的唯一键作为主键，并配置自增或者发号器。</p>
-<h3 id="7、建议使用-InnoDB"><a href="#7、建议使用-InnoDB" class="headerlink" title="7、建议使用 InnoDB"></a>7、建议使用 InnoDB</h3><p>InnoDB 具有支持事务、行锁设计、在高并发场景下性能更好等特性。因此在绝大多数业务场景下，InnoDB 都是唯一选择。</p>
-<h3 id="8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci"><a href="#8、使用-utf8mb4-字符集，数据排序规则使用-utf8mb4-general-ci" class="headerlink" title="8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci"></a>8、使用 utf8mb4 字符集，数据排序规则使用 utf8mb4_general_ci</h3><p>utf8mb4 为万国码，无乱码风险；与 utf8 编码相比，utf8mb4 支持 Emoji 表情。</p>
-<h3 id="9、所有表、字段都需要增加-comment-来描述此表、字段的含义"><a href="#9、所有表、字段都需要增加-comment-来描述此表、字段的含义" class="headerlink" title="9、所有表、字段都需要增加 comment 来描述此表、字段的含义"></a>9、所有表、字段都需要增加 comment 来描述此表、字段的含义</h3><h3 id="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"><a href="#10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段" class="headerlink" title="10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段"></a>10、如无特殊要求，表必须包含记录的创建时间和更新时间的字段</h3><h3 id="11、用尽量少的存储空间来存储一个字段的数据"><a href="#11、用尽量少的存储空间来存储一个字段的数据" class="headerlink" title="11、用尽量少的存储空间来存储一个字段的数据"></a>11、用尽量少的存储空间来存储一个字段的数据</h3><p>能用 int 的就不用 char 或 varchar<br>能用 tinyint 的就不用 int<br>使用 unsigned 存储非负数值</p>
-<h3 id="12、尽可能不使用-text-和-blob-类型"><a href="#12、尽可能不使用-text-和-blob-类型" class="headerlink" title="12、尽可能不使用 text 和 blob 类型"></a>12、尽可能不使用 text 和 blob 类型</h3><p>使用 text 或 blob 类型，会浪费更多的磁盘空间和内存空间。如无法避免使用 text 或 blob 类型，则建议独立出一张表，使用主键或其他唯一的字段来对应，以避免影响原有表的查询效率。</p>
-<h3 id="13、禁止在数据库中存储明文密码"><a href="#13、禁止在数据库中存储明文密码" class="headerlink" title="13、禁止在数据库中存储明文密码"></a>13、禁止在数据库中存储明文密码</h3><p>数据安全第一，防止密码泄露</p>
-<h3 id="14、索引设计"><a href="#14、索引设计" class="headerlink" title="14、索引设计"></a>14、索引设计</h3><p>在设计索引时，建议考虑以下因素：<br>经常作为条件、排序、join关联的字段，建议加上索引。<br>单表索引数不建议过多，因为索引也会占用空间。<br>如果可以使用覆盖索引，或者几个字段经常同时作为条件，则可以考虑使用联合索引。<br>不在低基数的列上创建索引，如性别字段。</p>
-<h3 id="15、不建议使用外键"><a href="#15、不建议使用外键" class="headerlink" title="15、不建议使用外键"></a>15、不建议使用外键</h3><p>在有外键的情况下，update 操作和 delete 操作都会涉及相关联的表，不仅会影响 SQL 的性能，还会大大增加死锁出现的概率</p>
-<h3 id="16、线上业务禁止使用存储过程、视图、触发器、Event-等"><a href="#16、线上业务禁止使用存储过程、视图、触发器、Event-等" class="headerlink" title="16、线上业务禁止使用存储过程、视图、触发器、Event 等"></a>16、线上业务禁止使用存储过程、视图、触发器、Event 等</h3><p>在高并发的情况下，这些功能很可能会影响数据库的性能，如果有类似的需求，则建议把这些逻辑放到服务层实现</p>
-<h3 id="17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定"><a href="#17、单表字段数不宜过多，建议小于-30-个字段，也可根据业务场景确定" class="headerlink" title="17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定"></a>17、单表字段数不宜过多，建议小于 30 个字段，也可根据业务场景确定</h3>]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>MySQL规范</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MySQL的SQL规范</title>
-    <url>/2022/11/10/MySQL%E7%9A%84SQL%E8%A7%84%E8%8C%83/</url>
-    <content><![CDATA[<p>良好的 SQL 习惯能大大降低慢查询出现的概率，下面主要介绍一些 SQL 规范</p>
-<h1 id="避免隐式转换"><a href="#避免隐式转换" class="headerlink" title="避免隐式转换"></a>避免隐式转换</h1><p>当操作符与不同类型的操作数一起使用时，会发生类型转换以使操作数兼容。则会发生转换隐式<br>隐式转换的类型主要有字段类型不一致、in参数包含多个类型、字符集类型或校对规则不一致等<br>隐式类型转换可能导致无法使用索引、查询结果不准确等</p>
-<h1 id="尽量不使用-select-，只选择需要的字段"><a href="#尽量不使用-select-，只选择需要的字段" class="headerlink" title="尽量不使用 select * ，只选择需要的字段"></a>尽量不使用 select * ，只选择需要的字段</h1><p>因为使用 selec * 会读取不需要的列，会增加 CPU 负载、磁盘 I&#x2F;O、网络流量的消耗，并且容易在增加或者删除字段后导致程序报错</p>
-<h1 id="禁止单条-SQL-语句同时更新多张表"><a href="#禁止单条-SQL-语句同时更新多张表" class="headerlink" title="禁止单条 SQL 语句同时更新多张表"></a>禁止单条 SQL 语句同时更新多张表</h1><h1 id="禁止使用以-“-”-开头的模糊查询"><a href="#禁止使用以-“-”-开头的模糊查询" class="headerlink" title="禁止使用以 “%” 开头的模糊查询"></a>禁止使用以 “%” 开头的模糊查询</h1><p>以 “%” 开头的模糊查询大都是不能使用索引的</p>
-<h1 id="在-SQL-中不建议使用-sleep"><a href="#在-SQL-中不建议使用-sleep" class="headerlink" title="在 SQL 中不建议使用 sleep()"></a>在 SQL 中不建议使用 sleep()</h1><p>使用 sleep() 可能会增加 SQL 加锁的时间，从而影响并发性能</p>
-<h1 id="避免大表的-join"><a href="#避免大表的-join" class="headerlink" title="避免大表的 join"></a>避免大表的 join</h1><p>可能会导致数据库高负载，从而影响其他查询</p>
-<h1 id="同一张表的多条-alter-语句要合成一次操作"><a href="#同一张表的多条-alter-语句要合成一次操作" class="headerlink" title="同一张表的多条 alter 语句要合成一次操作"></a>同一张表的多条 alter 语句要合成一次操作</h1>]]></content>
-      <categories>
-        <category>MySQL</category>
-      </categories>
-      <tags>
-        <tag>MySQL规范</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MySQL部署和操作规范</title>
-    <url>/2022/11/10/MySQL%E9%83%A8%E7%BD%B2%E5%92%8C%E6%93%8D%E4%BD%9C%E8%A7%84%E8%8C%83/</url>
-    <content><![CDATA[<p>规范的部署和操作可以让MySQL更加安全，并且可以提高数据库的性能。</p>
-<h1 id="选择合适的MySQL版本"><a href="#选择合适的MySQL版本" class="headerlink" title="选择合适的MySQL版本"></a>选择合适的MySQL版本</h1><p>不建议使用太旧的版本<br>因为很多特性旧版本都没有，并且性能也没有新版本的好<br>线上环境建议使用 GA （General Availability，正式发布的版本）</p>
-<h1 id="必须开启-Binlog"><a href="#必须开启-Binlog" class="headerlink" title="必须开启 Binlog"></a>必须开启 Binlog</h1><p>Binlog 的两个主要作用：复制和灾备<br>在通常情况下，必须开启 Binlog</p>
-<h1 id="对数据安全要求较高的场景，建议设置为“双-1”"><a href="#对数据安全要求较高的场景，建议设置为“双-1”" class="headerlink" title="对数据安全要求较高的场景，建议设置为“双 1”"></a>对数据安全要求较高的场景，建议设置为“双 1”</h1><p>innodb_flush_log_at_trx_commit 参数和 sync_binlog 参数都设置为 1</p>
-<h1 id="配置不区分大小写"><a href="#配置不区分大小写" class="headerlink" title="配置不区分大小写"></a>配置不区分大小写</h1><p>可以将 lower_case_table_names 参数设置为 1，表示表名以小写形式存储在磁盘上，并且不区分大小写</p>
-<h1 id="如无特殊说明，设置业务用户只有增、删、查、改的权限"><a href="#如无特殊说明，设置业务用户只有增、删、查、改的权限" class="headerlink" title="如无特殊说明，设置业务用户只有增、删、查、改的权限"></a>如无特殊说明，设置业务用户只有增、删、查、改的权限</h1><p>权限最小化可以大大降低误删数据库的风险</p>
-<h1 id="合理设置缓冲池"><a href="#合理设置缓冲池" class="headerlink" title="合理设置缓冲池"></a>合理设置缓冲池</h1><p>将 innodb_buffer_pool_size 参数设置为机器内存的 60%~75%</p>
-<h1 id="批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察"><a href="#批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察" class="headerlink" title="批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察"></a>批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察</h1><p>批量导入、导出、更新、删除操作以及会导致主从延迟和磁盘空间增加的操作（如碎片整理、增减字段等）建议在业务低峰进行。防止这些操作对线上业务影响。例如，批量删除数据可能会导致主从延迟，如果有从库提供业务查询，可能会导致读取延迟。碎片整理、增减字段等操作，短时间需要大量的磁盘空间，可能会导致数据库磁盘跑满</p>
-<h1 id="如果有可能导致-MySQL-QPS-上升，应提前告知-DBA"><a href="#如果有可能导致-MySQL-QPS-上升，应提前告知-DBA" class="headerlink" title="如果有可能导致 MySQL QPS 上升，应提前告知 DBA"></a>如果有可能导致 MySQL QPS 上升，应提前告知 DBA</h1><p>如果超过现有数据库配置所能承载的最大 QPS，则需要考虑扩容</p>
-<h1 id="删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表"><a href="#删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表" class="headerlink" title="删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表"></a>删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表</h1>]]></content>
       <categories>
         <category>MySQL</category>
       </categories>
@@ -629,6 +597,26 @@ rm -rf /var/lib/docker
       </categories>
       <tags>
         <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL部署和操作规范</title>
+    <url>/2022/11/10/MySQL%E9%83%A8%E7%BD%B2%E5%92%8C%E6%93%8D%E4%BD%9C%E8%A7%84%E8%8C%83/</url>
+    <content><![CDATA[<p>规范的部署和操作可以让MySQL更加安全，并且可以提高数据库的性能。</p>
+<h1 id="选择合适的MySQL版本"><a href="#选择合适的MySQL版本" class="headerlink" title="选择合适的MySQL版本"></a>选择合适的MySQL版本</h1><p>不建议使用太旧的版本<br>因为很多特性旧版本都没有，并且性能也没有新版本的好<br>线上环境建议使用 GA （General Availability，正式发布的版本）</p>
+<h1 id="必须开启-Binlog"><a href="#必须开启-Binlog" class="headerlink" title="必须开启 Binlog"></a>必须开启 Binlog</h1><p>Binlog 的两个主要作用：复制和灾备<br>在通常情况下，必须开启 Binlog</p>
+<h1 id="对数据安全要求较高的场景，建议设置为“双-1”"><a href="#对数据安全要求较高的场景，建议设置为“双-1”" class="headerlink" title="对数据安全要求较高的场景，建议设置为“双 1”"></a>对数据安全要求较高的场景，建议设置为“双 1”</h1><p>innodb_flush_log_at_trx_commit 参数和 sync_binlog 参数都设置为 1</p>
+<h1 id="配置不区分大小写"><a href="#配置不区分大小写" class="headerlink" title="配置不区分大小写"></a>配置不区分大小写</h1><p>可以将 lower_case_table_names 参数设置为 1，表示表名以小写形式存储在磁盘上，并且不区分大小写</p>
+<h1 id="如无特殊说明，设置业务用户只有增、删、查、改的权限"><a href="#如无特殊说明，设置业务用户只有增、删、查、改的权限" class="headerlink" title="如无特殊说明，设置业务用户只有增、删、查、改的权限"></a>如无特殊说明，设置业务用户只有增、删、查、改的权限</h1><p>权限最小化可以大大降低误删数据库的风险</p>
+<h1 id="合理设置缓冲池"><a href="#合理设置缓冲池" class="headerlink" title="合理设置缓冲池"></a>合理设置缓冲池</h1><p>将 innodb_buffer_pool_size 参数设置为机器内存的 60%~75%</p>
+<h1 id="批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察"><a href="#批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察" class="headerlink" title="批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察"></a>批量导入、导出、更新、删除操作建议在业务低峰操作，并且要提前通知DBA协助观察</h1><p>批量导入、导出、更新、删除操作以及会导致主从延迟和磁盘空间增加的操作（如碎片整理、增减字段等）建议在业务低峰进行。防止这些操作对线上业务影响。例如，批量删除数据可能会导致主从延迟，如果有从库提供业务查询，可能会导致读取延迟。碎片整理、增减字段等操作，短时间需要大量的磁盘空间，可能会导致数据库磁盘跑满</p>
+<h1 id="如果有可能导致-MySQL-QPS-上升，应提前告知-DBA"><a href="#如果有可能导致-MySQL-QPS-上升，应提前告知-DBA" class="headerlink" title="如果有可能导致 MySQL QPS 上升，应提前告知 DBA"></a>如果有可能导致 MySQL QPS 上升，应提前告知 DBA</h1><p>如果超过现有数据库配置所能承载的最大 QPS，则需要考虑扩容</p>
+<h1 id="删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表"><a href="#删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表" class="headerlink" title="删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表"></a>删除库或表前，先修改库名或表名，观察几天，确定对业务没有影响，再删除，防止有其他不知道的业务连接了该库或该表</h1>]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL规范</tag>
       </tags>
   </entry>
   <entry>
@@ -899,33 +887,6 @@ rm -rf /var/lib/docker
       </categories>
       <tags>
         <tag>Linux磁盘分区</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>CentOS逻辑卷调整分区大小</title>
-    <url>/2018/05/04/lvreduce-lvextend/</url>
-    <content><![CDATA[<h1 id="CentOS逻辑卷调整分区大小目的"><a href="#CentOS逻辑卷调整分区大小目的" class="headerlink" title="CentOS逻辑卷调整分区大小目的"></a>CentOS逻辑卷调整分区大小目的</h1><p>因为系统使用的是逻辑卷分区（LVM），且分区大小不合理</p>
-<p>想增加root大小，减少home</p>
-<h1 id="查看磁盘使用情况"><a href="#查看磁盘使用情况" class="headerlink" title="查看磁盘使用情况"></a>查看磁盘使用情况</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                       50G  3.4G   44G   8% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                      140G   60M  133G   1% /home</span><br><span class="line">/dev/sr0              3.7G  3.7G     0 100% /media/CentOS_6.9_Final</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># vgdisplay </span></span><br><span class="line">  --- Volume group ---</span><br><span class="line">  VG Name               vg_linuxcentos</span><br><span class="line">  System ID             </span><br><span class="line">  Format                lvm2</span><br><span class="line">  Metadata Areas        1</span><br><span class="line">  Metadata Sequence No  4</span><br><span class="line">  VG Access             <span class="built_in">read</span>/write</span><br><span class="line">  VG Status             resizable</span><br><span class="line">  MAX LV                0</span><br><span class="line">  Cur LV                3</span><br><span class="line">  Open LV               3</span><br><span class="line">  Max PV                0</span><br><span class="line">  Cur PV                1</span><br><span class="line">  Act PV                1</span><br><span class="line">  VG Size               199.51 GiB</span><br><span class="line">  PE Size               4.00 MiB</span><br><span class="line">  Total PE              51074</span><br><span class="line">  Alloc PE / Size       51074 / 199.51 GiB</span><br><span class="line">  Free  PE / Size       0 / 0   </span><br><span class="line">  VG UUID               DqgWat-YkkU-V56r-xNFv-XmmX-mgwD-Fi0RWh</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="调整home分区大小"><a href="#调整home分区大小" class="headerlink" title="调整home分区大小"></a>调整home分区大小</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># umount /home</span></span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># e2fsck -f /dev/mapper/vg_linuxcentos-lv_home </span></span><br><span class="line">e2fsck 1.41.12 (17-May-2010)</span><br><span class="line">Pass 1: Checking inodes, blocks, and sizes</span><br><span class="line">Pass 2: Checking directory structure</span><br><span class="line">Pass 3: Checking directory connectivity</span><br><span class="line">Pass 4: Checking reference counts</span><br><span class="line">Pass 5: Checking group summary information</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home: 11/9289728 files (0.0% non-contiguous), 631025/37148672 blocks</span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># resize2fs -p /dev/mapper/vg_linuxcentos-lv_home  20G</span></span><br><span class="line">resize2fs 1.41.12 (17-May-2010)</span><br><span class="line">Resizing the filesystem on /dev/mapper/vg_linuxcentos-lv_home to 5242880 (4k) blocks.</span><br><span class="line">Begin pass 2 (max = 32768)</span><br><span class="line">Relocating blocks             XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</span><br><span class="line">Begin pass 3 (max = 1134)</span><br><span class="line">Scanning inode table          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</span><br><span class="line">The filesystem on /dev/mapper/vg_linuxcentos-lv_home is now 5242880 blocks long.</span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># mount /home</span></span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                       50G  3.4G   44G   8% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                       20G   44M   19G   1% /home</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="释放空间"><a href="#释放空间" class="headerlink" title="释放空间"></a>释放空间</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># lvreduce /dev/mapper/vg_linuxcentos-lv_home -L 20G</span></span><br><span class="line">  WARNING: Reducing active and open logical volume to 20.00 GiB.</span><br><span class="line">  THIS MAY DESTROY YOUR DATA (filesystem etc.)</span><br><span class="line">Do you really want to reduce vg_linuxcentos/lv_home? [y/n]: y</span><br><span class="line">  Size of logical volume vg_linuxcentos/lv_home changed from 141.71 GiB (36278 extents) to 20.00 GiB (5120 extents).</span><br><span class="line">  Logical volume lv_home successfully resized.</span><br><span class="line">  </span><br><span class="line">  [root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                       50G  3.4G   44G   8% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                       20G   44M   19G   1% /home</span><br><span class="line">                       </span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># vgdisplay </span></span><br><span class="line">  --- Volume group ---</span><br><span class="line">  VG Name               vg_linuxcentos</span><br><span class="line">  System ID             </span><br><span class="line">  Format                lvm2</span><br><span class="line">  Metadata Areas        1</span><br><span class="line">  Metadata Sequence No  5</span><br><span class="line">  VG Access             <span class="built_in">read</span>/write</span><br><span class="line">  VG Status             resizable</span><br><span class="line">  MAX LV                0</span><br><span class="line">  Cur LV                3</span><br><span class="line">  Open LV               3</span><br><span class="line">  Max PV                0</span><br><span class="line">  Cur PV                1</span><br><span class="line">  Act PV                1</span><br><span class="line">  VG Size               199.51 GiB</span><br><span class="line">  PE Size               4.00 MiB</span><br><span class="line">  Total PE              51074</span><br><span class="line">  Alloc PE / Size       19916 / 77.80 GiB</span><br><span class="line">  Free  PE / Size       31158 / 121.71 GiB</span><br><span class="line">  VG UUID               DqgWat-YkkU-V56r-xNFv-XmmX-mgwD-Fi0RWh</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="增加释放的空间到root"><a href="#增加释放的空间到root" class="headerlink" title="增加释放的空间到root"></a>增加释放的空间到root</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># lvextend -L +120G /dev/mapper/vg_linuxcentos-lv_root   </span></span><br><span class="line">  Size of logical volume vg_linuxcentos/lv_root changed from 50.00 GiB (12800 extents) to 170.00 GiB (43520 extents).</span><br><span class="line">  Logical volume lv_root successfully resized.</span><br><span class="line">  </span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># resize2fs -p /dev/mapper/vg_linuxcentos-lv_root </span></span><br><span class="line">resize2fs 1.41.12 (17-May-2010)</span><br><span class="line">Filesystem at /dev/mapper/vg_linuxcentos-lv_root is mounted on /; on-line resizing required</span><br><span class="line">old desc_blocks = 4, new_desc_blocks = 11</span><br><span class="line">Performing an on-line resize of /dev/mapper/vg_linuxcentos-lv_root to 44564480 (4k) blocks.</span><br><span class="line">The filesystem on /dev/mapper/vg_linuxcentos-lv_root is now 44564480 blocks long.</span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                      168G  3.5G  156G   3% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                       20G   44M   19G   1% /home</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux逻辑卷</tag>
       </tags>
   </entry>
   <entry>
@@ -1453,6 +1414,33 @@ rm -rf /var/lib/docker
       </categories>
       <tags>
         <tag>运维安全</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>CentOS逻辑卷调整分区大小</title>
+    <url>/2018/05/04/lvreduce-lvextend/</url>
+    <content><![CDATA[<h1 id="CentOS逻辑卷调整分区大小目的"><a href="#CentOS逻辑卷调整分区大小目的" class="headerlink" title="CentOS逻辑卷调整分区大小目的"></a>CentOS逻辑卷调整分区大小目的</h1><p>因为系统使用的是逻辑卷分区（LVM），且分区大小不合理</p>
+<p>想增加root大小，减少home</p>
+<h1 id="查看磁盘使用情况"><a href="#查看磁盘使用情况" class="headerlink" title="查看磁盘使用情况"></a>查看磁盘使用情况</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                       50G  3.4G   44G   8% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                      140G   60M  133G   1% /home</span><br><span class="line">/dev/sr0              3.7G  3.7G     0 100% /media/CentOS_6.9_Final</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># vgdisplay </span></span><br><span class="line">  --- Volume group ---</span><br><span class="line">  VG Name               vg_linuxcentos</span><br><span class="line">  System ID             </span><br><span class="line">  Format                lvm2</span><br><span class="line">  Metadata Areas        1</span><br><span class="line">  Metadata Sequence No  4</span><br><span class="line">  VG Access             <span class="built_in">read</span>/write</span><br><span class="line">  VG Status             resizable</span><br><span class="line">  MAX LV                0</span><br><span class="line">  Cur LV                3</span><br><span class="line">  Open LV               3</span><br><span class="line">  Max PV                0</span><br><span class="line">  Cur PV                1</span><br><span class="line">  Act PV                1</span><br><span class="line">  VG Size               199.51 GiB</span><br><span class="line">  PE Size               4.00 MiB</span><br><span class="line">  Total PE              51074</span><br><span class="line">  Alloc PE / Size       51074 / 199.51 GiB</span><br><span class="line">  Free  PE / Size       0 / 0   </span><br><span class="line">  VG UUID               DqgWat-YkkU-V56r-xNFv-XmmX-mgwD-Fi0RWh</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="调整home分区大小"><a href="#调整home分区大小" class="headerlink" title="调整home分区大小"></a>调整home分区大小</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># umount /home</span></span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># e2fsck -f /dev/mapper/vg_linuxcentos-lv_home </span></span><br><span class="line">e2fsck 1.41.12 (17-May-2010)</span><br><span class="line">Pass 1: Checking inodes, blocks, and sizes</span><br><span class="line">Pass 2: Checking directory structure</span><br><span class="line">Pass 3: Checking directory connectivity</span><br><span class="line">Pass 4: Checking reference counts</span><br><span class="line">Pass 5: Checking group summary information</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home: 11/9289728 files (0.0% non-contiguous), 631025/37148672 blocks</span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># resize2fs -p /dev/mapper/vg_linuxcentos-lv_home  20G</span></span><br><span class="line">resize2fs 1.41.12 (17-May-2010)</span><br><span class="line">Resizing the filesystem on /dev/mapper/vg_linuxcentos-lv_home to 5242880 (4k) blocks.</span><br><span class="line">Begin pass 2 (max = 32768)</span><br><span class="line">Relocating blocks             XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</span><br><span class="line">Begin pass 3 (max = 1134)</span><br><span class="line">Scanning inode table          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</span><br><span class="line">The filesystem on /dev/mapper/vg_linuxcentos-lv_home is now 5242880 blocks long.</span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># mount /home</span></span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                       50G  3.4G   44G   8% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                       20G   44M   19G   1% /home</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="释放空间"><a href="#释放空间" class="headerlink" title="释放空间"></a>释放空间</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># lvreduce /dev/mapper/vg_linuxcentos-lv_home -L 20G</span></span><br><span class="line">  WARNING: Reducing active and open logical volume to 20.00 GiB.</span><br><span class="line">  THIS MAY DESTROY YOUR DATA (filesystem etc.)</span><br><span class="line">Do you really want to reduce vg_linuxcentos/lv_home? [y/n]: y</span><br><span class="line">  Size of logical volume vg_linuxcentos/lv_home changed from 141.71 GiB (36278 extents) to 20.00 GiB (5120 extents).</span><br><span class="line">  Logical volume lv_home successfully resized.</span><br><span class="line">  </span><br><span class="line">  [root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                       50G  3.4G   44G   8% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                       20G   44M   19G   1% /home</span><br><span class="line">                       </span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># vgdisplay </span></span><br><span class="line">  --- Volume group ---</span><br><span class="line">  VG Name               vg_linuxcentos</span><br><span class="line">  System ID             </span><br><span class="line">  Format                lvm2</span><br><span class="line">  Metadata Areas        1</span><br><span class="line">  Metadata Sequence No  5</span><br><span class="line">  VG Access             <span class="built_in">read</span>/write</span><br><span class="line">  VG Status             resizable</span><br><span class="line">  MAX LV                0</span><br><span class="line">  Cur LV                3</span><br><span class="line">  Open LV               3</span><br><span class="line">  Max PV                0</span><br><span class="line">  Cur PV                1</span><br><span class="line">  Act PV                1</span><br><span class="line">  VG Size               199.51 GiB</span><br><span class="line">  PE Size               4.00 MiB</span><br><span class="line">  Total PE              51074</span><br><span class="line">  Alloc PE / Size       19916 / 77.80 GiB</span><br><span class="line">  Free  PE / Size       31158 / 121.71 GiB</span><br><span class="line">  VG UUID               DqgWat-YkkU-V56r-xNFv-XmmX-mgwD-Fi0RWh</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="增加释放的空间到root"><a href="#增加释放的空间到root" class="headerlink" title="增加释放的空间到root"></a>增加释放的空间到root</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@LinuxCentOS ~]<span class="comment"># lvextend -L +120G /dev/mapper/vg_linuxcentos-lv_root   </span></span><br><span class="line">  Size of logical volume vg_linuxcentos/lv_root changed from 50.00 GiB (12800 extents) to 170.00 GiB (43520 extents).</span><br><span class="line">  Logical volume lv_root successfully resized.</span><br><span class="line">  </span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># resize2fs -p /dev/mapper/vg_linuxcentos-lv_root </span></span><br><span class="line">resize2fs 1.41.12 (17-May-2010)</span><br><span class="line">Filesystem at /dev/mapper/vg_linuxcentos-lv_root is mounted on /; on-line resizing required</span><br><span class="line">old desc_blocks = 4, new_desc_blocks = 11</span><br><span class="line">Performing an on-line resize of /dev/mapper/vg_linuxcentos-lv_root to 44564480 (4k) blocks.</span><br><span class="line">The filesystem on /dev/mapper/vg_linuxcentos-lv_root is now 44564480 blocks long.</span><br><span class="line"></span><br><span class="line">[root@LinuxCentOS ~]<span class="comment"># df -h</span></span><br><span class="line">Filesystem            Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_root</span><br><span class="line">                      168G  3.5G  156G   3% /</span><br><span class="line">tmpfs                 3.9G   76K  3.9G   1% /dev/shm</span><br><span class="line">/dev/xvda1            477M   36M  417M   8% /boot</span><br><span class="line">/dev/mapper/vg_linuxcentos-lv_home</span><br><span class="line">                       20G   44M   19G   1% /home</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux逻辑卷</tag>
       </tags>
   </entry>
 </search>
