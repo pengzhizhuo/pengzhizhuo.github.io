@@ -19,28 +19,31 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"javabk.com","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="常用的磁盘分区形式如表1所示，并且针对Linux操作系统，不同的磁盘分区形式需要选择不同的分区工具。    磁盘分区形式 支持最大磁盘容量 支持分区数量 Linux分区工具    主启动记录分区（MBR） 2 TB 4个主分区 3个主分区和1个扩展分区MBR分区包含主分区和扩展分区，其中扩展分区里面可以包含若干个逻辑分区。扩展分区不可以直接使用，需要划分成若干个逻辑分区才可以使用。以创建6个分区为">
+    <meta name="description" content="什么是ThreadLocal全称thread local variable（线程局部变量）功用非常简单，使用场合主要解决多线程中数据因并发产生不一致问题。 ThreadLocal为每一个线程都提供了变量的副本，使得每个线程在某时间访问到的并不是同一个对象，这样就隔离了多个线程对数据的数据共享，这样的结果是耗费了内存，但大大减少了线程同步所带来性能消耗，也减少了线程并发控制的复杂度。  总结起来就是">
 <meta property="og:type" content="article">
-<meta property="og:title" content="常用的磁盘分区形式">
-<meta property="og:url" content="https://javabk.com/2020/05/07/linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%BD%A2%E5%BC%8F/index.html">
+<meta property="og:title" content="ThreadLocal核心知识">
+<meta property="og:url" content="https://javabk.com/2022/11/22/ThreadLocal%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86/index.html">
 <meta property="og:site_name" content="JAVABK">
-<meta property="og:description" content="常用的磁盘分区形式如表1所示，并且针对Linux操作系统，不同的磁盘分区形式需要选择不同的分区工具。    磁盘分区形式 支持最大磁盘容量 支持分区数量 Linux分区工具    主启动记录分区（MBR） 2 TB 4个主分区 3个主分区和1个扩展分区MBR分区包含主分区和扩展分区，其中扩展分区里面可以包含若干个逻辑分区。扩展分区不可以直接使用，需要划分成若干个逻辑分区才可以使用。以创建6个分区为">
+<meta property="og:description" content="什么是ThreadLocal全称thread local variable（线程局部变量）功用非常简单，使用场合主要解决多线程中数据因并发产生不一致问题。 ThreadLocal为每一个线程都提供了变量的副本，使得每个线程在某时间访问到的并不是同一个对象，这样就隔离了多个线程对数据的数据共享，这样的结果是耗费了内存，但大大减少了线程同步所带来性能消耗，也减少了线程并发控制的复杂度。  总结起来就是">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-05-07T08:30:00.000Z">
-<meta property="article:modified_time" content="2022-11-10T12:38:29.035Z">
+<meta property="og:image" content="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/20221122002841.png">
+<meta property="og:image" content="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/20221122003438.png">
+<meta property="article:published_time" content="2022-11-21T16:13:16.000Z">
+<meta property="article:modified_time" content="2022-11-21T16:37:31.909Z">
 <meta property="article:author" content="DylanPeng">
-<meta property="article:tag" content="Linux磁盘分区">
+<meta property="article:tag" content="ThreadLocal">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/20221122002841.png">
 
 
-<link rel="canonical" href="https://javabk.com/2020/05/07/linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%BD%A2%E5%BC%8F/">
+<link rel="canonical" href="https://javabk.com/2022/11/22/ThreadLocal%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://javabk.com/2020/05/07/linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%BD%A2%E5%BC%8F/","path":"2020/05/07/linux磁盘分区形式/","title":"常用的磁盘分区形式"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://javabk.com/2022/11/22/ThreadLocal%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86/","path":"2022/11/22/ThreadLocal核心知识/","title":"ThreadLocal核心知识"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>常用的磁盘分区形式 | JAVABK</title>
+<title>ThreadLocal核心知识 | JAVABK</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-0YV237DHSY"></script>
   <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-0YV237DHSY","only_pageview":false}</script>
@@ -136,7 +139,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -149,6 +152,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFThreadLocal"><span class="nav-number">1.</span> <span class="nav-text">什么是ThreadLocal</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.</span> <span class="nav-text">核心应用场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ThreadLocal%E5%BA%95%E5%B1%82%E6%BA%90%E7%A0%81%E5%92%8C%E5%8E%9F%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">ThreadLocal底层源码和原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ThreadLocal%E5%B8%B8%E8%A7%81%E6%A0%B8%E5%BF%83%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">ThreadLocal常见核心面试题</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -216,7 +220,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://javabk.com/2020/05/07/linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E5%BD%A2%E5%BC%8F/">
+    <link itemprop="mainEntityOfPage" href="https://javabk.com/2022/11/22/ThreadLocal%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -229,12 +233,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="常用的磁盘分区形式 | JAVABK">
+      <meta itemprop="name" content="ThreadLocal核心知识 | JAVABK">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          常用的磁盘分区形式
+          ThreadLocal核心知识
         </h1>
 
         <div class="post-meta-container">
@@ -244,15 +248,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2020-05-07 16:30:00" itemprop="dateCreated datePublished" datetime="2020-05-07T16:30:00+08:00">2020-05-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-10 20:38:29" itemprop="dateModified" datetime="2022-11-10T20:38:29+08:00">2022-11-10</time>
+      <time title="创建时间：2022-11-22 00:13:16 / 修改时间：00:37:31" itemprop="dateCreated datePublished" datetime="2022-11-22T00:13:16+08:00">2022-11-22</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -260,7 +258,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
         </span>
     </span>
 
@@ -274,30 +272,47 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>常用的磁盘分区形式如表1所示，并且针对Linux操作系统，不同的磁盘分区形式需要选择不同的分区工具。</p>
-<table>
-<thead>
-<tr>
-<th>磁盘分区形式</th>
-<th>支持最大磁盘容量</th>
-<th>支持分区数量</th>
-<th>Linux分区工具</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>主启动记录分区（MBR）</td>
-<td>2 TB</td>
-<td>4个主分区 <br />3个主分区和1个扩展分区<br />MBR分区包含主分区和扩展分区，其中扩展分区里面可以包含若干个逻辑分区。扩展分区不可以直接使用，需要划分成若干个逻辑分区才可以使用。以创建6个分区为例，以下两种分区情况供参考：<br />3个主分区，1个扩展分区，其中扩展分区中包含3个逻辑分区。<br />1个主分区，1个扩展分区，其中扩展分区中包含5个逻辑分区。</td>
-<td>以下两种工具均可以使用：fdisk工具parted工具</td>
-</tr>
-<tr>
-<td>全局分区表（GPT, Guid Partition Table）</td>
-<td>18 EB1 EB &#x3D; 1048576 TB</td>
-<td>不限制分区数量GPT格式下没有主分区、扩展分区以及逻辑分区之分。</td>
-<td>parted工具</td>
-</tr>
-</tbody></table>
-<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，如果您需要使用大于2 TB的磁盘容量，分区形式请采用GPT。</p>
+        <h1 id="什么是ThreadLocal"><a href="#什么是ThreadLocal" class="headerlink" title="什么是ThreadLocal"></a>什么是ThreadLocal</h1><p>全称thread local variable（线程局部变量）功用非常简单，使用场合主要解决多线程中数据因并发产生不一致问题。</p>
+<p>ThreadLocal为每一个线程都提供了变量的副本，使得每个线程在某时间访问到的并不是同一个对象，这样就隔离了多个线程对数据的数据共享，这样的结果是耗费了内存，但大大减少了线程同步所带来性能消耗，也减少了线程并发控制的复杂度。 </p>
+<p>总结起来就是：同个线程共享数据</p>
+<p>注意：ThreadLocal不能使用原子类型，只能使用Object类型</p>
+<h1 id="核心应用场景"><a href="#核心应用场景" class="headerlink" title="核心应用场景"></a>核心应用场景</h1><p>ThreadLocal 用作每个线程内需要独立保存信息，方便同个线程的其他方法获取该信息的场景。</p>
+<p>每个线程获取到的信息可能都是不一样的，前面执行的方法保存了信息后，后续方法可以通过ThreadLocal 直接获取到，避免了传参，类似于全局变量的概念，比如用户登录令牌解密后的信息传递（还有用户权限信息、从用户系统获取到的用户名、用户ID）</p>
+<p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/20221122002841.png"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ThreadLocal&lt;LoginUser&gt; threadLocal = <span class="keyword">new</span> <span class="title class_">ThreadLocal</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                <span class="type">LoginUser</span> <span class="variable">loginUser</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LoginUser</span>();</span><br><span class="line">                loginUser.setId(id);</span><br><span class="line">                loginUser.setName(name);</span><br><span class="line">                loginUser.setMail(mail);</span><br><span class="line">                loginUser.setHeadImg(headImg);</span><br><span class="line">                threadLocal.set(loginUser);</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="ThreadLocal底层源码和原理"><a href="#ThreadLocal底层源码和原理" class="headerlink" title="ThreadLocal底层源码和原理"></a>ThreadLocal底层源码和原理</h1><ul>
+<li><p>ThreadLocal中的一个内部类ThreadLocalMap，这个类没有实现map接口，就是一个普通的Java类，但是实现的类似map的功能</p>
+</li>
+<li><p>每个数据用Entry保存，其中的Entry继承与WeakReference，用一个键值对存储，键为ThreadLocal的引用。</p>
+</li>
+<li><p>每个线程持有一个ThreadLocalMap对象，每一个新的线程Thread都会实例化一个ThreadLocalMap并赋值给成员变量threadLocals，使用时若已经存在threadLocals，则直接使用已经存在的对象。</p>
+</li>
+</ul>
+<p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/20221122003438.png"></p>
+<h1 id="ThreadLocal常见核心面试题"><a href="#ThreadLocal常见核心面试题" class="headerlink" title="ThreadLocal常见核心面试题"></a>ThreadLocal常见核心面试题</h1><p>P6面试题：ThreadLocal和Synchronized的区别 </p>
+<blockquote>
+<ul>
+<li>都是为了解决多线程中相同变量的访问冲突问题</li>
+<li>Synchronized是通过线程等待，牺牲时间来解决访问冲突</li>
+<li>ThreadLocal是通过每个线程单独一份存储空间，牺牲空间来解决冲突，</li>
+<li>对比Synchronized，ThreadLocal具有线程隔离的效果，只有在线程内才能获取到对应的值，线程外则不能访问到想要的值</li>
+</ul>
+</blockquote>
+<p>P6面试题：为啥什么ThreadLocal的键是弱引用，如果是强引用有什么问题？</p>
+<blockquote>
+<p>Java中除了基础的数据类型以外，其它的都为引用类型。<br>而Java根据其生命周期的长短将引用类型又分为强引用 、 软引用 、 弱引用 、 虚引用<br>正常情况下我们平时基本上我们只用到强引用类型，而其他的引用类型我们也就在面试中，或者平日阅读类库或其他框架源码的时候才能见到</p>
+<p>1、强引用 new了一个对象就是强引用  Object obj &#x3D; new Object();</p>
+<p>2、软引用的生命周期比强引用短一些,通过SoftReference类实现，当内存空间足够，垃圾回收器就不会回收它; 当JVM认为内存空间不足时，就会去试图回收软引用指向的对象，也就是说在JVM抛出OutOfMemoryError之前，会去清理软引用对象<br>主要用来描述一些【有用但并不是必需】的对象<br>使用场景：适合用来实现缓存，内存空间充足的时候将数据缓存在内存中，如果空间不足了就将其回收掉</p>
+<p>3、弱引用是通过WeakReference类实现的，它的生命周期比软引用还要短，在GC的时候，不管内存空间足不足都会回收这个对象<br>使用场景：一个对象只是偶尔使用，希望在使用时能随时获取，但也不想影响对该对象的垃圾收集，则可以考虑使用弱引用来指向该对象。</p>
+<p>ThreadLocal为什么是WeakReference呢？</p>
+<p>如果是强引用，即使把ThreadLocal设置为null，但是ThreadLocalMap还持有ThreadLocal的强引用，如果没有手动删除，ThreadLocal不会被回收，导致Entry内存泄漏</p>
+<p>如果是弱引用<br>引用ThreadLocal的对象被回收了，由于ThreadLocalMap持有ThreadLocal的弱引用，即使没有手动删除，ThreadLocal也会被回收。value在下一次ThreadLocalMap调用set、get、remove的时候会被清除。</p>
+</blockquote>
 
     </div>
 
@@ -307,21 +322,18 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Linux%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA/" rel="tag"># Linux磁盘分区</a>
+              <a href="/tags/ThreadLocal/" rel="tag"># ThreadLocal</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2018/05/04/lvreduce-lvextend/" rel="prev" title="CentOS逻辑卷调整分区大小">
-                  <i class="fa fa-chevron-left"></i> CentOS逻辑卷调整分区大小
+                <a href="/2022/11/11/Docker%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4/" rel="prev" title="Docker常见命令">
+                  <i class="fa fa-chevron-left"></i> Docker常见命令
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2020/05/07/linux-init-disk/" rel="next" title="初始化Linux数据盘（fdisk）">
-                  初始化Linux数据盘（fdisk） <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>

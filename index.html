@@ -156,18 +156,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -210,6 +210,125 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://javabk.com/2022/11/22/ThreadLocal%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DylanPeng">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="JAVABK">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | JAVABK">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/11/22/ThreadLocal%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86/" class="post-title-link" itemprop="url">ThreadLocal核心知识</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-11-22 00:13:16 / 修改时间：00:37:31" itemprop="dateCreated datePublished" datetime="2022-11-22T00:13:16+08:00">2022-11-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="什么是ThreadLocal"><a href="#什么是ThreadLocal" class="headerlink" title="什么是ThreadLocal"></a>什么是ThreadLocal</h1><p>全称thread local variable（线程局部变量）功用非常简单，使用场合主要解决多线程中数据因并发产生不一致问题。</p>
+<p>ThreadLocal为每一个线程都提供了变量的副本，使得每个线程在某时间访问到的并不是同一个对象，这样就隔离了多个线程对数据的数据共享，这样的结果是耗费了内存，但大大减少了线程同步所带来性能消耗，也减少了线程并发控制的复杂度。 </p>
+<p>总结起来就是：同个线程共享数据</p>
+<p>注意：ThreadLocal不能使用原子类型，只能使用Object类型</p>
+<h1 id="核心应用场景"><a href="#核心应用场景" class="headerlink" title="核心应用场景"></a>核心应用场景</h1><p>ThreadLocal 用作每个线程内需要独立保存信息，方便同个线程的其他方法获取该信息的场景。</p>
+<p>每个线程获取到的信息可能都是不一样的，前面执行的方法保存了信息后，后续方法可以通过ThreadLocal 直接获取到，避免了传参，类似于全局变量的概念，比如用户登录令牌解密后的信息传递（还有用户权限信息、从用户系统获取到的用户名、用户ID）</p>
+<p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/20221122002841.png"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> ThreadLocal&lt;LoginUser&gt; threadLocal = <span class="keyword">new</span> <span class="title class_">ThreadLocal</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                <span class="type">LoginUser</span> <span class="variable">loginUser</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LoginUser</span>();</span><br><span class="line">                loginUser.setId(id);</span><br><span class="line">                loginUser.setName(name);</span><br><span class="line">                loginUser.setMail(mail);</span><br><span class="line">                loginUser.setHeadImg(headImg);</span><br><span class="line">                threadLocal.set(loginUser);</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="ThreadLocal底层源码和原理"><a href="#ThreadLocal底层源码和原理" class="headerlink" title="ThreadLocal底层源码和原理"></a>ThreadLocal底层源码和原理</h1><ul>
+<li><p>ThreadLocal中的一个内部类ThreadLocalMap，这个类没有实现map接口，就是一个普通的Java类，但是实现的类似map的功能</p>
+</li>
+<li><p>每个数据用Entry保存，其中的Entry继承与WeakReference，用一个键值对存储，键为ThreadLocal的引用。</p>
+</li>
+<li><p>每个线程持有一个ThreadLocalMap对象，每一个新的线程Thread都会实例化一个ThreadLocalMap并赋值给成员变量threadLocals，使用时若已经存在threadLocals，则直接使用已经存在的对象。</p>
+</li>
+</ul>
+<p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/20221122003438.png"></p>
+<h1 id="ThreadLocal常见核心面试题"><a href="#ThreadLocal常见核心面试题" class="headerlink" title="ThreadLocal常见核心面试题"></a>ThreadLocal常见核心面试题</h1><p>P6面试题：ThreadLocal和Synchronized的区别 </p>
+<blockquote>
+<ul>
+<li>都是为了解决多线程中相同变量的访问冲突问题</li>
+<li>Synchronized是通过线程等待，牺牲时间来解决访问冲突</li>
+<li>ThreadLocal是通过每个线程单独一份存储空间，牺牲空间来解决冲突，</li>
+<li>对比Synchronized，ThreadLocal具有线程隔离的效果，只有在线程内才能获取到对应的值，线程外则不能访问到想要的值</li>
+</ul>
+</blockquote>
+<p>P6面试题：为啥什么ThreadLocal的键是弱引用，如果是强引用有什么问题？</p>
+<blockquote>
+<p>Java中除了基础的数据类型以外，其它的都为引用类型。<br>而Java根据其生命周期的长短将引用类型又分为强引用 、 软引用 、 弱引用 、 虚引用<br>正常情况下我们平时基本上我们只用到强引用类型，而其他的引用类型我们也就在面试中，或者平日阅读类库或其他框架源码的时候才能见到</p>
+<p>1、强引用 new了一个对象就是强引用  Object obj &#x3D; new Object();</p>
+<p>2、软引用的生命周期比强引用短一些,通过SoftReference类实现，当内存空间足够，垃圾回收器就不会回收它; 当JVM认为内存空间不足时，就会去试图回收软引用指向的对象，也就是说在JVM抛出OutOfMemoryError之前，会去清理软引用对象<br>主要用来描述一些【有用但并不是必需】的对象<br>使用场景：适合用来实现缓存，内存空间充足的时候将数据缓存在内存中，如果空间不足了就将其回收掉</p>
+<p>3、弱引用是通过WeakReference类实现的，它的生命周期比软引用还要短，在GC的时候，不管内存空间足不足都会回收这个对象<br>使用场景：一个对象只是偶尔使用，希望在使用时能随时获取，但也不想影响对该对象的垃圾收集，则可以考虑使用弱引用来指向该对象。</p>
+<p>ThreadLocal为什么是WeakReference呢？</p>
+<p>如果是强引用，即使把ThreadLocal设置为null，但是ThreadLocalMap还持有ThreadLocal的强引用，如果没有手动删除，ThreadLocal不会被回收，导致Entry内存泄漏</p>
+<p>如果是弱引用<br>引用ThreadLocal的对象被回收了，由于ThreadLocalMap持有ThreadLocal的弱引用，即使没有手动删除，ThreadLocal也会被回收。value在下一次ThreadLocalMap调用set、get、remove的时候会被清除。</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://javabk.com/2022/11/11/Docker%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -238,9 +357,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2022-11-11 16:50:14 / 修改时间：18:45:55" itemprop="dateCreated datePublished" datetime="2022-11-11T16:50:14+08:00">2022-11-11</time>
+      <time title="创建时间：2022-11-11 16:50:14" itemprop="dateCreated datePublished" datetime="2022-11-11T16:50:14+08:00">2022-11-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-11-13 23:07:00" itemprop="dateModified" datetime="2022-11-13T23:07:00+08:00">2022-11-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -270,7 +395,7 @@
 </ul>
 <p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/docker-architecture.svg"></p>
 <h1 id="Docker命令概览"><a href="#Docker命令概览" class="headerlink" title="Docker命令概览"></a>Docker命令概览</h1><ul>
-<li>Docker帮助命令—<code>docker --help</code></li>
+<li>Docker帮助命令—<code>docker 命令 --help</code></li>
 <li>Docker环境信息 — <code>docker [info|version]</code></li>
 <li>容器生命周期管理 — <code>docker  [create|exec|run|start|stop|restart|kill|rm|pause|unpause]</code></li>
 <li>容器操作管理 — <code>docker [ps|inspect|top|attach|wait|export|port|rename|stat]</code></li>
@@ -280,12 +405,13 @@
 <li>容器资源管理 — <code>docker [volume|network]</code></li>
 <li>系统日志信息 — <code>docker [events|history|logs]</code></li>
 </ul>
+<p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/docker_command.jpg"></p>
 <p><img src="https://javabk.oss-cn-hangzhou.aliyuncs.com/blog/images/docker_commands.png"></p>
 <h1 id="常用的命令"><a href="#常用的命令" class="headerlink" title="常用的命令"></a>常用的命令</h1><h2 id="docker-exec"><a href="#docker-exec" class="headerlink" title="docker exec"></a>docker exec</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-d :分离模式: 在后台运行</span><br><span class="line"></span><br><span class="line">-i :即使没有附加也保持STDIN 打开</span><br><span class="line"></span><br><span class="line">-t :分配一个伪终端</span><br><span class="line"></span><br><span class="line"><span class="comment">#实例</span></span><br><span class="line">docker <span class="built_in">exec</span> -it nginx /bin/bash</span><br></pre></td></tr></table></figure>
 
 
 
-<h2 id="docker-run"><a href="#docker-run" class="headerlink" title="docker run"></a>docker run</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">-i, --interactive=<span class="literal">false</span>   打开STDIN，用于控制台交互</span><br><span class="line">-t, --<span class="built_in">tty</span>=<span class="literal">false</span>            分配<span class="built_in">tty</span>设备，该可以支持终端登录，默认为<span class="literal">false</span></span><br><span class="line">-d, --detach=<span class="literal">false</span>         指定容器运行于前台还是后台，默认为<span class="literal">false</span></span><br><span class="line">-u, --user=<span class="string">&quot;&quot;</span>              指定容器的用户</span><br><span class="line">-a, --attach=[]            登录容器（必须是以docker run -d启动的容器）</span><br><span class="line">-w, --workdir=<span class="string">&quot;&quot;</span>           指定容器的工作目录</span><br><span class="line">-c, --cpu-shares=0        设置容器CPU权重，在CPU共享场景使用</span><br><span class="line">-e, --<span class="built_in">env</span>=[]               指定环境变量，容器中可以使用该环境变量</span><br><span class="line">-m, --memory=<span class="string">&quot;&quot;</span>            指定容器的内存上限</span><br><span class="line">-P, --publish-all=<span class="literal">false</span>    指定容器暴露的端口</span><br><span class="line">-p, --publish=[]           指定容器暴露的端口</span><br><span class="line">-h, --hostname=<span class="string">&quot;&quot;</span>          指定容器的主机名</span><br><span class="line">-v, --volume=[]            给容器挂载存储卷，挂载到容器的某个目录    顺序：主机：容器</span><br><span class="line">--volumes-from=[]          给容器挂载其他容器上的卷，挂载到容器的某个目录</span><br><span class="line">--cap-add=[]               添加权限，权限清单详见：http://linux.die.net/man/7/capabilities</span><br><span class="line">--cap-drop=[]              删除权限，权限清单详见：http://linux.die.net/man/7/capabilities</span><br><span class="line">--cidfile=<span class="string">&quot;&quot;</span>               运行容器后，在指定文件中写入容器PID值，一种典型的监控系统用法</span><br><span class="line">--cpuset=<span class="string">&quot;&quot;</span>                设置容器可以使用哪些CPU，此参数可以用来容器独占CPU</span><br><span class="line">--device=[]                添加主机设备给容器，相当于设备直通</span><br><span class="line">--dns=[]                   指定容器的dns服务器</span><br><span class="line">--dns-search=[]            指定容器的dns搜索域名，写入到容器的/etc/resolv.conf文件</span><br><span class="line">--entrypoint=<span class="string">&quot;&quot;</span>            覆盖image的入口点</span><br><span class="line">--env-file=[]              指定环境变量文件，文件格式为每行一个环境变量</span><br><span class="line">--expose=[]                指定容器暴露的端口，即修改镜像的暴露端口</span><br><span class="line">--<span class="built_in">link</span>=[]                  指定容器间的关联，使用其他容器的IP、<span class="built_in">env</span>等信息</span><br><span class="line">--lxc-conf=[]              指定容器的配置文件，只有在指定--exec-driver=lxc时使用</span><br><span class="line">--name=<span class="string">&quot;&quot;</span>                  指定容器名字，后续可以通过名字进行容器管理，links特性需要使用名字</span><br><span class="line">--net=<span class="string">&quot;bridge&quot;</span>             容器网络设置:</span><br><span class="line">                            bridge 使用docker daemon指定的网桥</span><br><span class="line">                            host    //容器使用主机的网络</span><br><span class="line">                            container:NAME_or_ID  &gt;//使用其他容器的网路，共享IP和PORT等网络资源</span><br><span class="line">                            none 容器使用自己的网络（类似--net=bridge），但是不进行配置</span><br><span class="line">--privileged=<span class="literal">false</span>         指定容器是否为特权容器，特权容器拥有所有的capabilities</span><br><span class="line">--restart=<span class="string">&quot;no&quot;</span>             指定容器停止后的重启策略:</span><br><span class="line">                            no：容器退出时不重启</span><br><span class="line">                            on-failure：容器故障退出（返回值非零）时重启</span><br><span class="line">                            always：容器退出时总是重启</span><br><span class="line">--<span class="built_in">rm</span>=<span class="literal">false</span>                 指定容器停止后自动删除容器(不支持以docker run -d启动的容器)</span><br><span class="line">--sig-proxy=<span class="literal">true</span>           设置由代理接受并处理信号，但是SIGCHLD、SIGSTOP和SIGKILL不能被代理</span><br></pre></td></tr></table></figure>
+<h2 id="docker-run"><a href="#docker-run" class="headerlink" title="docker run"></a>docker run</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">-i, --interactive=<span class="literal">false</span>   打开STDIN，用于控制台交互，以交互模式运行容器，通常与 -t 同时使用</span><br><span class="line">-t, --<span class="built_in">tty</span>=<span class="literal">false</span>            分配<span class="built_in">tty</span>设备，该可以支持终端登录，默认为<span class="literal">false</span>，通常与 -i 同时使用</span><br><span class="line">-d, --detach=<span class="literal">false</span>         指定容器运行于前台还是后台，默认为<span class="literal">false</span>,并返回容器ID，也即启动守护式容器</span><br><span class="line">-u, --user=<span class="string">&quot;&quot;</span>              指定容器的用户</span><br><span class="line">-a, --attach=[]            登录容器（必须是以docker run -d启动的容器）</span><br><span class="line">-w, --workdir=<span class="string">&quot;&quot;</span>           指定容器的工作目录</span><br><span class="line">-c, --cpu-shares=0        设置容器CPU权重，在CPU共享场景使用</span><br><span class="line">-e, --<span class="built_in">env</span>=[]               指定环境变量，容器中可以使用该环境变量</span><br><span class="line">-m, --memory=<span class="string">&quot;&quot;</span>            指定容器的内存上限</span><br><span class="line">-P, --publish-all=<span class="literal">false</span>    指定容器暴露的端口，随机端口映射，容器内部端口随机映射到主机的端口</span><br><span class="line">-p, --publish=[]           指定容器暴露的端口，指定端口映射，格式为：主机(宿主)端口:容器端口</span><br><span class="line">-h, --hostname=<span class="string">&quot;&quot;</span>          指定容器的主机名</span><br><span class="line">-v, --volume=[]            给容器挂载存储卷，挂载到容器的某个目录    顺序：主机：容器</span><br><span class="line">--volumes-from=[]          给容器挂载其他容器上的卷，挂载到容器的某个目录</span><br><span class="line">--cap-add=[]               添加权限，权限清单详见：http://linux.die.net/man/7/capabilities</span><br><span class="line">--cap-drop=[]              删除权限，权限清单详见：http://linux.die.net/man/7/capabilities</span><br><span class="line">--cidfile=<span class="string">&quot;&quot;</span>               运行容器后，在指定文件中写入容器PID值，一种典型的监控系统用法</span><br><span class="line">--cpuset=<span class="string">&quot;&quot;</span>                设置容器可以使用哪些CPU，此参数可以用来容器独占CPU</span><br><span class="line">--device=[]                添加主机设备给容器，相当于设备直通</span><br><span class="line">--dns=[]                   指定容器的dns服务器</span><br><span class="line">--dns-search=[]            指定容器的dns搜索域名，写入到容器的/etc/resolv.conf文件</span><br><span class="line">--entrypoint=<span class="string">&quot;&quot;</span>            覆盖image的入口点</span><br><span class="line">--env-file=[]              指定环境变量文件，文件格式为每行一个环境变量</span><br><span class="line">--expose=[]                指定容器暴露的端口，即修改镜像的暴露端口</span><br><span class="line">--<span class="built_in">link</span>=[]                  指定容器间的关联，使用其他容器的IP、<span class="built_in">env</span>等信息</span><br><span class="line">--lxc-conf=[]              指定容器的配置文件，只有在指定--exec-driver=lxc时使用</span><br><span class="line">--name=<span class="string">&quot;&quot;</span>                  指定容器名字，后续可以通过名字进行容器管理，links特性需要使用名字</span><br><span class="line">--net=<span class="string">&quot;bridge&quot;</span>             容器网络设置:</span><br><span class="line">                            bridge 使用docker daemon指定的网桥</span><br><span class="line">                            host    //容器使用主机的网络</span><br><span class="line">                            container:NAME_or_ID  &gt;//使用其他容器的网路，共享IP和PORT等网络资源</span><br><span class="line">                            none 容器使用自己的网络（类似--net=bridge），但是不进行配置</span><br><span class="line">--privileged=<span class="literal">false</span>         指定容器是否为特权容器，特权容器拥有所有的capabilities</span><br><span class="line">--restart=<span class="string">&quot;no&quot;</span>             指定容器停止后的重启策略:</span><br><span class="line">                            no：容器退出时不重启</span><br><span class="line">                            on-failure：容器故障退出（返回值非零）时重启</span><br><span class="line">                            always：容器退出时总是重启</span><br><span class="line">--<span class="built_in">rm</span>=<span class="literal">false</span>                 指定容器停止后自动删除容器(不支持以docker run -d启动的容器)</span><br><span class="line">--sig-proxy=<span class="literal">true</span>           设置由代理接受并处理信号，但是SIGCHLD、SIGSTOP和SIGKILL不能被代理</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -1648,314 +1774,6 @@
 <li>有条件的可以在办公环境上一个小型的业务机房</li>
 <li>wifi管控，单做guest接入点，不能访问业务核心网络</li>
 </ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://javabk.com/2020/05/07/linux-init-disk/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DylanPeng">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="JAVABK">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | JAVABK">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/05/07/linux-init-disk/" class="post-title-link" itemprop="url">初始化Linux数据盘（fdisk）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-05-07 17:00:00" itemprop="dateCreated datePublished" datetime="2020-05-07T17:00:00+08:00">2020-05-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-11-10 20:36:07" itemprop="dateModified" datetime="2022-11-10T20:36:07+08:00">2022-11-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="初始化Linux数据盘（fdisk）"><a href="#初始化Linux数据盘（fdisk）" class="headerlink" title="初始化Linux数据盘（fdisk）"></a>初始化Linux数据盘（fdisk）</h1><h4 id="操作场景"><a href="#操作场景" class="headerlink" title="操作场景"></a>操作场景</h4><p>本文以云服务器的操作系统为“CentOS 7.7 64位”为例，采用fdisk分区工具为数据盘设置分区。</p>
-<p>MBR支持的磁盘最大容量为2 TB，GPT最大支持的磁盘容量为18 EB，因此当您初始化容量大于2 TB的磁盘时，分区形式请采用GPT。对于Linux操作系统而言，当磁盘分区形式选用GPT时，fdisk分区工具将无法使用，需要采用parted工具。</p>
-<h4 id="划分分区并挂载磁盘"><a href="#划分分区并挂载磁盘" class="headerlink" title="划分分区并挂载磁盘"></a>划分分区并挂载磁盘</h4><p>本操作以该场景为例，当服务器挂载了一块新的数据盘时，使用fdisk分区工具将该数据盘设为主分区，分区形式默认设置为MBR，文件系统设为xfs格式，挂载在“&#x2F;opt”下，并设置开机启动自动挂载。</p>
-<ol>
-<li><p>执行以下命令，查看新增数据盘。</p>
-<p><strong>fdisk -l</strong></p>
-<p>回显类似如下信息：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# fdisk -l</span><br><span class="line"></span><br><span class="line">Disk /dev/sda: 68.7 GB, 68719476736 bytes, 134217728 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line">Disk label type: dos</span><br><span class="line">Disk identifier: 0x0002fb1b</span><br><span class="line"></span><br><span class="line">   Device Boot      Start         End      Blocks   Id  System</span><br><span class="line">/dev/sda1   *        2048     2099199     1048576   83  Linux</span><br><span class="line">/dev/sda2         2099200   134217727    66059264   8e  Linux LVM</span><br><span class="line"></span><br><span class="line">Disk /dev/sdb: 1073.7 GB, 1073741824000 bytes, 2097152000 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disk /dev/mapper/rootvg-lvroot: 27.9 GB, 27917287424 bytes, 54525952 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disk /dev/mapper/rootvg-lvswap: 17.2 GB, 17179869184 bytes, 33554432 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disk /dev/mapper/rootvg-lvhome: 1073 MB, 1073741824 bytes, 2097152 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disk /dev/mapper/rootvg-lvvar: 10.7 GB, 10737418240 bytes, 20971520 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Disk /dev/mapper/rootvg-lvopt: 10.7 GB, 10733223936 bytes, 20963328 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br></pre></td></tr></table></figure>
-
-
-
-<p>表示当前的服务器有两块磁盘，<strong>“&#x2F;dev&#x2F;sda”</strong>是系统盘，<strong>“&#x2F;dev&#x2F;sdb”</strong>是新增数据盘。</p>
-</li>
-<li><p>执行以下命令，进入fdisk分区工具，开始对新增数据盘执行分区操作。</p>
-<p><strong>fdisk</strong> <em>新增数据盘</em></p>
-<p>以新挂载的数据盘“&#x2F;dev&#x2F;sdb”为例：</p>
-<p><strong>fdisk &#x2F;dev&#x2F;sdb</strong></p>
-<p>回显类似如下信息：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# fdisk /dev/sdb</span><br><span class="line">Welcome to fdisk (util-linux 2.23.2).</span><br><span class="line"></span><br><span class="line">Changes will remain in memory only, until you decide to write them.</span><br><span class="line">Be careful before using the write command.</span><br><span class="line"></span><br><span class="line">Device does not contain a recognized partition table</span><br><span class="line">Building a new DOS disklabel with disk identifier 0xa04eb0bd.</span><br><span class="line"></span><br><span class="line">Command (m for help): </span><br></pre></td></tr></table></figure>
-
-
-
-
-</li>
-<li><p>输入“n”，按“Enter”，开始新建分区。</p>
-<p>回显类似如下信息：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Command (m for help): n</span><br><span class="line">Partition type:</span><br><span class="line">   p   primary (0 primary, 0 extended, 4 free)</span><br><span class="line">   e   extended</span><br></pre></td></tr></table></figure>
-
-
-
-<p>表示磁盘有两种分区类型：</p>
-<ul>
-<li>“p”表示主分区。</li>
-<li>“e”表示扩展分区。</li>
-</ul>
-<p>说明：</p>
-<p>磁盘使用MBR分区形式，最多可以创建4个主分区，或者3个主分区加1个扩展分区，扩展分区不可以直接使用，需要划分成若干个逻辑分区才可以使用。</p>
-<p>磁盘使用GPT分区形式时，没有主分区、扩展分区以及逻辑分区之分。</p>
-</li>
-<li><p>以创建一个主要分区为例，输入“p”，按“Enter”，开始创建一个主分区。</p>
-<p>回显类似如下信息：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Select (default p): p</span><br><span class="line">Partition number (1-4, default 1): </span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>“Partition number”</strong>表示主分区编号，可以选择1-4。</p>
-</li>
-<li><p>以分区编号选择“1”为例，输入主分区编号“1”，按“Enter”。</p>
-<p>回显类似如下信息：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Partition number (1-4, default 1): 1</span><br><span class="line">First sector (2048-209715199, default 2048):</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>“First sector”</strong>表示起始磁柱值，可以选择2048-209715199，默认为2048。</p>
-</li>
-<li><p>以选择默认起始磁柱值2048为例，按“Enter”。</p>
-<p>系统会自动提示分区可用空间的起始磁柱值和截止磁柱值，可以在该区间内自定义，或者使用默认值。起始磁柱值必须小于分区的截止磁柱值。</p>
-<p>回显类似如下信息：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">First sector (2048-209715199, default 2048):</span><br><span class="line">Using default value 2048</span><br><span class="line">Last sector, +sectors or +size&#123;K,M,G&#125; (2048-209715199, default 209715199):</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>“Last sector”</strong>表示截止磁柱值，可以选择2048-209715199，默认为209715199。</p>
-</li>
-<li><p>以选择默认截止磁柱值209715199为例，按“Enter”。</p>
-<p>系统会自动提示分区可用空间的起始磁柱值和截止磁柱值，可以在该区间内自定义，或者使用默认值。起始磁柱值必须小于分区的截止磁柱值。</p>
-<p>回显类似如下信息：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Last sector, +sectors or +size&#123;K,M,G&#125; (2048-209715199, default 209715199):</span><br><span class="line">Using default value 209715199</span><br><span class="line">Partition 1 of type Linux and of size 100 GiB is set</span><br><span class="line"></span><br><span class="line">Command (m for help):</span><br></pre></td></tr></table></figure>
-
-
-
-<p>表示分区完成，即为数据盘新建了1个分区。</p>
-</li>
-<li><p>输入“p”，按“Enter”，查看新建分区的详细信息。</p>
-<p>回显类似如下信息：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Command (m for help): p</span><br><span class="line"></span><br><span class="line">Disk /dev/sdb: 1073.7 GB, 1073741824000 bytes, 2097152000 sectors</span><br><span class="line">Units = sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 512 bytes</span><br><span class="line">I/O size (minimum/optimal): 512 bytes / 512 bytes</span><br><span class="line">Disk label type: dos</span><br><span class="line">Disk identifier: 0xa04eb0bd</span><br><span class="line"></span><br><span class="line">   Device Boot      Start         End      Blocks   Id  System</span><br><span class="line">/dev/sdb1            2048  2097151999  1048574976   83  Linux</span><br></pre></td></tr></table></figure>
-
-
-
-<p>表示新建分区<strong>“&#x2F;dev&#x2F;sdb1”</strong>的详细信息。</p>
-</li>
-<li><p>输入“w”，按“Enter”，将分区结果写入分区表中。</p>
-<p>回显类似如下信息：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Command (m for help): w</span><br><span class="line">The partition table has been altered!</span><br><span class="line"></span><br><span class="line">Calling ioctl() to re-read partition table.</span><br><span class="line">Syncing disks.</span><br></pre></td></tr></table></figure>
-
-
-
-<p>表示分区创建完成。</p>
-<p>说明：</p>
-<p>如果之前分区操作有误，请输入“q”，则会退出fdisk分区工具，之前的分区结果将不会被保留。</p>
-</li>
-<li><p>执行以下命令，将新的分区表变更同步至操作系统。</p>
-</li>
-</ol>
-<p>   <strong>partprobe</strong></p>
-<ol start="11">
-<li>执行以下命令，将新建分区文件系统设为系统所需格式。</li>
-</ol>
-<p>  ​    </p>
-<pre><code>**mkfs** **-t** *文件系统格式* **/dev/sdb1**
-
-以设置文件系统为“xfs”为例：
-
-**mkfs -t xfs /dev/sdb1**
-
-回显类似如下信息：
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# mkfs -t xfs /dev/sdb1</span><br><span class="line">meta-data=/dev/sdb1              isize=512    agcount=4, agsize=65535936 blks</span><br><span class="line">         =                       sectsz=512   attr=2, projid32bit=1</span><br><span class="line">         =                       crc=1        finobt=0, sparse=0</span><br><span class="line">data     =                       bsize=4096   blocks=262143744, imaxpct=25</span><br><span class="line">         =                       sunit=0      swidth=0 blks</span><br><span class="line">naming   =version 2              bsize=4096   ascii-ci=0 ftype=1</span><br><span class="line">log      =internal log           bsize=4096   blocks=127999, version=2</span><br><span class="line">         =                       sectsz=512   sunit=0 blks, lazy-count=1</span><br><span class="line">realtime =none                   extsz=4096   blocks=0, rtextents=0</span><br></pre></td></tr></table></figure>
-</code></pre>
-<p>​    </p>
-<pre><code>格式化需要等待一段时间，请观察系统运行状态，不要退出。
-
-不同文件系统支持的分区大小不同，请根据您的业务需求选择合适的文件系统。
-</code></pre>
-<p>​    </p>
-<ol start="12">
-<li><p>执行以下命令，新建挂载目录。</p>
-<p><strong>mkdir</strong> <em>挂载目录</em></p>
-<p>以挂载目录“&#x2F;opt”为例：</p>
-</li>
-<li><p>执行以下命令，将新建分区挂载到<a target="_blank" rel="noopener" href="https://support.huaweicloud.com/qs-ecs/zh-cn_topic_0085634797.html#zh-cn_topic_0085634797__zh-cn_topic_0044524669_li1758111811323">12</a>中创建的目录下。</p>
-</li>
-</ol>
-<p>  ​    </p>
-<pre><code>**mount** *磁盘分区* *挂载目录*
-
-以挂载新建分区“/dev/sdb1”至“/opt”为例：
-
-**mount /dev/sdb1 /opt**
-</code></pre>
-<p>​    </p>
-<ol start="14">
-<li>执行以下命令，查看挂载结果。</li>
-</ol>
-<p>  ​    </p>
-<pre><code>**df -TH**
-
-回显类似如下信息：
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# df -HT</span><br><span class="line">Filesystem                Type      Size  Used Avail Use% Mounted on</span><br><span class="line">devtmpfs                  devtmpfs   17G     0   17G   0% /dev</span><br><span class="line">tmpfs                     tmpfs      17G     0   17G   0% /dev/shm</span><br><span class="line">tmpfs                     tmpfs      17G   55M   17G   1% /run</span><br><span class="line">tmpfs                     tmpfs      17G     0   17G   0% /sys/fs/cgroup</span><br><span class="line">/dev/mapper/rootvg-lvroot xfs        28G  4.7G   24G  17% /</span><br><span class="line">/dev/sda1                 xfs       1.1G  178M  886M  17% /boot</span><br><span class="line">/dev/sdb1                 xfs       1.1T   34M  1.1T   1% /opt</span><br><span class="line">/dev/mapper/rootvg-lvhome xfs       1.1G   34M  1.1G   4% /home</span><br><span class="line">/dev/mapper/rootvg-lvvar  xfs        11G  320M   11G   3% /var</span><br><span class="line">tmpfs                     tmpfs     3.4G   13k  3.4G   1% /run/user/42</span><br><span class="line">tmpfs                     tmpfs     3.4G     0  3.4G   0% /run/user/1000</span><br></pre></td></tr></table></figure>
-</code></pre>
-<p>​    </p>
-<pre><code>表示新建分区**“/dev/sdb1”**已挂载至“/opt”。
-</code></pre>
-<p>​    </p>
-<pre><code>说明：
-
-服务器重启后，挂载会失效。您可以修改“/etc/fstab”文件，将新建磁盘分区设置为开机自动挂载
-</code></pre>
-<p>​    </p>
-<h4 id="设置开机自动挂载磁盘分区"><a href="#设置开机自动挂载磁盘分区" class="headerlink" title="设置开机自动挂载磁盘分区"></a>设置开机自动挂载磁盘分区</h4><p>设置云服务器系统启动时自动挂载磁盘分区，不能采用在“&#x2F;etc&#x2F;fstab”直接指定设备名（比如&#x2F;dev&#x2F;sdb1）的方法，因为设备的顺序编码在关闭或者开启服务器过程中可能发生改变，例如&#x2F;dev&#x2F;sdb1可能会变成&#x2F;dev&#x2F;sdb2。推荐使用UUID来配置自动挂载磁盘分区。</p>
-<p>说明：</p>
-<p>UUID（universally unique identifier）是Linux系统为磁盘分区提供的唯一的标识字符串。</p>
-<ol>
-<li><p>执行如下命令，查询磁盘分区的UUID。</p>
-<p><strong>blkid</strong> <em>磁盘分区</em></p>
-<p>以查询磁盘分区<strong>“&#x2F;dev&#x2F;sdb1”</strong>的UUID为例：</p>
-<p><strong>blkid &#x2F;dev&#x2F;sdb1</strong></p>
-<p>回显类似如下信息：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@DB-Sub12003574 ~]# blkid /dev/sdb1</span><br><span class="line">/dev/sdb1: UUID=&quot;94a71f8e-1900-41d5-82c8-9e79b6754981&quot; TYPE=&quot;xfs&quot; </span><br></pre></td></tr></table></figure>
-
-
-
-<p>表示<strong>“&#x2F;dev&#x2F;sdb1”</strong>的UUID。</p>
-</li>
-<li><p>执行以下命令，使用VI编辑器打开“fstab”文件。</p>
-<p><strong>vim &#x2F;etc&#x2F;fstab</strong></p>
-</li>
-<li><p>按“i”，进入编辑模式。</p>
-</li>
-<li><p>将光标移至文件末尾，按“Enter”，添加如下内容。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UUID=94a71f8e-1900-41d5-82c8-9e79b6754981 /opt  xfs defaults    0 0</span><br></pre></td></tr></table></figure>
-
-
-
-<p>以内容上仅为示例，具体请以实际情况为准，参数说明如下：</p>
-<ul>
-<li><p>第一列为UUID，此处填写<a target="_blank" rel="noopener" href="https://support.huaweicloud.com/qs-ecs/zh-cn_topic_0085634797.html#zh-cn_topic_0085634797__zh-cn_topic_0044524669_li840964143216">1</a>中查询到的磁盘分区的UUID。</p>
-</li>
-<li><p>第二列为磁盘分区的挂载目录，可以通过<strong>df -TH</strong>命令查询。</p>
-</li>
-<li><p>第三列为磁盘分区的文件系统格式， 可以通过<strong>df -TH</strong>命令查询。</p>
-</li>
-<li><p>第四列为磁盘分区的挂载选项，此处通常设置为defaults即可。</p>
-</li>
-<li><p>第五列为Linux dump备份选项。</p>
-<ul>
-<li>0表示不使用Linux dump备份。现在通常不使用dump备份，此处设置为0即可。</li>
-<li>1表示使用Linux dump备份。</li>
-</ul>
-</li>
-<li><p>第六列为fsck选项，即开机时是否使用fsck检查磁盘。</p>
-<ul>
-<li><p>0表示不检验。</p>
-</li>
-<li><p>挂载点为（&#x2F;）根目录的分区，此处必须填写1。</p>
-<p>根分区设置为1，其他分区只能从2开始，系统会按照数字从小到大依次检查下去。</p>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>按“ESC”后，输入“:wq”，按“Enter”。</p>
-<p>保存设置并退出编辑器。</p>
-</li>
-<li><p>执行以下步骤，验证自动挂载功能。</p>
-<ol>
-<li><p>执行如下命令，卸载已挂载的分区。</p>
-<p><strong>umount</strong> <em>磁盘分区</em></p>
-<p>命令示例：</p>
-<p><strong>umount &#x2F;dev&#x2F;sdb1</strong></p>
-</li>
-<li><p>执行如下命令，将“&#x2F;etc&#x2F;fstab”文件所有内容重新加载。</p>
-<p><strong>mount -a</strong></p>
-</li>
-<li><p>执行如下命令，查询文件系统挂载信息。</p>
-<p><strong>mount</strong> <strong>|</strong> <strong>grep</strong> <em>挂载目录</em></p>
-<p>命令示例：</p>
-<p><strong>mount</strong> <strong>|</strong> <strong>grep</strong> <strong>&#x2F;opt</strong></p>
-<p>回显类似如下信息，说明自动挂载功能生效：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@DB-Sub12003574 etc]# mount | grep /opt</span><br><span class="line">/dev/mapper/rootvg-lvopt on /opt type xfs (rw,relatime,attr2,inode64,noquota)</span><br><span class="line">/dev/sdb1 on /opt type xfs (rw,relatime,attr2,inode64,noquota)</span><br></pre></td></tr></table></figure></li>
-</ol>
-</li>
-</ol>
 
       
     </div>
